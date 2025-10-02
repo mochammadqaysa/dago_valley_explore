@@ -2,6 +2,8 @@ import 'dart:math' as math show pi;
 
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:dago_valley_explore/screen/example_screen_1.dart';
+import 'package:dago_valley_explore/screen/example_screen_2.dart';
+import 'package:dago_valley_explore/screen/example_screen_3.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
