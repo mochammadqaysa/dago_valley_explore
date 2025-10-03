@@ -12,14 +12,11 @@ class ExampleScreen1State extends State<ExampleScreen1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: PanoramaViewer(
         animSpeed: .1,
-        //sensorControl: SensorControl.orientation,
+        // sensorControl: SensorControl.orientation,
         //child: Image.asset('assets/panorama1.webp'),
-        child: Image.asset('assets/panorama1-rid.jpg'),
+        child: Image.asset('assets/panorama1.webp'),
       ),
     );
   }
