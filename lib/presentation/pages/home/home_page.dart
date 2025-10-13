@@ -1,5 +1,6 @@
 import 'package:dago_valley_explore/app/config/app_colors.dart';
 import 'package:dago_valley_explore/app/types/tab_type.dart';
+import 'package:dago_valley_explore/presentation/components/drawer/custom_drawer.dart';
 import 'package:dago_valley_explore/presentation/controllers/auth/auth_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/bookingonline/bookingonline_binding.dart';
 import 'package:dago_valley_explore/presentation/controllers/cashcalculator/cashcalculator_binding.dart';
@@ -22,40 +23,65 @@ import 'package:get/get.dart';
 class HomePage extends GetView<AuthController> {
   @override
   Widget build(BuildContext context) {
-    return CupertinoTabScaffold(
-      tabBar: CupertinoTabBar(
-        items: TabType.values
-            .map((e) => BottomNavigationBarItem(icon: e.icon, label: e.title))
-            .toList(),
-        inactiveColor: AppColors.lightGrey,
-        activeColor: AppColors.primary,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Row(
+        children: [
+          // Drawer selalu terlihat di sisi kiri
+          CustomDrawer(),
+
+          // Garis pembatas opsional antara drawer dan konten
+          Container(width: 1, color: Colors.grey.shade300),
+
+          // Konten utama
+          Expanded(
+            child: Container(
+              color: Colors.white,
+              child: const Center(
+                child: Text(
+                  'Always-open drawer layout (TV style)',
+                  style: TextStyle(color: Colors.black, fontSize: 18),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
-      tabBuilder: (context, index) {
-        final type = TabType.values[index];
-        switch (type) {
-          case TabType.homepage:
-            DashboardBinding().dependencies();
-            return DashboardPage();
-          case TabType.siteplanpage:
-            SiteplanBinding().dependencies();
-            return SiteplanPage();
-          case TabType.virtualtourpage:
-            VirtualtourBinding().dependencies();
-            return VirtualtourPage();
-          case TabType.mortgagepage:
-            MortgageBinding().dependencies();
-            return MortgagePage();
-          case TabType.cashcalculatorpage:
-            CashcalculatorBinding().dependencies();
-            return CashcalculatorPage();
-          case TabType.licenselegaldocumentpage:
-            LicenselegaldocumentBinding().dependencies();
-            return LicenselegaldocumentPage();
-          case TabType.bookingonlinepage:
-            BookingonlineBinding().dependencies();
-            return BookingonlinePage();
-        }
-      },
     );
+    // return CupertinoTabScaffold(
+    //   tabBar: CupertinoTabBar(
+    //     items: TabType.values
+    //         .map((e) => BottomNavigationBarItem(icon: e.icon, label: e.title))
+    //         .toList(),
+    //     inactiveColor: AppColors.lightGrey,
+    //     activeColor: AppColors.primary,
+    //   ),
+    //   tabBuilder: (context, index) {
+    //     final type = TabType.values[index];
+    //     switch (type) {
+    //       case TabType.homepage:
+    //         DashboardBinding().dependencies();
+    //         return DashboardPage();
+    //       case TabType.siteplanpage:
+    //         SiteplanBinding().dependencies();
+    //         return SiteplanPage();
+    //       case TabType.virtualtourpage:
+    //         VirtualtourBinding().dependencies();
+    //         return VirtualtourPage();
+    //       case TabType.mortgagepage:
+    //         MortgageBinding().dependencies();
+    //         return MortgagePage();
+    //       case TabType.cashcalculatorpage:
+    //         CashcalculatorBinding().dependencies();
+    //         return CashcalculatorPage();
+    //       case TabType.licenselegaldocumentpage:
+    //         LicenselegaldocumentBinding().dependencies();
+    //         return LicenselegaldocumentPage();
+    //       case TabType.bookingonlinepage:
+    //         BookingonlineBinding().dependencies();
+    //         return BookingonlinePage();
+    //     }
+    //   },
+    // );
   }
 }
