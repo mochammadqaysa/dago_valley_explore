@@ -1,11 +1,11 @@
+import 'package:dago_valley_explore/presentation/controllers/dashboard/dashboard_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../controllers/headline/headline_controller.dart';
 import '../detail/detail_page.dart';
 import 'views/article_cell.dart';
 
-class HeadlinePage extends GetView<HeadlineController> {
+class DashboardPage extends GetView<DashboardController> {
   final _scrollController = ScrollController();
 
   @override
@@ -23,9 +23,8 @@ class HeadlinePage extends GetView<HeadlineController> {
       },
       builder: (_) {
         return CupertinoPageScaffold(
-          navigationBar: CupertinoNavigationBar(
-            middle: Text('Headline'),
-          ),
+          navigationBar: CupertinoNavigationBar(middle: Text('Headline')),
+          // child: Text("Dashboard"),
           child: ListView.builder(
             controller: _scrollController,
             itemCount: controller.articles.length,

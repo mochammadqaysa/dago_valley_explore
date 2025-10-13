@@ -1,12 +1,12 @@
 import 'package:get/get.dart';
 import '../../../domain/usecases/fetch_headline_use_case.dart';
 import '../../../data/repositories/article_repository.dart';
-import 'headline_controller.dart';
+import 'mortgage_controller.dart';
 
-class HeadlineBinding extends Bindings {
+class MortgageBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => FetchHeadlineUseCase(Get.find<ArticleRepositoryIml>()));
-    Get.lazyPut(() => HeadlineController(Get.find()));
+    Get.lazyPut(() => MortgageController(Get.find()));
   }
 }

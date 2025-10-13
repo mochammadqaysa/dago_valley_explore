@@ -2,12 +2,12 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import '../../../domain/entities/article.dart';
 import '../../../domain/entities/paging.dart';
-import '../../../domain/usecases/fetch_news_use_case.dart';
+import '../../../domain/usecases/fetch_headline_use_case.dart';
 import 'package:tuple/tuple.dart';
 
-class NewsController extends GetxController {
-  NewsController(this._fetchNewlineUseCase);
-  final FetchNewsUseCase _fetchNewlineUseCase;
+class BookingonlineController extends GetxController {
+  BookingonlineController(this._fetchHeadlineUseCase);
+  final FetchHeadlineUseCase _fetchHeadlineUseCase;
   int _currentPage = 1;
   int _pageSize = 20;
   var _isLoadMore = false;
@@ -15,22 +15,23 @@ class NewsController extends GetxController {
 
   var articles = RxList<Article>([]);
 
-  fetchData(String keyword) async {
-    _currentPage = 1;
-    final newPaging = await _fetchNewlineUseCase
-        .execute(Tuple3(keyword, _currentPage, _pageSize));
-    articles.assignAll(newPaging.articles);
-    _paging.value = newPaging;
+  fetchData() async {
+    // final newPaging = await _fetchHeadlineUseCase.execute(
+    //   Tuple2(_currentPage, _pageSize),
+    // );
+    // articles.assignAll(newPaging.articles);
+    // _paging.value = newPaging;
   }
 
-  loadMore(String keyword) async {
+  loadMore() async {
     final totalResults = _paging.value?.totalResults ?? 0;
     if (totalResults / _pageSize <= _currentPage) return;
     if (_isLoadMore) return;
     _isLoadMore = true;
     _currentPage += 1;
-    final newPaging = await _fetchNewlineUseCase
-        .execute(Tuple3(keyword, _currentPage, _pageSize));
+    final newPaging = await _fetchHeadlineUseCase.execute(
+      Tuple2(_currentPage, _pageSize),
+    );
     articles.addAll(newPaging.articles);
     _paging.value?.totalResults = newPaging.totalResults;
     _isLoadMore = false;

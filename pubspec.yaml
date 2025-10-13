@@ -42,7 +42,7 @@ dependencies:
   cached_network_image: ^3.1.0
   json_annotation:
   jiffy: ^4.1.0
-  shared_preferences: ^2.0.6
+  shared_preferences: ^2.5.3
   visibility_detector: ^0.2.0
   badges: ^3.1.2
 

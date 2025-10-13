@@ -5,8 +5,8 @@ import '../../../domain/entities/paging.dart';
 import '../../../domain/usecases/fetch_headline_use_case.dart';
 import 'package:tuple/tuple.dart';
 
-class HeadlineController extends GetxController {
-  HeadlineController(this._fetchHeadlineUseCase);
+class SiteplanController extends GetxController {
+  SiteplanController(this._fetchHeadlineUseCase);
   final FetchHeadlineUseCase _fetchHeadlineUseCase;
   int _currentPage = 1;
   int _pageSize = 20;
@@ -16,10 +16,11 @@ class HeadlineController extends GetxController {
   var articles = RxList<Article>([]);
 
   fetchData() async {
-    final newPaging =
-        await _fetchHeadlineUseCase.execute(Tuple2(_currentPage, _pageSize));
-    articles.assignAll(newPaging.articles);
-    _paging.value = newPaging;
+    // final newPaging = await _fetchHeadlineUseCase.execute(
+    //   Tuple2(_currentPage, _pageSize),
+    // );
+    // articles.assignAll(newPaging.articles);
+    // _paging.value = newPaging;
   }
 
   loadMore() async {
@@ -28,8 +29,9 @@ class HeadlineController extends GetxController {
     if (_isLoadMore) return;
     _isLoadMore = true;
     _currentPage += 1;
-    final newPaging =
-        await _fetchHeadlineUseCase.execute(Tuple2(_currentPage, _pageSize));
+    final newPaging = await _fetchHeadlineUseCase.execute(
+      Tuple2(_currentPage, _pageSize),
+    );
     articles.addAll(newPaging.articles);
     _paging.value?.totalResults = newPaging.totalResults;
     _isLoadMore = false;

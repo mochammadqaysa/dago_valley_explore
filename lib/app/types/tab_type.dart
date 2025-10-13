@@ -9,9 +9,6 @@ enum TabType {
   cashcalculatorpage,
   licenselegaldocumentpage,
   bookingonlinepage,
-  headline,
-  news,
-  profile,
 }
 
 extension TabItem on TabType {
@@ -31,19 +28,13 @@ extension TabItem on TabType {
         return Icon(CupertinoIcons.doc_text, size: 25);
       case TabType.bookingonlinepage:
         return Icon(CupertinoIcons.book, size: 25);
-      case TabType.headline:
-        return Icon(CupertinoIcons.news, size: 25);
-      case TabType.news:
-        return Icon(CupertinoIcons.news, size: 25);
-      case TabType.profile:
-        return Icon(CupertinoIcons.person, size: 25);
     }
   }
 
   String get title {
     switch (this) {
       case TabType.homepage:
-        return "Beranda";
+        return "Dashboard";
       case TabType.siteplanpage:
         return "Site Plan Interaktif";
       case TabType.virtualtourpage:
@@ -56,12 +47,6 @@ extension TabItem on TabType {
         return "Dokumen Perizinan & Legalitas";
       case TabType.bookingonlinepage:
         return "Booking Online";
-      case TabType.headline:
-        return "Headline";
-      case TabType.news:
-        return "Berita";
-      case TabType.profile:
-        return "Profil";
     }
   }
 }
