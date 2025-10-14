@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 enum TabType {
   homepage,
   siteplanpage,
-  virtualtourpage,
+  productpage,
   mortgagepage,
-  cashcalculatorpage,
   licenselegaldocumentpage,
   bookingonlinepage,
 }
@@ -18,12 +17,10 @@ extension TabItem on TabType {
         return Icon(CupertinoIcons.home, size: 25);
       case TabType.siteplanpage:
         return Icon(CupertinoIcons.map, size: 25);
-      case TabType.virtualtourpage:
+      case TabType.productpage:
         return Icon(Icons.threesixty, size: 25);
       case TabType.mortgagepage:
         return Icon(CupertinoIcons.money_dollar, size: 25);
-      case TabType.cashcalculatorpage:
-        return Icon(Icons.calculate, size: 25);
       case TabType.licenselegaldocumentpage:
         return Icon(CupertinoIcons.doc_text, size: 25);
       case TabType.bookingonlinepage:
@@ -37,16 +34,31 @@ extension TabItem on TabType {
         return "Dashboard";
       case TabType.siteplanpage:
         return "Site Plan Interaktif";
-      case TabType.virtualtourpage:
+      case TabType.productpage:
         return "Virtual Tour";
       case TabType.mortgagepage:
         return "Simulasi KPR";
-      case TabType.cashcalculatorpage:
-        return "Kalkulator Cash Bertahap";
       case TabType.licenselegaldocumentpage:
         return "Dokumen Perizinan & Legalitas";
       case TabType.bookingonlinepage:
         return "Booking Online";
+    }
+  }
+
+  String get svgIcon {
+    switch (this) {
+      case TabType.homepage:
+        return "assets/menu/home_icon.svg";
+      case TabType.siteplanpage:
+        return "assets/menu/siteplan_icon.svg";
+      case TabType.productpage:
+        return "assets/menu/product_icon.svg";
+      case TabType.mortgagepage:
+        return "assets/menu/calculator_icon.svg";
+      case TabType.licenselegaldocumentpage:
+        return "assets/menu/folder_icon.svg";
+      case TabType.bookingonlinepage:
+        return "assets/menu/hotline_icon.svg";
     }
   }
 }

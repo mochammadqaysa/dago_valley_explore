@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 
 class CustomDrawerHeader extends StatelessWidget {
   final bool isColapsed;
+  final VoidCallback? onToggle;
 
-  const CustomDrawerHeader({Key? key, required this.isColapsed})
+  const CustomDrawerHeader({Key? key, required this.isColapsed, this.onToggle})
     : super(key: key);
 
   @override
@@ -16,19 +17,20 @@ class CustomDrawerHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const FlutterLogo(size: 30),
+          Image.asset("assets/logo-dago.webp", width: 64),
           if (isColapsed) const SizedBox(width: 10),
           if (isColapsed)
             const Expanded(
               flex: 3,
               child: Text(
-                'FlyCompany',
+                'Dago Valley',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
                 ),
                 maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           if (isColapsed) const Spacer(),
@@ -36,8 +38,11 @@ class CustomDrawerHeader extends StatelessWidget {
             Expanded(
               flex: 1,
               child: IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.search, color: Colors.white),
+                onPressed: onToggle,
+                icon: Icon(
+                  isColapsed ? Icons.menu_open : Icons.menu,
+                  color: Colors.white,
+                ),
               ),
             ),
         ],

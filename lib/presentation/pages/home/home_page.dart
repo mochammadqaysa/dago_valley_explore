@@ -1,7 +1,7 @@
-import 'package:dago_valley_explore/app/config/app_colors.dart';
+import 'package:dago_valley_explore/app/extensions/color.dart';
 import 'package:dago_valley_explore/app/types/tab_type.dart';
 import 'package:dago_valley_explore/presentation/components/drawer/custom_drawer.dart';
-import 'package:dago_valley_explore/presentation/controllers/auth/auth_controller.dart';
+import 'package:dago_valley_explore/presentation/controllers/sidebar/sidebar_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/bookingonline/bookingonline_binding.dart';
 import 'package:dago_valley_explore/presentation/controllers/cashcalculator/cashcalculator_binding.dart';
 import 'package:dago_valley_explore/presentation/controllers/dashboard/dashboard_binding.dart';
@@ -16,72 +16,63 @@ import 'package:dago_valley_explore/presentation/pages/licenselegaldocument/lice
 import 'package:dago_valley_explore/presentation/pages/mortgage/mortgage_page.dart';
 import 'package:dago_valley_explore/presentation/pages/siteplan/siteplan_page.dart';
 import 'package:dago_valley_explore/presentation/pages/virtualtour/virtualtour_page.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:dago_valley_explore/screen/dasbor_awal.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HomePage extends GetView<AuthController> {
+class HomePage extends GetView<SidebarController> {
+  const HomePage({Key? key}) : super(key: key);
+
+  // Method untuk mendapatkan widget sesuai tab aktif
+  Widget _getPageForTab(TabType tab) {
+    switch (tab) {
+      case TabType.homepage:
+        DashboardBinding().dependencies();
+        // return DashboardPage();
+        return DasborAwal();
+      case TabType.siteplanpage:
+        SiteplanBinding().dependencies();
+        return SiteplanPage();
+      case TabType.productpage:
+        VirtualtourBinding().dependencies();
+        return VirtualtourPage();
+      case TabType.mortgagepage:
+        MortgageBinding().dependencies();
+        return MortgagePage();
+      case TabType.licenselegaldocumentpage:
+        LicenselegaldocumentBinding().dependencies();
+        return LicenselegaldocumentPage();
+      case TabType.bookingonlinepage:
+        BookingonlineBinding().dependencies();
+        return BookingonlinePage();
+      default:
+        DashboardBinding().dependencies();
+        return DashboardPage();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Row(
-        children: [
-          // Drawer selalu terlihat di sisi kiri
-          CustomDrawer(),
+    return GetX<SidebarController>(
+      builder: (_) {
+        return Scaffold(
+          backgroundColor: HexColor("F4F4F4"),
+          body: Row(
+            children: [
+              // Drawer/Sidebar selalu terlihat di sisi kiri
+              const CustomDrawer(),
 
-          // Garis pembatas opsional antara drawer dan konten
-          Container(width: 1, color: Colors.grey.shade300),
-
-          // Konten utama
-          Expanded(
-            child: Container(
-              color: Colors.white,
-              child: const Center(
-                child: Text(
-                  'Always-open drawer layout (TV style)',
-                  style: TextStyle(color: Colors.black, fontSize: 18),
+              // Konten utama yang berubah sesuai tab aktif
+              Expanded(
+                child: Container(
+                  color: HexColor("121212"),
+                  child: _getPageForTab(controller.activeTab),
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
-    // return CupertinoTabScaffold(
-    //   tabBar: CupertinoTabBar(
-    //     items: TabType.values
-    //         .map((e) => BottomNavigationBarItem(icon: e.icon, label: e.title))
-    //         .toList(),
-    //     inactiveColor: AppColors.lightGrey,
-    //     activeColor: AppColors.primary,
-    //   ),
-    //   tabBuilder: (context, index) {
-    //     final type = TabType.values[index];
-    //     switch (type) {
-    //       case TabType.homepage:
-    //         DashboardBinding().dependencies();
-    //         return DashboardPage();
-    //       case TabType.siteplanpage:
-    //         SiteplanBinding().dependencies();
-    //         return SiteplanPage();
-    //       case TabType.virtualtourpage:
-    //         VirtualtourBinding().dependencies();
-    //         return VirtualtourPage();
-    //       case TabType.mortgagepage:
-    //         MortgageBinding().dependencies();
-    //         return MortgagePage();
-    //       case TabType.cashcalculatorpage:
-    //         CashcalculatorBinding().dependencies();
-    //         return CashcalculatorPage();
-    //       case TabType.licenselegaldocumentpage:
-    //         LicenselegaldocumentBinding().dependencies();
-    //         return LicenselegaldocumentPage();
-    //       case TabType.bookingonlinepage:
-    //         BookingonlineBinding().dependencies();
-    //         return BookingonlinePage();
-    //     }
-    //   },
-    // );
   }
 }

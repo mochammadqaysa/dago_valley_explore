@@ -1,120 +1,81 @@
+import 'package:dago_valley_explore/app/extensions/color.dart';
+import 'package:dago_valley_explore/app/types/tab_type.dart';
 import 'package:dago_valley_explore/presentation/components/drawer/bottom_user_info.dart';
 import 'package:dago_valley_explore/presentation/components/drawer/custom_list_tile.dart';
 import 'package:dago_valley_explore/presentation/components/drawer/header.dart';
+import 'package:dago_valley_explore/presentation/controllers/sidebar/sidebar_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class CustomDrawer extends StatefulWidget {
+class CustomDrawer extends GetView<SidebarController> {
   const CustomDrawer({Key? key}) : super(key: key);
 
   @override
-  State<CustomDrawer> createState() => _CustomDrawerState();
-}
-
-class _CustomDrawerState extends State<CustomDrawer> {
-  bool _isCollapsed = false;
-
-  @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: AnimatedContainer(
-        curve: Curves.easeInOutCubic,
-        duration: const Duration(milliseconds: 500),
-        width: _isCollapsed ? 300 : 80,
-        margin: const EdgeInsets.only(bottom: 10, top: 10, left: 10),
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            bottomRight: Radius.circular(10),
-            topRight: Radius.circular(10),
-          ),
-          color: Color.fromRGBO(20, 20, 20, 1),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CustomDrawerHeader(isColapsed: _isCollapsed),
-              const Divider(color: Colors.grey),
-              CustomListTile(
-                isCollapsed: _isCollapsed,
-                icon: Icons.home_outlined,
-                title: 'Home',
-                infoCount: 0,
-              ),
-              CustomListTile(
-                isCollapsed: _isCollapsed,
-                icon: Icons.calendar_today,
-                title: 'Calender',
-                infoCount: 0,
-              ),
-              CustomListTile(
-                isCollapsed: _isCollapsed,
-                icon: Icons.pin_drop,
-                title: 'Destinations',
-                infoCount: 0,
-                doHaveMoreOptions: Icons.arrow_forward_ios,
-              ),
-              CustomListTile(
-                isCollapsed: _isCollapsed,
-                icon: Icons.message_rounded,
-                title: 'Messages',
-                infoCount: 8,
-              ),
-              CustomListTile(
-                isCollapsed: _isCollapsed,
-                icon: Icons.cloud,
-                title: 'Weather',
-                infoCount: 0,
-                doHaveMoreOptions: Icons.arrow_forward_ios,
-              ),
-              CustomListTile(
-                isCollapsed: _isCollapsed,
-                icon: Icons.airplane_ticket,
-                title: 'Flights',
-                infoCount: 0,
-                doHaveMoreOptions: Icons.arrow_forward_ios,
-              ),
-              const Divider(color: Colors.grey),
-              const Spacer(),
-              CustomListTile(
-                isCollapsed: _isCollapsed,
-                icon: Icons.notifications,
-                title: 'Notifications',
-                infoCount: 2,
-              ),
-              CustomListTile(
-                isCollapsed: _isCollapsed,
-                icon: Icons.settings,
-                title: 'Settings',
-                infoCount: 0,
-              ),
-              const SizedBox(height: 10),
-              BottomUserInfo(isCollapsed: _isCollapsed),
-              Align(
-                alignment: _isCollapsed
-                    ? Alignment.bottomRight
-                    : Alignment.bottomCenter,
-                child: IconButton(
-                  splashColor: Colors.transparent,
-                  icon: Icon(
-                    _isCollapsed
-                        ? Icons.arrow_back_ios
-                        : Icons.arrow_forward_ios,
-                    color: Colors.white,
-                    size: 16,
+    return GetX<SidebarController>(
+      init: controller,
+      builder: (_) {
+        return SafeArea(
+          child: AnimatedContainer(
+            curve: Curves.easeInOutCubic,
+            duration: const Duration(milliseconds: 500),
+            width: controller.isCollapsed ? 300 : 85,
+            margin: const EdgeInsets.only(bottom: 10, top: 10, left: 10),
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(16)),
+              color: HexColor("EBEBEB"),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 10),
+                  CustomDrawerHeader(
+                    isColapsed: controller.isCollapsed,
+                    onToggle: controller.toggleCollapse,
                   ),
-                  onPressed: () {
-                    setState(() {
-                      _isCollapsed = !_isCollapsed;
-                    });
-                  },
-                ),
+                  const Spacer(),
+                  ...TabType.values
+                      .where((e) => e != TabType.bookingonlinepage)
+                      .map(
+                        (e) => CustomListTile(
+                          isActive: controller.isTabActive(e),
+                          isCollapsed: controller.isCollapsed,
+                          icon: Icons.home_max,
+                          svgIcon: e.svgIcon,
+                          title: e.title,
+                          infoCount: 0,
+                          onTap: () => controller.setActiveTab(e),
+                        ),
+                      )
+                      .toList(),
+                  const Spacer(),
+                  CustomListTile(
+                    isActive: false,
+                    isCollapsed: controller.isCollapsed,
+                    icon: Icons.settings,
+                    svgIcon: "assets/menu/hotline_icon.svg",
+                    title: 'Settings',
+                    infoCount: 0,
+                    onTap: () {
+                      Get.snackbar(
+                        'Settings',
+                        'Settings menu clicked',
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  // BottomUserInfo(isCollapsed: controller.isCollapsed),
+                  const SizedBox(height: 10),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

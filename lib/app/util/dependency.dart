@@ -1,3 +1,4 @@
+import 'package:dago_valley_explore/presentation/controllers/auth/auth_controller.dart';
 import 'package:get/get.dart';
 
 import '../../data/repositories/article_repository.dart';

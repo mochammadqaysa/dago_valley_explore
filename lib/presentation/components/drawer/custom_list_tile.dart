@@ -1,29 +1,46 @@
+import 'package:dago_valley_explore/app/extensions/color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomListTile extends StatelessWidget {
   final bool isCollapsed;
+  final bool isActive;
   final IconData icon;
+  final String svgIcon;
   final String title;
   final IconData? doHaveMoreOptions;
   final int infoCount;
+  final VoidCallback? onTap;
 
   const CustomListTile({
     Key? key,
     required this.isCollapsed,
+    required this.isActive,
     required this.icon,
+    required this.svgIcon,
     required this.title,
     this.doHaveMoreOptions,
     required this.infoCount,
+    this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 200),
         width: isCollapsed ? 300 : 80,
-        height: 40,
+        margin: const EdgeInsets.symmetric(vertical: 10),
+        decoration: BoxDecoration(
+          color: HexColor("ffffff"),
+          border: isActive
+              ? Border.all(width: 4, color: HexColor("5C5C5A"))
+              : Border.all(width: 4, color: Colors.transparent),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        height: 70,
         child: Row(
           children: [
             Expanded(
@@ -31,17 +48,30 @@ class CustomListTile extends StatelessWidget {
                 child: Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    Icon(icon, color: Colors.white),
+                    Container(
+                      padding: const EdgeInsets.all(18),
+                      child: SvgPicture.asset(svgIcon, color: Colors.black),
+                    ),
                     if (infoCount > 0)
                       Positioned(
-                        right: -5,
-                        top: -5,
+                        right: -2,
+                        top: -2,
                         child: Container(
-                          height: 10,
-                          width: 10,
+                          height: 20,
+                          width: 20,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.red,
+                          ),
+                          child: Center(
+                            child: Text(
+                              infoCount > 9 ? '9+' : infoCount.toString(),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -59,9 +89,12 @@ class CustomListTile extends StatelessWidget {
                       flex: 4,
                       child: Text(
                         title,
-                        style: const TextStyle(color: Colors.white),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
                         maxLines: 1,
-                        overflow: TextOverflow.clip,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     if (infoCount > 0)
@@ -77,10 +110,11 @@ class CustomListTile extends StatelessWidget {
                           ),
                           child: Center(
                             child: Text(
-                              infoCount.toString(),
+                              infoCount > 9 ? '9+' : infoCount.toString(),
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
+                                fontSize: 12,
                               ),
                             ),
                           ),

@@ -1,18 +1,21 @@
 import 'package:dago_valley_explore/app/config/app_colors.dart';
+import 'package:dago_valley_explore/app/extensions/color.dart';
+import 'package:dago_valley_explore/presentation/components/glass/glassy_button.dart';
 import 'package:dago_valley_explore/screen/site_plan.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class DasborAwal extends StatefulWidget {
+  const DasborAwal({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<DasborAwal> createState() => _DasborAwalState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _DasborAwalState extends State<DasborAwal> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: HexColor("F4F4F4"),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -61,6 +64,10 @@ class _HomePageState extends State<HomePage> {
                               textAlign: TextAlign.center,
                             ),
                             SizedBox(height: 8),
+                            GlassyButton(
+                              onPressed: () {},
+                              child: Text("Glassy Button"),
+                            ),
                             ElevatedButton(
                               onPressed: () {},
                               style: ElevatedButton.styleFrom(
