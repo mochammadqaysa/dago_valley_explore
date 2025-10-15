@@ -11,7 +11,7 @@ import 'package:dago_valley_explore/presentation/controllers/virtualtour/virtual
 import 'package:dago_valley_explore/presentation/pages/bookingonline/bookingonline_page.dart';
 import 'package:dago_valley_explore/presentation/pages/cashcalculator/cashcalculator_page.dart';
 import 'package:dago_valley_explore/presentation/pages/dashboard/dashboard_page.dart';
-import 'package:dago_valley_explore/presentation/pages/licenselegaldocument/licenselegaldocument_page.dart';
+import 'package:dago_valley_explore/presentation/pages/licenselegaldocument/license_legal_document_page.dart';
 import 'package:dago_valley_explore/presentation/pages/siteplan/siteplan_page.dart';
 import 'package:dago_valley_explore/presentation/pages/virtualtour/virtualtour_page.dart';
 import 'package:dago_valley_explore/screen/dasbor_awal.dart';
@@ -39,7 +39,7 @@ class HomePage extends GetView<SidebarController> {
         return CashcalculatorPage();
       case TabType.licenselegaldocumentpage:
         LicenselegaldocumentBinding().dependencies();
-        return LicenselegaldocumentPage();
+        return LicenseLegalDocumentPage();
       case TabType.bookingonlinepage:
         BookingonlineBinding().dependencies();
         return BookingonlinePage();
