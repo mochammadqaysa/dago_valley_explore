@@ -4,6 +4,7 @@ import 'package:dago_valley_explore/presentation/components/liquidglass/liquid_g
 import 'package:dago_valley_explore/presentation/components/liquidglass/liquid_glass_container.dart';
 import 'package:dago_valley_explore/screen/site_plan.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:oc_liquid_glass/oc_liquid_glass.dart';
 
 class DasborAwal extends StatefulWidget {
@@ -77,37 +78,20 @@ class _DasborAwalState extends State<DasborAwal> {
                           ],
                         ),
                       ),
-                      // OCLiquidGlassGroup(
-                      //   settings: const OCLiquidGlassSettings(),
-                      //   child: Stack(
-                      //     children: [
-                      //       Positioned(
-                      //         top: 100,
-                      //         left: 50,
-                      //         child: OCLiquidGlass(
-                      //           width: 120,
-                      //           height: 80,
-                      //           borderRadius: 40,
-                      //           child: Container(),
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
                 SizedBox(height: 16),
-                Container(
-                  height: 500,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start, // Tambahkan ini
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Wrap(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    spacing: 40, // jarak antar kartu
+                    crossAxisAlignment: WrapCrossAlignment.start,
                     children: [
                       SitePlanCard(
                         title: 'Site Plan',
-                        imageUrl: 'assets/1.jpg',
+                        imageUrl: 'assets/1.png',
                         buttonText: 'Check',
                         onButtonPressed: () {
                           print('Button pressed!');
@@ -116,8 +100,8 @@ class _DasborAwalState extends State<DasborAwal> {
                         buttonColor: Colors.white,
                       ),
                       SitePlanCard(
-                        title: 'Site Plan',
-                        imageUrl: 'assets/1.jpg',
+                        title: 'Event',
+                        imageUrl: 'assets/1.png',
                         buttonText: 'Check',
                         onButtonPressed: () {
                           print('Button pressed!');
@@ -126,8 +110,8 @@ class _DasborAwalState extends State<DasborAwal> {
                         buttonColor: Colors.white,
                       ),
                       SitePlanCard(
-                        title: 'Site Plan',
-                        imageUrl: 'assets/1.jpg',
+                        title: 'Tipe Rumah',
+                        imageUrl: 'assets/1.png',
                         buttonText: 'Check',
                         onButtonPressed: () {
                           print('Button pressed!');
@@ -136,14 +120,34 @@ class _DasborAwalState extends State<DasborAwal> {
                         buttonColor: Colors.white,
                       ),
                       SitePlanCard(
-                        title: 'Site Plan',
-                        imageUrl: 'assets/1.jpg',
+                        title: 'Akad',
+                        imageUrl: 'assets/1.png',
                         buttonText: 'Check',
                         onButtonPressed: () {
                           print('Button pressed!');
                         },
                         titleBackgroundColor: Colors.white,
                         buttonColor: Colors.white,
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 16),
+                LiquidGlassContainer(
+                  glassColor: Colors.black,
+                  glassAccentColor: Colors.black,
+                  height: 60,
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  child: Row(
+                    children: [
+                      Row(
+                        children: [
+                          SvgPicture.asset(
+                            "assets/whatsapp.svg",
+                            color: Colors.white,
+                          ),
+                        ],
                       ),
                     ],
                   ),

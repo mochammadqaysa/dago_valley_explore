@@ -9,6 +9,7 @@ class LiquidGlassContainer extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
   final Color? glassColor;
+  final Color? glassAccentColor;
   final double borderRadius;
   final double blurIntensity;
   final bool showBorder;
@@ -22,6 +23,7 @@ class LiquidGlassContainer extends StatelessWidget {
     this.padding,
     this.margin,
     this.glassColor,
+    this.glassAccentColor,
     this.borderRadius = 8,
     this.blurIntensity = 0.1,
     this.showBorder = true,
@@ -31,6 +33,8 @@ class LiquidGlassContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final defaultGlassColor = glassColor ?? Colors.grey.withOpacity(0.1);
+    final defaultGlassAccentColor =
+        glassAccentColor ?? Colors.white.withOpacity(0.1);
 
     return Container(
       width: width,
@@ -62,8 +66,11 @@ class LiquidGlassContainer extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  defaultGlassColor.withOpacity(0.8),
-                  defaultGlassColor.withOpacity(0.4),
+                  defaultGlassColor.withOpacity(0.3),
+                  defaultGlassAccentColor.withOpacity(0.2),
+                  defaultGlassColor.withOpacity(0.3),
+                  defaultGlassAccentColor.withOpacity(0.2),
+                  defaultGlassColor.withOpacity(0.3),
                 ],
               ),
               borderRadius: BorderRadius.circular(borderRadius),
