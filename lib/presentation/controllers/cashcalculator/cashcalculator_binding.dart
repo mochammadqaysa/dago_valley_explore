@@ -6,7 +6,6 @@ import 'cashcalculator_controller.dart';
 class CashcalculatorBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => FetchHeadlineUseCase(Get.find<ArticleRepositoryIml>()));
-    Get.lazyPut(() => CashcalculatorController(Get.find()));
+    Get.lazyPut(() => CashcalculatorController());
   }
 }

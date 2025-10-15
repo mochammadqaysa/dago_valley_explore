@@ -5,7 +5,7 @@ enum TabType {
   homepage,
   siteplanpage,
   productpage,
-  mortgagepage,
+  calculatorpage,
   licenselegaldocumentpage,
   bookingonlinepage,
 }
@@ -19,7 +19,7 @@ extension TabItem on TabType {
         return Icon(CupertinoIcons.map, size: 25);
       case TabType.productpage:
         return Icon(Icons.threesixty, size: 25);
-      case TabType.mortgagepage:
+      case TabType.calculatorpage:
         return Icon(CupertinoIcons.money_dollar, size: 25);
       case TabType.licenselegaldocumentpage:
         return Icon(CupertinoIcons.doc_text, size: 25);
@@ -36,7 +36,7 @@ extension TabItem on TabType {
         return "Site Plan Interaktif";
       case TabType.productpage:
         return "Virtual Tour";
-      case TabType.mortgagepage:
+      case TabType.calculatorpage:
         return "Simulasi KPR";
       case TabType.licenselegaldocumentpage:
         return "Dokumen Perizinan & Legalitas";
@@ -53,7 +53,7 @@ extension TabItem on TabType {
         return "assets/menu/siteplan_icon.svg";
       case TabType.productpage:
         return "assets/menu/product_icon.svg";
-      case TabType.mortgagepage:
+      case TabType.calculatorpage:
         return "assets/menu/calculator_icon.svg";
       case TabType.licenselegaldocumentpage:
         return "assets/menu/folder_icon.svg";
