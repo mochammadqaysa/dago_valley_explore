@@ -34,7 +34,7 @@ class CustomListTile extends StatelessWidget {
         width: isCollapsed ? 300 : 80,
         margin: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: HexColor("ffffff"),
+          color: HexColor("282924"),
           border: isActive
               ? Border.all(width: 4, color: HexColor("5C5C5A"))
               : Border.all(width: 4, color: Colors.transparent),
@@ -50,7 +50,7 @@ class CustomListTile extends StatelessWidget {
                   children: [
                     Container(
                       padding: const EdgeInsets.all(18),
-                      child: SvgPicture.asset(svgIcon, color: Colors.black),
+                      child: SvgPicture.asset(svgIcon, color: Colors.white),
                     ),
                     if (infoCount > 0)
                       Positioned(

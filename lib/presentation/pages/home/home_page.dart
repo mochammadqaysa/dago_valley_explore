@@ -56,7 +56,7 @@ class HomePage extends GetView<SidebarController> {
     return GetX<SidebarController>(
       builder: (_) {
         return Scaffold(
-          backgroundColor: HexColor("F4F4F4"),
+          backgroundColor: HexColor("121212"),
           body: Row(
             children: [
               // Drawer/Sidebar selalu terlihat di sisi kiri
