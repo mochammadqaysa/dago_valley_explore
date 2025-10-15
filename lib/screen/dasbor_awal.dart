@@ -1,9 +1,10 @@
 import 'package:dago_valley_explore/app/config/app_colors.dart';
 import 'package:dago_valley_explore/app/extensions/color.dart';
-import 'package:dago_valley_explore/presentation/components/glass/glassy_button.dart';
+import 'package:dago_valley_explore/presentation/components/liquidglass/liquid_glass_button.dart';
+import 'package:dago_valley_explore/presentation/components/liquidglass/liquid_glass_container.dart';
 import 'package:dago_valley_explore/screen/site_plan.dart';
 import 'package:flutter/material.dart';
-import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
+import 'package:oc_liquid_glass/oc_liquid_glass.dart';
 
 class DasborAwal extends StatefulWidget {
   const DasborAwal({super.key});
@@ -67,42 +68,32 @@ class _DasborAwalState extends State<DasborAwal> {
                               textAlign: TextAlign.center,
                             ),
                             SizedBox(height: 8),
-                            // GlassyButton(
-                            //   onPressed: () {},
-                            //   child: Text("Glassy Button"),
-                            // ),
-                            // LiquidGlass(
-                            //   child: ElevatedButton(
-                            //     onPressed: () {},
-                            //     child: Text("Glassy Button"),
-                            //   ),
-                            //   shape: LiquidOval(),
-                            // ),
-                            // ElevatedButton(
-                            //   onPressed: () {},
-                            //   style: ElevatedButton.styleFrom(
-                            //     backgroundColor: AppColors
-                            //         .primary, // ganti dengan warna yang Anda inginkan
-                            //     foregroundColor: Colors.white, // warna text
-                            //     padding: EdgeInsets.symmetric(
-                            //       horizontal: 32,
-                            //       vertical: 12,
-                            //     ),
-                            //     shape: RoundedRectangleBorder(
-                            //       borderRadius: BorderRadius.circular(8),
-                            //     ),
-                            //   ),
-                            //   child: Text(
-                            //     "Lihat Promo",
-                            //     style: TextStyle(
-                            //       fontWeight: FontWeight.w700,
-                            //       fontSize: 16,
-                            //     ),
-                            //   ),
-                            // ),
+                            LiquidGlassButton(
+                              width: 200,
+                              borderRadius: 30,
+                              text: 'Lihat Promo',
+                              onPressed: () {},
+                            ),
                           ],
                         ),
                       ),
+                      // OCLiquidGlassGroup(
+                      //   settings: const OCLiquidGlassSettings(),
+                      //   child: Stack(
+                      //     children: [
+                      //       Positioned(
+                      //         top: 100,
+                      //         left: 50,
+                      //         child: OCLiquidGlass(
+                      //           width: 120,
+                      //           height: 80,
+                      //           borderRadius: 40,
+                      //           child: Container(),
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
