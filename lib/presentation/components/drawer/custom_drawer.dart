@@ -23,7 +23,8 @@ class CustomDrawer extends GetView<SidebarController> {
             margin: const EdgeInsets.only(bottom: 10, top: 10, left: 10),
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(16)),
-              color: HexColor("EBEBEB"),
+              // color: HexColor("EBEBEB"),
+              color: HexColor("1C1C19"),
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),

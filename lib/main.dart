@@ -10,14 +10,14 @@ void main() async {
   DependencyCreator.init();
   WidgetsFlutterBinding.ensureInitialized();
   await initServices();
-  // Glassy().setConfig(
-  //   GlassyConfig(
-  //     radius: 15,
-  //     backgroundColor: Colors.grey,
-  //     backgroundOpacity: 0.2,
-  //     borderOpacity: 0.5,
-  //   ),
-  // );
+  Glassy().setConfig(
+    GlassyConfig(
+      radius: 8,
+      backgroundColor: Colors.grey.shade100,
+      backgroundOpacity: 0.1,
+      borderOpacity: 0.2,
+    ),
+  );
   runApp(App());
 }
 
