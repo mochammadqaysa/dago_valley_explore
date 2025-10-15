@@ -2,10 +2,12 @@ import 'package:dago_valley_explore/app/config/app_colors.dart';
 import 'package:dago_valley_explore/app/extensions/color.dart';
 import 'package:dago_valley_explore/presentation/components/liquidglass/liquid_glass_button.dart';
 import 'package:dago_valley_explore/presentation/components/liquidglass/liquid_glass_container.dart';
+import 'package:dago_valley_explore/presentation/controllers/promo/promo_binding.dart';
+import 'package:dago_valley_explore/presentation/pages/promo/promo_detail_page.dart';
 import 'package:dago_valley_explore/screen/site_plan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:oc_liquid_glass/oc_liquid_glass.dart';
+import 'package:get/get.dart';
 
 class DasborAwal extends StatefulWidget {
   const DasborAwal({super.key});
@@ -15,10 +17,23 @@ class DasborAwal extends StatefulWidget {
 }
 
 class _DasborAwalState extends State<DasborAwal> {
+  void _showPromoModal() {
+    // Panggil binding secara manual sesuai pattern Anda
+    PromoBinding().dependencies();
+
+    // Navigasi dengan fade transition
+    Get.to(
+      () => const PromoDetailPage(),
+      transition: Transition.fade,
+      duration: const Duration(milliseconds: 400),
+      opaque: false,
+      fullscreenDialog: true,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: HexColor("F4F4F4"),
       backgroundColor: HexColor("121212"),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -32,7 +47,7 @@ class _DasborAwalState extends State<DasborAwal> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
-                  clipBehavior: Clip.antiAlias, // agar borderRadius bekerja
+                  clipBehavior: Clip.antiAlias,
                   child: Stack(
                     children: [
                       // Gambar
@@ -73,7 +88,7 @@ class _DasborAwalState extends State<DasborAwal> {
                               width: 200,
                               borderRadius: 30,
                               text: 'Lihat Promo',
-                              onPressed: () {},
+                              onPressed: _showPromoModal,
                             ),
                           ],
                         ),
@@ -85,8 +100,7 @@ class _DasborAwalState extends State<DasborAwal> {
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Wrap(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    spacing: 40, // jarak antar kartu
+                    spacing: 40,
                     crossAxisAlignment: WrapCrossAlignment.start,
                     children: [
                       SitePlanCard(
@@ -138,16 +152,71 @@ class _DasborAwalState extends State<DasborAwal> {
                   glassAccentColor: Colors.black,
                   height: 60,
                   width: double.infinity,
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  // padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          SvgPicture.asset(
-                            "assets/whatsapp.svg",
-                            color: Colors.white,
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 15,
+                            horizontal: 20,
                           ),
-                        ],
+                          child: Row(
+                            children: [
+                              // WhatsApp
+                              SvgPicture.asset(
+                                "assets/whatsapp.svg",
+                                color: Colors.white,
+                                height: 20,
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                "+6289765345729",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              SizedBox(width: 20),
+
+                              // Website
+                              SvgPicture.asset(
+                                "assets/web.svg",
+                                color: Colors.white,
+                                height: 20,
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                "dagovalleybandung.com",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              SizedBox(width: 20),
+
+                              // Instagram
+                              SvgPicture.asset(
+                                "assets/instagram.svg",
+                                color: Colors.white,
+                                height: 20,
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                "@dagovalleybandung",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      // Tombol di kanan
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 4,
+                        ),
+                        child: LiquidGlassButton(
+                          borderRadius: 16,
+                          text: 'Rate Us',
+                          onPressed: () {},
+                        ),
                       ),
                     ],
                   ),
