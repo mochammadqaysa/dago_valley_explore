@@ -1,4 +1,3 @@
-// lib/kpr_calculator_page.dart
 import 'package:dago_valley_explore/data/models/house_model.dart';
 import 'package:dago_valley_explore/presentation/controllers/cashcalculator/cashcalculator_controller.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +18,18 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
   bool tanpaDp = false;
   double? diskonNominal;
   double? diskonPersen;
-  int tenor = 5; // allowed 5,10,15,20
+  int tenor = 5;
   final controller = CashcalculatorController();
 
-  final List<int> tenorOptions = [5, 10, 15, 20];
   final rupiahFormat = NumberFormat("#,###", "id_ID");
+
+  List<int> get tenorOptions {
+    if (paymentMethod == PaymentMethod.kprSyariah) {
+      return [5, 10, 15, 20];
+    } else {
+      return [1, 2, 3, 4];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +85,9 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                 items: houseModels.map((m) {
                                   return DropdownMenuItem(
                                     value: m,
-                                    child: Text('${m.displayName}'),
+                                    child: Text(
+                                      '${m.displayName} - Rp. ${_formatCurrency(m.hargaCash.round())}',
+                                    ),
                                   );
                                 }).toList(),
                                 onChanged: (v) =>
@@ -88,12 +96,46 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                               const SizedBox(height: 16),
 
                               const Text(
+                                'Metode Pembayaran',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: RadioListTile<PaymentMethod>(
+                                      title: const Text('KPR Syariah (DP 20%)'),
+                                      value: PaymentMethod.kprSyariah,
+                                      groupValue: paymentMethod,
+                                      onChanged: (v) {
+                                        setState(() {
+                                          paymentMethod = v!;
+                                          tanpaDp = false;
+                                          tenor = 5;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: RadioListTile<PaymentMethod>(
+                                      title: const Text('Developer (DP 30%)'),
+                                      value: PaymentMethod.developer,
+                                      groupValue: paymentMethod,
+                                      onChanged: (v) {
+                                        setState(() {
+                                          paymentMethod = v!;
+                                          tenor = 1;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const Text(
                                 'Tenor (tahun)',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 5),
 
-                              // SLIDER Tenor
                               Slider(
                                 value: tenor.toDouble(),
                                 divisions: tenorOptions.length - 1,
@@ -111,54 +153,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   ),
                                 ),
                               ),
-
-                              // versi lama button (disimpan, tapi dikomentari)
-                              /*
-                              Wrap(
-                                spacing: 8,
-                                children: tenorOptions.map((o) {
-                                  final active = (o == tenor);
-                                  return ChoiceChip(
-                                    label: Text('$o th'),
-                                    selected: active,
-                                    onSelected: (_) => setState(() => tenor = o),
-                                  );
-                                }).toList(),
-                              ),
-                              */
                               const SizedBox(height: 16),
-
-                              const Text(
-                                'Metode Pembayaran',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: RadioListTile<PaymentMethod>(
-                                      title: const Text('KPR Syariah (DP 20%)'),
-                                      value: PaymentMethod.kprSyariah,
-                                      groupValue: paymentMethod,
-                                      onChanged: (v) =>
-                                          setState(() => paymentMethod = v!),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: RadioListTile<PaymentMethod>(
-                                      title: const Text('Developer (DP 30%)'),
-                                      value: PaymentMethod.developer,
-                                      groupValue: paymentMethod,
-                                      onChanged: (v) => setState(() {
-                                        paymentMethod = v!;
-                                        if (paymentMethod ==
-                                            PaymentMethod.kprSyariah) {
-                                          tanpaDp = false;
-                                        }
-                                      }),
-                                    ),
-                                  ),
-                                ],
-                              ),
                               if (paymentMethod == PaymentMethod.developer)
                                 Row(
                                   children: [
@@ -171,6 +166,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                     ),
                                   ],
                                 ),
+
                               const SizedBox(height: 16),
                               const Text(
                                 'DP',
@@ -197,7 +193,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 8),
-                              // Diskon Inputs
+
                               Row(
                                 children: [
                                   Expanded(
@@ -306,8 +302,6 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                     ),
                     const SizedBox(height: 8),
 
-                    // Hasil Perhitungan Card
-                    // hasil perhitungan diperpendek (flex 2)
                     if (selectedModel != null && result != null)
                       Expanded(
                         flex: 2,
@@ -330,7 +324,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                       style: TextStyle(fontSize: 12),
                                     ),
                                     Text(
-                                      'Rp ${_formatCurrency(result.cicilanBulanan.round())}',
+                                      'Rp ${(diskonNominal != null || diskonPersen != null) ? _formatCurrency(result.cicilanBulananSetelahDiskon.round()) : _formatCurrency(result.cicilanBulanan.round())}',
                                       style: const TextStyle(
                                         fontSize: 22,
                                         fontWeight: FontWeight.bold,
@@ -342,7 +336,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                       Column(
                                         children: [
                                           Text(
-                                            'Rp ${_formatCurrency(selectedModel!.hargaCash)}',
+                                            'Rp ${_formatCurrency(result.totalPembayaran.round())}',
                                             style: const TextStyle(
                                               fontSize: 14,
                                               decoration:
@@ -362,7 +356,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                       )
                                     else
                                       Text(
-                                        'Rp ${_formatCurrency(selectedModel!.hargaCash)}',
+                                        'Rp ${_formatCurrency(result.totalPembayaran.round())}',
                                         style: const TextStyle(fontSize: 14),
                                       ),
                                   ],
@@ -377,7 +371,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
               ),
             ),
 
-            // Panel Catatan - 40%
+            // Panel Kanan tetap sama
             Expanded(
               flex: 4,
               child: Padding(
@@ -390,53 +384,53 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                   elevation: 0,
                   child: DefaultTabController(
                     length: 3,
-                    child: Column(
-                      children: [
-                        Material(
-                          color: cardColor,
-                          child: TabBar(
-                            labelColor: Colors.black,
-                            unselectedLabelColor: Colors.grey,
-                            indicatorColor: Colors.green.shade700,
-                            tabs: const [
-                              Tab(text: 'Ringkasan'),
-                              Tab(text: 'Tabel Angsuran'),
-                              Tab(text: 'Perbandingan'),
-                            ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(6),
+                      child: Column(
+                        children: [
+                          Material(
+                            color: cardColor,
+                            child: TabBar(
+                              labelColor: Colors.black,
+                              unselectedLabelColor: Colors.grey,
+                              indicatorColor: Colors.green.shade700,
+                              tabs: const [
+                                Tab(text: 'Ringkasan'),
+                                Tab(text: 'Tabel Angsuran'),
+                                Tab(text: 'Perbandingan'),
+                              ],
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: TabBarView(
-                            children: [
-                              // Ringkasan
-                              SingleChildScrollView(
-                                padding: const EdgeInsets.all(12),
-                                child: Text(
-                                  _ringkasanText,
-                                  style: const TextStyle(fontSize: 14),
+                          Expanded(
+                            child: TabBarView(
+                              children: [
+                                SingleChildScrollView(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(
+                                    _ringkasanText,
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
                                 ),
-                              ),
-                              // Tabel Angsuran
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: selectedModel == null || result == null
-                                    ? const Center(
-                                        child: Text(
-                                          'Pilih model & hitung terlebih dahulu',
-                                        ),
-                                      )
-                                    : _buildScheduleTable(result),
-                              ),
-                              // Perbandingan (kosong)
-                              const Center(
-                                child: Text(
-                                  'Perbandingan KPR Syariah vs Developer',
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: selectedModel == null || result == null
+                                      ? const Center(
+                                          child: Text(
+                                            'Pilih model & hitung terlebih dahulu',
+                                          ),
+                                        )
+                                      : _buildScheduleTable(result),
                                 ),
-                              ),
-                            ],
+                                const Center(
+                                  child: Text(
+                                    'Perbandingan KPR Syariah vs Developer',
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -448,32 +442,27 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
     );
   }
 
-  Widget _tabelRow(String title, String value) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Colors.black12, width: 0.8)),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.w500),
-            ),
-          ),
-          Text(
-            value,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-          ),
-        ],
-      ),
-    );
+  String _formatCurrency(int v) {
+    final s = v.toString();
+    final buf = StringBuffer();
+    int cnt = 0;
+    for (int i = s.length - 1; i >= 0; i--) {
+      buf.write(s[i]);
+      cnt++;
+      if (cnt == 3 && i != 0) {
+        buf.write('.');
+        cnt = 0;
+      }
+    }
+    final rev = buf.toString().split('').reversed.join();
+    return rev;
   }
 
   Widget _buildScheduleTable(CalculatorResult result) {
     final schedule = controller.generateMonthlySchedule(
-      monthlyInstallment: result.cicilanBulanan,
+      monthlyInstallment: diskonNominal != null || diskonPersen != null
+          ? result.cicilanBulananSetelahDiskon
+          : result.cicilanBulanan,
       months: result.months,
       startDate: DateTime.now(),
     );
@@ -521,22 +510,6 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
         ),
       ],
     );
-  }
-
-  String _formatCurrency(int v) {
-    final s = v.toString();
-    final buf = StringBuffer();
-    int cnt = 0;
-    for (int i = s.length - 1; i >= 0; i--) {
-      buf.write(s[i]);
-      cnt++;
-      if (cnt == 3 && i != 0) {
-        buf.write('.');
-        cnt = 0;
-      }
-    }
-    final rev = buf.toString().split('').reversed.join();
-    return rev;
   }
 }
 
