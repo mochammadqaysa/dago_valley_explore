@@ -6,7 +6,6 @@ import 'mortgage_controller.dart';
 class MortgageBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => FetchHeadlineUseCase(Get.find<ArticleRepositoryIml>()));
     Get.lazyPut(() => MortgageController(Get.find()));
   }
 }

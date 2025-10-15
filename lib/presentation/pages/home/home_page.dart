@@ -6,14 +6,12 @@ import 'package:dago_valley_explore/presentation/controllers/bookingonline/booki
 import 'package:dago_valley_explore/presentation/controllers/cashcalculator/cashcalculator_binding.dart';
 import 'package:dago_valley_explore/presentation/controllers/dashboard/dashboard_binding.dart';
 import 'package:dago_valley_explore/presentation/controllers/licenselegaldocument/licenselegaldocument_binding.dart';
-import 'package:dago_valley_explore/presentation/controllers/mortgage/mortgage_binding.dart';
 import 'package:dago_valley_explore/presentation/controllers/siteplan/siteplan_binding.dart';
 import 'package:dago_valley_explore/presentation/controllers/virtualtour/virtualtour_binding.dart';
 import 'package:dago_valley_explore/presentation/pages/bookingonline/bookingonline_page.dart';
 import 'package:dago_valley_explore/presentation/pages/cashcalculator/cashcalculator_page.dart';
 import 'package:dago_valley_explore/presentation/pages/dashboard/dashboard_page.dart';
 import 'package:dago_valley_explore/presentation/pages/licenselegaldocument/licenselegaldocument_page.dart';
-import 'package:dago_valley_explore/presentation/pages/mortgage/mortgage_page.dart';
 import 'package:dago_valley_explore/presentation/pages/siteplan/siteplan_page.dart';
 import 'package:dago_valley_explore/presentation/pages/virtualtour/virtualtour_page.dart';
 import 'package:dago_valley_explore/screen/dasbor_awal.dart';
@@ -36,9 +34,9 @@ class HomePage extends GetView<SidebarController> {
       case TabType.productpage:
         VirtualtourBinding().dependencies();
         return VirtualtourPage();
-      case TabType.mortgagepage:
-        MortgageBinding().dependencies();
-        return MortgagePage();
+      case TabType.calculatorpage:
+        CashcalculatorBinding().dependencies();
+        return CashcalculatorPage();
       case TabType.licenselegaldocumentpage:
         LicenselegaldocumentBinding().dependencies();
         return LicenselegaldocumentPage();
