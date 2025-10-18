@@ -6,6 +6,7 @@ class HouseModel {
   final List<String> blok;
   final int jumlahUnit;
   final int hargaCash;
+  final Map<String, Set<String>>? galeri;
 
   /// Struktur:
   /// {
@@ -21,6 +22,7 @@ class HouseModel {
     required this.blok,
     required this.jumlahUnit,
     required this.hargaCash,
+    required this.galeri,
     required this.cicilanData,
   });
 
@@ -34,6 +36,15 @@ const List<HouseModel> houseModels = [
     blok: ["I3", "I5", "I7", "I8"],
     jumlahUnit: 4,
     hargaCash: 2499000000,
+    galeri: {
+      "image": {
+        "assets/rumah/fasad_harmoni_100_108.png",
+        "assets/rumah/fasad_harmoni_100_108_kanopi.png",
+        "assets/rumah/harmoni_100_108_lt_1.png",
+        "assets/rumah/harmoni_100_108_lt_2.png",
+        "assets/rumah/harmoni_100_108_lt_rt.png",
+      },
+    },
     cicilanData: {
       "kpr_syariah": {
         5: {"cicilan": 42467256, "total": 3047835335},
@@ -61,6 +72,16 @@ const List<HouseModel> houseModels = [
     blok: ["G3", "G5", "G7"],
     jumlahUnit: 3,
     hargaCash: 2670000000,
+    galeri: {
+      "image": {
+        // gaada asetnya, pakai yang 100/108
+        "assets/rumah/fasad_harmoni_100_108.png",
+        "assets/rumah/fasad_harmoni_100_108_kanopi.png",
+        "assets/rumah/harmoni_100_108_lt_1.png",
+        "assets/rumah/harmoni_100_108_lt_2.png",
+        "assets/rumah/harmoni_100_108_lt_rt.png",
+      },
+    },
     cicilanData: {
       "kpr_syariah": {
         5: {"cicilan": 45373178, "total": 3256390694},
@@ -88,6 +109,16 @@ const List<HouseModel> houseModels = [
     blok: ["F3", "F5"],
     jumlahUnit: 2,
     hargaCash: 2820000000,
+    galeri: {
+      "image": {
+        // gaada asetnya, pakai yang 100/108
+        "assets/rumah/fasad_harmoni_100_108.png",
+        "assets/rumah/fasad_harmoni_100_108_kanopi.png",
+        "assets/rumah/harmoni_100_108_lt_1.png",
+        "assets/rumah/harmoni_100_108_lt_2.png",
+        "assets/rumah/harmoni_100_108_lt_rt.png",
+      },
+    },
     cicilanData: {
       "kpr_syariah": {
         5: {"cicilan": 47922233, "total": 3439333991},
@@ -115,6 +146,16 @@ const List<HouseModel> houseModels = [
     blok: ["H1", "H2", "H9", "H10", "I2", "I9", "I10"],
     jumlahUnit: 7,
     hargaCash: 3333000000,
+    galeri: {
+      "image": {
+        "assets/rumah/fasad_harmoni_129_144.png",
+        "assets/rumah/fasad_harmoni_129_144_kanopi.png",
+        "assets/rumah/fasad_harmoni_129_144_siang.png",
+        "assets/rumah/harmoni_129_144_lt_1.png",
+        "assets/rumah/harmoni_129_144_lt_2.png",
+        "assets/rumah/harmoni_129_144_lt_rt.png",
+      },
+    },
     cicilanData: {
       "kpr_syariah": {
         5: {"cicilan": 56640001, "total": 4065000068},
@@ -142,6 +183,15 @@ const List<HouseModel> houseModels = [
     blok: ["G1", "G9"],
     jumlahUnit: 2,
     hargaCash: 3443000000,
+    galeri: {
+      "image": {
+        "assets/rumah/fasad_harmoni_131_150.png",
+        "assets/rumah/fasad_harmoni_131_150_siang.png",
+        "assets/rumah/harmoni_131_150_lt_1.png",
+        "assets/rumah/harmoni_131_150_lt_2.png",
+        "assets/rumah/harmoni_131_150_lt_rt.png",
+      },
+    },
     cicilanData: {
       "kpr_syariah": {
         5: {"cicilan": 58509308, "total": 4199158486},
@@ -169,6 +219,16 @@ const List<HouseModel> houseModels = [
     blok: ["F1", "F7"],
     jumlahUnit: 2,
     hargaCash: 3787000000,
+    galeri: {
+      "image": {
+        //gaada asetnya, pakai yang 131/150
+        "assets/rumah/fasad_harmoni_131_150.png",
+        "assets/rumah/fasad_harmoni_131_150_siang.png",
+        "assets/rumah/harmoni_131_150_lt_1.png",
+        "assets/rumah/harmoni_131_150_lt_2.png",
+        "assets/rumah/harmoni_131_150_lt_rt.png",
+      },
+    },
     cicilanData: {
       "kpr_syariah": {
         5: {"cicilan": 64355141, "total": 4618708448},
@@ -196,6 +256,16 @@ const List<HouseModel> houseModels = [
     blok: ["E3", "E5"],
     jumlahUnit: 2,
     hargaCash: 4351000000,
+    galeri: {
+      "image": {
+        "assets/rumah/fasad_foresta_144_190.png",
+        "assets/rumah/fasad_foresta_144_190_kanopi.png",
+        "assets/rumah/fasad_foresta_144_190_siang.png",
+        "assets/rumah/foresta_144_190_lt_1.png",
+        "assets/rumah/foresta_144_190_lt_2.png",
+        "assets/rumah/foresta_144_190_lt_rt.png",
+      },
+    },
     cicilanData: {
       "kpr_syariah": {
         5: {"cicilan": 73939587, "total": 5306575246},
@@ -223,6 +293,17 @@ const List<HouseModel> houseModels = [
     blok: ["F6", "F8"],
     jumlahUnit: 2,
     hargaCash: 4799000000,
+    galeri: {
+      "image": {
+        //gaada asetnya, pakai yang 144/190
+        "assets/rumah/fasad_foresta_144_190.png",
+        "assets/rumah/fasad_foresta_144_190_kanopi.png",
+        "assets/rumah/fasad_foresta_144_190_siang.png",
+        "assets/rumah/foresta_144_190_lt_1.png",
+        "assets/rumah/foresta_144_190_lt_2.png",
+        "assets/rumah/foresta_144_190_lt_rt.png",
+      },
+    },
     cicilanData: {
       "kpr_syariah": {
         5: {"cicilan": 81552765, "total": 5852965895},
@@ -250,6 +331,16 @@ const List<HouseModel> houseModels = [
     blok: ["F4"],
     jumlahUnit: 1,
     hargaCash: 4957000000,
+    galeri: {
+      "image": {
+        //gaada asetnya, pakai yang 193/228
+        "assets/rumah/fasad_foresta_193_228.png",
+        "assets/rumah/fasad_foresta_193_228_kanopi.png",
+        "assets/rumah/foresta_193_228_lt_1.png",
+        "assets/rumah/foresta_193_228_lt_2.png",
+        "assets/rumah/foresta_193_228_lt_rt.png",
+      },
+    },
     cicilanData: {
       "kpr_syariah": {
         5: {"cicilan": 84237769, "total": 6045666168},
@@ -277,6 +368,15 @@ const List<HouseModel> houseModels = [
     blok: ["E1", "E7"],
     jumlahUnit: 2,
     hargaCash: 5311000000,
+    galeri: {
+      "image": {
+        "assets/rumah/fasad_foresta_193_228.png",
+        "assets/rumah/fasad_foresta_193_228_kanopi.png",
+        "assets/rumah/foresta_193_228_lt_1.png",
+        "assets/rumah/foresta_193_228_lt_2.png",
+        "assets/rumah/foresta_193_228_lt_rt.png",
+      },
+    },
     cicilanData: {
       "kpr_syariah": {
         5: {"cicilan": 90253539, "total": 6477412350},
@@ -304,6 +404,16 @@ const List<HouseModel> houseModels = [
     blok: ["F2"],
     jumlahUnit: 1,
     hargaCash: 5422000000,
+    galeri: {
+      "image": {
+        //gaada asetnya, pakai yang 193/228
+        "assets/rumah/fasad_foresta_193_228.png",
+        "assets/rumah/fasad_foresta_193_228_kanopi.png",
+        "assets/rumah/foresta_193_228_lt_1.png",
+        "assets/rumah/foresta_193_228_lt_2.png",
+        "assets/rumah/foresta_193_228_lt_rt.png",
+      },
+    },
     cicilanData: {
       "kpr_syariah": {
         5: {"cicilan": 92155854, "total": 6615252489},
