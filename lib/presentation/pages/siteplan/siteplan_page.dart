@@ -6,12 +6,14 @@ import 'package:get/get.dart';
 import '../detail/detail_page.dart';
 
 class SiteplanPage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(middle: Text('Kont')),
-      child: Center(child: Text("asd")),
+      backgroundColor: Color(121212),
+      navigationBar: CupertinoNavigationBar(middle: Text('')),
+      child: Center(
+        child: Text("Kawasan 360", style: TextStyle(color: Colors.grey)),
+      ),
     );
   }
 }

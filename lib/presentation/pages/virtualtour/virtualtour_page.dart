@@ -9,8 +9,11 @@ class VirtualtourPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: CupertinoNavigationBar(middle: Text('Headline')),
-      child: Center(child: Text("Virtual Tour")),
+      backgroundColor: Color(121212),
+      navigationBar: CupertinoNavigationBar(middle: Text('')),
+      child: Center(
+        child: Text("Virtual Tour", style: TextStyle(color: Colors.grey)),
+      ),
     );
   }
 }

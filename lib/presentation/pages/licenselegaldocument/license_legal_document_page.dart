@@ -85,6 +85,11 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage> {
       appBar: AppBar(
         title: const Text('Dokumentasi Perizinan dan Legalitas '),
         backgroundColor: Colors.black,
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator(color: Colors.white))

@@ -1,3 +1,4 @@
+import 'package:dago_valley_explore/app/extensions/color.dart';
 import 'package:dago_valley_explore/data/models/house_model.dart';
 import 'package:dago_valley_explore/presentation/controllers/cashcalculator/cashcalculator_controller.dart';
 import 'package:flutter/material.dart';
@@ -44,9 +45,10 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
           )
         : null;
 
-    final cardColor = Colors.grey.shade100;
+    final cardColor = Colors.grey[900];
 
     return Scaffold(
+      backgroundColor: Color(121212),
       body: SafeArea(
         child: Row(
           children: [
@@ -75,35 +77,56 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
+                                  color: Colors.white,
                                 ),
                               ),
                               const SizedBox(height: 8),
-                              DropdownButton<HouseModel>(
-                                isExpanded: true,
-                                value: selectedModel,
-                                hint: const Text('Pilih model rumah'),
-                                items: houseModels.map((m) {
-                                  return DropdownMenuItem(
-                                    value: m,
-                                    child: Text(
-                                      '${m.displayName} - Rp. ${_formatCurrency(m.hargaCash.round())}',
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (v) =>
-                                    setState(() => selectedModel = v),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey), // outline grey
+                                  borderRadius: BorderRadius.circular(4), // radius 4
+                                ),
+                                child: DropdownButton<HouseModel>(
+                                  isExpanded: true,
+                                  value: selectedModel,
+                                  hint: const Text(
+                                    'Pilih model rumah',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                  dropdownColor: cardColor,
+                                  focusColor: cardColor,
+                                  underline: const SizedBox(), // hilangkan underline default
+                                  items: houseModels.map((m) {
+                                    return DropdownMenuItem(
+                                      value: m,
+                                      child: Text(
+                                        '${m.displayName} - Rp. ${_formatCurrency(m.hargaCash.round())}',
+                                        style: const TextStyle(color: Colors.white),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (v) => setState(() => selectedModel = v),
+                                ),
                               ),
+
                               const SizedBox(height: 16),
 
                               const Text(
                                 'Metode Pembayaran',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                               Row(
                                 children: [
                                   Expanded(
                                     child: RadioListTile<PaymentMethod>(
-                                      title: const Text('KPR Syariah (DP 20%)'),
+                                      title: const Text(
+                                        'KPR Syariah (DP 20%)',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                       value: PaymentMethod.kprSyariah,
                                       groupValue: paymentMethod,
                                       onChanged: (v) {
@@ -117,7 +140,10 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   ),
                                   Expanded(
                                     child: RadioListTile<PaymentMethod>(
-                                      title: const Text('Developer (DP 30%)'),
+                                      title: const Text(
+                                        'Developer (DP 30%)',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
                                       value: PaymentMethod.developer,
                                       groupValue: paymentMethod,
                                       onChanged: (v) {
@@ -132,7 +158,10 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                               ),
                               const Text(
                                 'Tenor (tahun)',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                               const SizedBox(height: 5),
 
@@ -150,6 +179,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   '$tenor Tahun',
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
@@ -157,7 +187,10 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                               if (paymentMethod == PaymentMethod.developer)
                                 Row(
                                   children: [
-                                    const Text('Tanpa DP'),
+                                    const Text(
+                                      'Tanpa DP',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                     const SizedBox(width: 10),
                                     Switch(
                                       value: tanpaDp,
@@ -170,27 +203,34 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                               const SizedBox(height: 16),
                               const Text(
                                 'DP',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                               const SizedBox(height: 8),
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderRadius: BorderRadius.circular(4),
+                                  color: Colors.grey.shade800,
+                                  
                                 ),
                                 child: Text(
                                   selectedModel == null
                                       ? 'Pilih model dulu'
                                       : 'Rp ${_formatCurrency(controller.calculateDp(harga: selectedModel!.hargaCash, method: paymentMethod, tanpaDp: tanpaDp).round())}',
-                                  style: const TextStyle(fontSize: 16),
+                                  style: const TextStyle(fontSize: 16, color: Colors.white),
                                 ),
                               ),
                               const SizedBox(height: 16),
 
                               const Text(
                                 'Diskon',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                               const SizedBox(height: 8),
 
@@ -222,6 +262,9 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                                 : null,
                                           ),
                                           keyboardType: TextInputType.number,
+                                          style: const TextStyle(
+                                            color: Colors.grey,
+                                          ),
                                           onChanged: (v) {
                                             String cleaned = v.replaceAll(
                                               '.',
@@ -282,6 +325,9 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                                 : null,
                                           ),
                                           keyboardType: TextInputType.number,
+                                          style: const TextStyle(
+                                            color: Colors.grey,
+                                          ),
                                           onChanged: (v) => setState(() {
                                             diskonPersen = (v.trim().isEmpty)
                                                 ? null
@@ -321,13 +367,17 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   children: [
                                     const Text(
                                       'Angsuran / Bulan',
-                                      style: TextStyle(fontSize: 12),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                     Text(
                                       'Rp ${(diskonNominal != null || diskonPersen != null) ? _formatCurrency(result.cicilanBulananSetelahDiskon.round()) : _formatCurrency(result.cicilanBulanan.round())}',
                                       style: const TextStyle(
                                         fontSize: 22,
                                         fontWeight: FontWeight.bold,
+                                        color: Colors.white,
                                       ),
                                     ),
                                     const SizedBox(height: 6),
@@ -341,7 +391,9 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                               fontSize: 14,
                                               decoration:
                                                   TextDecoration.lineThrough,
-                                              color: Colors.grey,
+                                              decorationColor: Colors.red,
+                                              decorationThickness: 2,
+                                              color: Colors.white,
                                             ),
                                           ),
                                           Text(
@@ -357,7 +409,10 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                     else
                                       Text(
                                         'Rp ${_formatCurrency(result.totalPembayaran.round())}',
-                                        style: const TextStyle(fontSize: 14),
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                        ),
                                       ),
                                   ],
                                 ),
@@ -391,7 +446,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                           Material(
                             color: cardColor,
                             child: TabBar(
-                              labelColor: Colors.black,
+                              labelColor: Colors.white,
                               unselectedLabelColor: Colors.grey,
                               indicatorColor: Colors.green.shade700,
                               tabs: const [
@@ -408,7 +463,10 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   padding: const EdgeInsets.all(12),
                                   child: Text(
                                     _ringkasanText,
-                                    style: const TextStyle(fontSize: 14),
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
                                   ),
                                 ),
                                 Padding(
@@ -424,6 +482,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                 const Center(
                                   child: Text(
                                     'Perbandingan KPR Syariah vs Developer',
+                                    style: TextStyle(color: Colors.grey)
                                   ),
                                 ),
                               ],
@@ -483,21 +542,22 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
             width: double.infinity,
             child: SingleChildScrollView(
               child: DataTable(
-                border: TableBorder.all(color: Colors.black26, width: 1),
+                border: TableBorder.all(color: Colors.grey, width: 1),
                 columns: const [
-                  DataColumn(label: Text('No')),
-                  DataColumn(label: Text('Bulan')),
-                  DataColumn(label: Text('Nominal')),
+                  DataColumn(label: Text('No', style: TextStyle(color: Colors.grey))),
+                  DataColumn(label: Text('Bulan', style: TextStyle(color: Colors.grey))),
+                  DataColumn(label: Text('Nominal', style: TextStyle(color: Colors.grey))),
                 ],
                 rows: schedule
                     .map(
                       (r) => DataRow(
                         cells: [
-                          DataCell(Text('${r['no']}')),
-                          DataCell(Text('${r['label']}')),
+                          DataCell(Text('${r['no']}', style: TextStyle(color: Colors.grey))),
+                          DataCell(Text('${r['label']}', style: TextStyle(color: Colors.grey))),
                           DataCell(
                             Text(
                               'Rp ${_formatCurrency((r['amount'] as double).round())}',
+                              style: TextStyle(color: Colors.grey)
                             ),
                           ),
                         ],
