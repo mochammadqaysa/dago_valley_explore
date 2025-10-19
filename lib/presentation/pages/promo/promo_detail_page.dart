@@ -136,7 +136,7 @@ class PromoDetailPage extends GetView<PromoController> {
                                                         controller
                                                             .promos[index]
                                                             .imageUrl,
-                                                        fit: BoxFit.cover,
+                                                        fit: BoxFit.fill,
                                                       ),
                                                       // Gradient overlay
                                                       Container(
@@ -240,7 +240,7 @@ class PromoDetailPage extends GetView<PromoController> {
                                                         height: 1.6,
                                                       ),
                                                     ),
-                                                    const SizedBox(height: 100),
+                                                    const SizedBox(height: 50),
                                                     // Wrap(
                                                     //   spacing: 10,
                                                     //   runSpacing: 10,

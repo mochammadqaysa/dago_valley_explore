@@ -12,10 +12,10 @@ class PromoController extends GetxController {
 
   // List promo (bisa diganti dengan API call)
   final _promos = <Promo>[].obs;
-  List<Promo> get promos => _promos;
+  List<Promo> get promos => dummyPromos;
 
   // Current promo
-  Promo get currentPromo => _promos[_currentIndex.value];
+  Promo get currentPromo => dummyPromos[_currentIndex.value];
 
   @override
   void onInit() {

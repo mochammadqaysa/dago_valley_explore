@@ -3,7 +3,9 @@ import 'package:dago_valley_explore/app/extensions/color.dart';
 import 'package:dago_valley_explore/presentation/components/liquidglass/liquid_glass_button.dart';
 import 'package:dago_valley_explore/presentation/components/liquidglass/liquid_glass_container.dart';
 import 'package:dago_valley_explore/presentation/controllers/promo/promo_binding.dart';
+import 'package:dago_valley_explore/presentation/controllers/qrcode/qrcode_binding.dart';
 import 'package:dago_valley_explore/presentation/pages/promo/promo_detail_page.dart';
+import 'package:dago_valley_explore/presentation/pages/qrcode/qrcode_page.dart';
 import 'package:dago_valley_explore/screen/site_plan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -24,6 +26,20 @@ class _DasborAwalState extends State<DasborAwal> {
     // Navigasi dengan fade transition
     Get.to(
       () => const PromoDetailPage(),
+      transition: Transition.fade,
+      duration: const Duration(milliseconds: 400),
+      opaque: false,
+      fullscreenDialog: true,
+    );
+  }
+
+  void _showQRCodeModal() {
+    // Panggil binding secara manual sesuai pattern Anda
+    QrCodeBinding().dependencies();
+
+    // Navigasi dengan fade transition
+    Get.to(
+      () => const QRCodePage(),
       transition: Transition.fade,
       duration: const Duration(milliseconds: 400),
       opaque: false,
@@ -100,12 +116,12 @@ class _DasborAwalState extends State<DasborAwal> {
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Wrap(
-                    spacing: 40,
-                    crossAxisAlignment: WrapCrossAlignment.start,
+                    spacing: 55,
+                    crossAxisAlignment: WrapCrossAlignment.end,
                     children: [
                       SitePlanCard(
                         title: 'Site Plan',
-                        imageUrl: 'assets/1.png',
+                        imageUrl: 'assets/siteplan.png',
                         buttonText: 'Check',
                         onButtonPressed: () {
                           print('Button pressed!');
@@ -115,7 +131,7 @@ class _DasborAwalState extends State<DasborAwal> {
                       ),
                       SitePlanCard(
                         title: 'Event',
-                        imageUrl: 'assets/1.png',
+                        imageUrl: 'assets/event.jpg',
                         buttonText: 'Check',
                         onButtonPressed: () {
                           print('Button pressed!');
@@ -125,7 +141,7 @@ class _DasborAwalState extends State<DasborAwal> {
                       ),
                       SitePlanCard(
                         title: 'Tipe Rumah',
-                        imageUrl: 'assets/1.png',
+                        imageUrl: 'assets/tiperumah.png',
                         buttonText: 'Check',
                         onButtonPressed: () {
                           print('Button pressed!');
@@ -135,7 +151,7 @@ class _DasborAwalState extends State<DasborAwal> {
                       ),
                       SitePlanCard(
                         title: 'Akad',
-                        imageUrl: 'assets/1.png',
+                        imageUrl: 'assets/akad.jpg',
                         buttonText: 'Check',
                         onButtonPressed: () {
                           print('Button pressed!');
@@ -152,7 +168,6 @@ class _DasborAwalState extends State<DasborAwal> {
                   glassAccentColor: Colors.black,
                   height: 60,
                   width: double.infinity,
-                  // padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -206,7 +221,7 @@ class _DasborAwalState extends State<DasborAwal> {
                         ),
                       ),
 
-                      // Tombol di kanan
+                      // Tombol di kanan - Trigger QR Modal
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8.0,
@@ -215,7 +230,9 @@ class _DasborAwalState extends State<DasborAwal> {
                         child: LiquidGlassButton(
                           borderRadius: 16,
                           text: 'Rate Us',
-                          onPressed: () {},
+                          icon: Icons.qr_code_2,
+                          glassColor: Colors.teal.withOpacity(0.3),
+                          onPressed: _showQRCodeModal, // Panggil QR Modal
                         ),
                       ),
                     ],
