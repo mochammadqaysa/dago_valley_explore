@@ -626,7 +626,7 @@ const List<HouseModel> houseModels = [
   HouseModel(
     type: "118/60",
     model: "Tropica",
-    tahap: "1",
+    tahap: "2",
     isAddendum: false,
     blok: [],
     jumlahUnit: 2,
@@ -666,7 +666,7 @@ const List<HouseModel> houseModels = [
   HouseModel(
     type: "118/90",
     model: "Tropica",
-    tahap: "1",
+    tahap: "2",
     isAddendum: false,
     blok: [],
     jumlahUnit: 2,
