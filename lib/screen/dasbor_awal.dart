@@ -68,7 +68,7 @@ class _DasborAwalState extends State<DasborAwal> {
                     children: [
                       // Gambar
                       Image.asset(
-                        "assets/1.png",
+                        "assets/1.jpg",
                         width: double.infinity,
                         height: double.infinity,
                         fit: BoxFit.fitWidth,
@@ -121,7 +121,7 @@ class _DasborAwalState extends State<DasborAwal> {
                     children: [
                       SitePlanCard(
                         title: 'Site Plan',
-                        imageUrl: 'assets/siteplan.png',
+                        imageUrl: 'assets/siteplan.jpg',
                         buttonText: 'Check',
                         onButtonPressed: () {
                           print('Button pressed!');
@@ -141,7 +141,7 @@ class _DasborAwalState extends State<DasborAwal> {
                       ),
                       SitePlanCard(
                         title: 'Tipe Rumah',
-                        imageUrl: 'assets/tiperumah.png',
+                        imageUrl: 'assets/tiperumah.jpg',
                         buttonText: 'Check',
                         onButtonPressed: () {
                           print('Button pressed!');

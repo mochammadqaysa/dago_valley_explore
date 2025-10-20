@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 
 class QRCodeController extends GetxController {
   // URL untuk Google Search "Dago Valley"
-  final searchUrl = 'https://www.google.com/search?q=Dago+Valley';
+  final searchUrl = 'https://share.google/X2hw1barxPYD8QBjy';
 
   // Observable untuk loading state
   final _isLoading = false.obs;

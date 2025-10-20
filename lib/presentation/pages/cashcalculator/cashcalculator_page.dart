@@ -72,6 +72,23 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                           padding: const EdgeInsets.all(20),
                           child: ListView(
                             children: [
+                              Text(
+                                'Simulasi KPR',
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                'Simulasi KPR membantu Anda menghitung perkiraan cicilan rumah berdasarkan harga, uang muka, dan lama cicilan. Dengan fitur ini, Anda bisa mengetahui estimasi angsuran bulanan agar lebih mudah merencanakan pembelian rumah impian.',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 24),
                               const Text(
                                 'Model & Tipe',
                                 style: TextStyle(
@@ -80,7 +97,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   color: Colors.white,
                                 ),
                               ),
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 16),
                               Container(
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 12,
@@ -120,7 +137,6 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                       setState(() => selectedModel = v),
                                 ),
                               ),
-
                               const SizedBox(height: 16),
 
                               const Text(
@@ -174,7 +190,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   color: Colors.white,
                                 ),
                               ),
-                              const SizedBox(height: 5),
+                              const SizedBox(height: 16),
 
                               Slider(
                                 value: tenor.toDouble(),
@@ -194,6 +210,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   ),
                                 ),
                               ),
+
                               const SizedBox(height: 16),
                               if (paymentMethod == PaymentMethod.developer)
                                 Row(
@@ -220,6 +237,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                 ),
                               ),
                               const SizedBox(height: 8),
+
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
@@ -246,7 +264,6 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                 ),
                               ),
                               const SizedBox(height: 8),
-
                               Row(
                                 children: [
                                   Expanded(
@@ -532,6 +549,9 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                       ? const Center(
                                           child: Text(
                                             'Pilih model & hitung terlebih dahulu',
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                            ),
                                           ),
                                         )
                                       : _buildScheduleTable(result),
