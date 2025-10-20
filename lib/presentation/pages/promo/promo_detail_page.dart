@@ -35,7 +35,16 @@ class PromoDetailPage extends GetView<PromoController> {
                 Positioned.fill(
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: Container(color: Colors.black.withOpacity(0.5)),
+                    child: Image.asset(
+                      controller.currentPromo.imageUrl,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Positioned.fill(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                    child: Container(color: Colors.black.withOpacity(0.8)),
                   ),
                 ),
 
@@ -97,15 +106,15 @@ class PromoDetailPage extends GetView<PromoController> {
                                           borderRadius: BorderRadius.circular(
                                             20,
                                           ),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(
-                                                0.3,
-                                              ),
-                                              blurRadius: 20,
-                                              offset: const Offset(0, 10),
-                                            ),
-                                          ],
+                                          // boxShadow: [
+                                          //   BoxShadow(
+                                          //     color: Colors.black.withOpacity(
+                                          //       0.3,
+                                          //     ),
+                                          //     blurRadius: 20,
+                                          //     offset: const Offset(0, 10),
+                                          //   ),
+                                          // ],
                                         ),
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(
@@ -127,39 +136,38 @@ class PromoDetailPage extends GetView<PromoController> {
                                                 );
                                               },
                                             ),
-                                            itemBuilder:
-                                                (context, index, realIndex) {
-                                                  return Stack(
-                                                    fit: StackFit.expand,
-                                                    children: [
-                                                      Image.asset(
-                                                        controller
-                                                            .promos[index]
-                                                            .imageUrl,
-                                                        fit: BoxFit.fill,
+                                            itemBuilder: (context, index, realIndex) {
+                                              return Stack(
+                                                fit: StackFit.expand,
+                                                children: [
+                                                  Image.asset(
+                                                    controller
+                                                        .promos[index]
+                                                        .imageUrl,
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                  // Gradient overlay
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                      gradient: LinearGradient(
+                                                        begin:
+                                                            Alignment.topCenter,
+                                                        end: Alignment
+                                                            .bottomCenter,
+                                                        colors: [
+                                                          // Colors
+                                                          //     .transparent,
+                                                          // Colors.black
+                                                          //     .withOpacity(
+                                                          //       0.3,
+                                                          //     ),
+                                                        ],
                                                       ),
-                                                      // Gradient overlay
-                                                      Container(
-                                                        decoration: BoxDecoration(
-                                                          gradient: LinearGradient(
-                                                            begin: Alignment
-                                                                .topCenter,
-                                                            end: Alignment
-                                                                .bottomCenter,
-                                                            colors: [
-                                                              Colors
-                                                                  .transparent,
-                                                              Colors.black
-                                                                  .withOpacity(
-                                                                    0.3,
-                                                                  ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
                                           ),
                                         ),
                                       ),

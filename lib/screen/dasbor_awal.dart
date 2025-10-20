@@ -159,7 +159,7 @@ class _DasborAwalState extends State<DasborAwal> {
                     SizedBox(width: 20),
                     Expanded(
                       child: SitePlanCard(
-                        title: 'Akad',
+                        title: 'Perjanjian & Legalitas',
                         imageUrl: 'assets/akad.jpg',
                         buttonText: 'Check',
                         onButtonPressed: () {

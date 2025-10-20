@@ -41,7 +41,7 @@ class SitePlanCard extends StatelessWidget {
             // === Layer 1: Gambar ===
             Image.asset(
               imageUrl,
-              height: 500,
+              height: 512,
               width: double.infinity,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
@@ -59,6 +59,32 @@ class SitePlanCard extends StatelessWidget {
             //   width: double.infinity,
             //   color: Colors.black.withOpacity(0.3),
             // ),
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Container(
+                width: 200,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: titleBackgroundColor ?? Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(8),
+                    bottomRight: Radius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+            ),
 
             // === Layer 2: Container berisi teks dan tombol ===
             Positioned(
