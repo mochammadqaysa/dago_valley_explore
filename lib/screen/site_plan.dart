@@ -22,7 +22,7 @@ class SitePlanCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 410,
+      width: 400,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -41,7 +41,7 @@ class SitePlanCard extends StatelessWidget {
             // === Layer 1: Gambar ===
             Image.asset(
               imageUrl,
-              height: 450,
+              height: 500,
               width: double.infinity,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {

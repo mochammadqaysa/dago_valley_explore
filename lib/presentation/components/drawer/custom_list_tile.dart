@@ -31,8 +31,8 @@ class CustomListTile extends StatelessWidget {
       borderRadius: BorderRadius.circular(8),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        width: isCollapsed ? 300 : 80,
-        margin: const EdgeInsets.symmetric(vertical: 10),
+        width: isCollapsed ? 300 : 70,
+        margin: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
           color: HexColor("282924"),
           border: isActive
