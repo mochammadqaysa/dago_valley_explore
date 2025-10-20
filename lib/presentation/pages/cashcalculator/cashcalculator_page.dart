@@ -398,14 +398,14 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                     const Text(
                                       'Angsuran / Bulan',
                                       style: TextStyle(
-                                        fontSize: 12,
+                                        fontSize: 18,
                                         color: Colors.white,
                                       ),
                                     ),
                                     Text(
                                       'Rp ${(diskonNominal != null || diskonPersen != null) ? _formatCurrency(result.cicilanBulananSetelahDiskon.round()) : _formatCurrency(result.cicilanBulanan.round())}',
                                       style: const TextStyle(
-                                        fontSize: 22,
+                                        fontSize: 32,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white,
                                       ),
@@ -418,7 +418,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                           Text(
                                             'Rp ${_formatCurrency(result.totalPembayaran.round())}',
                                             style: const TextStyle(
-                                              fontSize: 14,
+                                              fontSize: 16,
                                               decoration:
                                                   TextDecoration.lineThrough,
                                               decorationColor: Colors.red,
@@ -440,7 +440,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                       Text(
                                         'Rp ${_formatCurrency(result.totalPembayaran.round())}',
                                         style: const TextStyle(
-                                          fontSize: 14,
+                                          fontSize: 16,
                                           color: Colors.white,
                                         ),
                                       ),

@@ -3,6 +3,8 @@
 class HouseModel {
   final String type;
   final String model;
+  final String tahap;
+  final bool isAddendum;
   final List<String> blok;
   final int jumlahUnit;
   final int hargaCash;
@@ -19,6 +21,8 @@ class HouseModel {
   const HouseModel({
     required this.type,
     required this.model,
+    required this.tahap,
+    required this.isAddendum,
     required this.blok,
     required this.jumlahUnit,
     required this.hargaCash,
@@ -30,9 +34,12 @@ class HouseModel {
 }
 
 const List<HouseModel> houseModels = [
+  // --- Harmoni ---
   HouseModel(
     type: "100/108",
     model: "Harmoni",
+    tahap: "1",
+    isAddendum: false,
     blok: ["I3", "I5", "I7", "I8"],
     jumlahUnit: 4,
     hargaCash: 2499000000,
@@ -67,8 +74,49 @@ const List<HouseModel> houseModels = [
     },
   ),
   HouseModel(
+    type: "140/108",
+    model: "Harmoni",
+    tahap: "1",
+    isAddendum: true,
+    blok: [],
+    jumlahUnit: 0,
+    hargaCash: 0,
+    galeri: {
+      "image": {
+        // gaada asetnya, pakai yang 100/108
+        "assets/rumah/fasad_harmoni_100_108.png",
+        "assets/rumah/fasad_harmoni_100_108_kanopi.png",
+        "assets/rumah/harmoni_100_108_lt_1.png",
+        "assets/rumah/harmoni_100_108_lt_2.png",
+        "assets/rumah/harmoni_100_108_lt_rt.png",
+      },
+    },
+    cicilanData: {
+      "kpr_syariah": {
+        5: {"cicilan": 0, "total": 0},
+        10: {"cicilan": 0, "total": 0},
+        15: {"cicilan": 0, "total": 0},
+        20: {"cicilan": 0, "total": 0},
+      },
+      "developer_dp": {
+        1: {"cicilan": 0, "total": 0},
+        2: {"cicilan": 0, "total": 0},
+        3: {"cicilan": 0, "total": 0},
+        4: {"cicilan": 0, "total": 0},
+      },
+      "developer_tanpa_dp": {
+        1: {"cicilan": 0, "total": 0},
+        2: {"cicilan": 0, "total": 0},
+        3: {"cicilan": 0, "total": 0},
+        4: {"cicilan": 0, "total": 0},
+      },
+    },
+  ),
+  HouseModel(
     type: "106/112",
     model: "Harmoni",
+    tahap: "1",
+    isAddendum: false,
     blok: ["G3", "G5", "G7"],
     jumlahUnit: 3,
     hargaCash: 2670000000,
@@ -106,6 +154,8 @@ const List<HouseModel> houseModels = [
   HouseModel(
     type: "112/117",
     model: "Harmoni",
+    tahap: "1",
+    isAddendum: false,
     blok: ["F3", "F5"],
     jumlahUnit: 2,
     hargaCash: 2820000000,
@@ -143,6 +193,8 @@ const List<HouseModel> houseModels = [
   HouseModel(
     type: "129/144",
     model: "Harmoni",
+    tahap: "1",
+    isAddendum: false,
     blok: ["H1", "H2", "H9", "H10", "I2", "I9", "I10"],
     jumlahUnit: 7,
     hargaCash: 3333000000,
@@ -178,8 +230,50 @@ const List<HouseModel> houseModels = [
     },
   ),
   HouseModel(
+    type: "150/144",
+    model: "Harmoni",
+    tahap: "1",
+    isAddendum: true,
+    blok: [],
+    jumlahUnit: 0,
+    hargaCash: 0,
+    galeri: {
+      "image": {
+        // gaada asetnya, pakai yang 129/144
+        "assets/rumah/fasad_harmoni_129_144.png",
+        "assets/rumah/fasad_harmoni_129_144_kanopi.png",
+        "assets/rumah/fasad_harmoni_129_144_siang.png",
+        "assets/rumah/harmoni_129_144_lt_1.png",
+        "assets/rumah/harmoni_129_144_lt_2.png",
+        "assets/rumah/harmoni_129_144_lt_rt.png",
+      },
+    },
+    cicilanData: {
+      "kpr_syariah": {
+        5: {"cicilan": 0, "total": 0},
+        10: {"cicilan": 0, "total": 0},
+        15: {"cicilan": 0, "total": 0},
+        20: {"cicilan": 0, "total": 0},
+      },
+      "developer_dp": {
+        1: {"cicilan": 0, "total": 0},
+        2: {"cicilan": 0, "total": 0},
+        3: {"cicilan": 0, "total": 0},
+        4: {"cicilan": 0, "total": 0},
+      },
+      "developer_tanpa_dp": {
+        1: {"cicilan": 0, "total": 0},
+        2: {"cicilan": 0, "total": 0},
+        3: {"cicilan": 0, "total": 0},
+        4: {"cicilan": 0, "total": 0},
+      },
+    },
+  ),
+  HouseModel(
     type: "131/150",
     model: "Harmoni",
+    tahap: "1",
+    isAddendum: false,
     blok: ["G1", "G9"],
     jumlahUnit: 2,
     hargaCash: 3443000000,
@@ -216,6 +310,8 @@ const List<HouseModel> houseModels = [
   HouseModel(
     type: "131/169",
     model: "Harmoni",
+    tahap: "1",
+    isAddendum: false,
     blok: ["F1", "F7"],
     jumlahUnit: 2,
     hargaCash: 3787000000,
@@ -250,9 +346,12 @@ const List<HouseModel> houseModels = [
       },
     },
   ),
+  // --- Foresta ---
   HouseModel(
     type: "144/190",
     model: "Foresta",
+    tahap: "1",
+    isAddendum: false,
     blok: ["E3", "E5"],
     jumlahUnit: 2,
     hargaCash: 4351000000,
@@ -287,47 +386,52 @@ const List<HouseModel> houseModels = [
       },
     },
   ),
-  HouseModel(
-    type: "200/186",
-    model: "Foresta",
-    blok: ["F6", "F8"],
-    jumlahUnit: 2,
-    hargaCash: 4799000000,
-    galeri: {
-      "image": {
-        //gaada asetnya, pakai yang 144/190
-        "assets/rumah/fasad_foresta_144_190.png",
-        "assets/rumah/fasad_foresta_144_190_kanopi.png",
-        "assets/rumah/fasad_foresta_144_190_siang.png",
-        "assets/rumah/foresta_144_190_lt_1.png",
-        "assets/rumah/foresta_144_190_lt_2.png",
-        "assets/rumah/foresta_144_190_lt_rt.png",
-      },
-    },
-    cicilanData: {
-      "kpr_syariah": {
-        5: {"cicilan": 81552765, "total": 5852965895},
-        10: {"cicilan": 50714054, "total": 7045486425},
-        15: {"cicilan": 41232756, "total": 8381696022},
-        20: {"cicilan": 37023678, "total": 9845482756},
-      },
-      "developer_dp": {
-        1: {"cicilan": 294638604, "total": 4975363250},
-        2: {"cicilan": 154667771, "total": 5151726500},
-        3: {"cicilan": 108010826, "total": 5328089750},
-        4: {"cicilan": 84682354, "total": 5504453000},
-      },
-      "developer_tanpa_dp": {
-        1: {"cicilan": 420912292, "total": 5050947500},
-        2: {"cicilan": 220953958, "total": 5302895000},
-        3: {"cicilan": 154301181, "total": 5554842500},
-        4: {"cicilan": 120974792, "total": 5806790000},
-      },
-    },
-  ),
+
+  // HouseModel(
+  //   type: "200/186",
+  //   model: "Foresta",
+  //   tahap: "1",
+  //   isAddendum: false,
+  //   blok: ["F6", "F8"],
+  //   jumlahUnit: 2,
+  //   hargaCash: 4799000000,
+  //   galeri: {
+  //     "image": {
+  //       //gaada asetnya, pakai yang 144/190
+  //       "assets/rumah/fasad_foresta_144_190.png",
+  //       "assets/rumah/fasad_foresta_144_190_kanopi.png",
+  //       "assets/rumah/fasad_foresta_144_190_siang.png",
+  //       "assets/rumah/foresta_144_190_lt_1.png",
+  //       "assets/rumah/foresta_144_190_lt_2.png",
+  //       "assets/rumah/foresta_144_190_lt_rt.png",
+  //     },
+  //   },
+  //   cicilanData: {
+  //     "kpr_syariah": {
+  //       5: {"cicilan": 81552765, "total": 5852965895},
+  //       10: {"cicilan": 50714054, "total": 7045486425},
+  //       15: {"cicilan": 41232756, "total": 8381696022},
+  //       20: {"cicilan": 37023678, "total": 9845482756},
+  //     },
+  //     "developer_dp": {
+  //       1: {"cicilan": 294638604, "total": 4975363250},
+  //       2: {"cicilan": 154667771, "total": 5151726500},
+  //       3: {"cicilan": 108010826, "total": 5328089750},
+  //       4: {"cicilan": 84682354, "total": 5504453000},
+  //     },
+  //     "developer_tanpa_dp": {
+  //       1: {"cicilan": 420912292, "total": 5050947500},
+  //       2: {"cicilan": 220953958, "total": 5302895000},
+  //       3: {"cicilan": 154301181, "total": 5554842500},
+  //       4: {"cicilan": 120974792, "total": 5806790000},
+  //     },
+  //   },
+  // ),
   HouseModel(
     type: "144/228",
     model: "Foresta",
+    tahap: "1",
+    isAddendum: false,
     blok: ["F4"],
     jumlahUnit: 1,
     hargaCash: 4957000000,
@@ -365,6 +469,8 @@ const List<HouseModel> houseModels = [
   HouseModel(
     type: "193/228",
     model: "Foresta",
+    tahap: "1",
+    isAddendum: false,
     blok: ["E1", "E7"],
     jumlahUnit: 2,
     hargaCash: 5311000000,
@@ -399,8 +505,49 @@ const List<HouseModel> houseModels = [
     },
   ),
   HouseModel(
+    type: "220/228",
+    model: "Foresta",
+    tahap: "1",
+    isAddendum: true,
+    blok: [],
+    jumlahUnit: 2,
+    hargaCash: 0,
+    galeri: {
+      "image": {
+        //gaada asetnya, pakai yang 193/228
+        "assets/rumah/fasad_foresta_193_228.png",
+        "assets/rumah/fasad_foresta_193_228_kanopi.png",
+        "assets/rumah/foresta_193_228_lt_1.png",
+        "assets/rumah/foresta_193_228_lt_2.png",
+        "assets/rumah/foresta_193_228_lt_rt.png",
+      },
+    },
+    cicilanData: {
+      "kpr_syariah": {
+        5: {"cicilan": 0, "total": 0},
+        10: {"cicilan": 0, "total": 0},
+        15: {"cicilan": 0, "total": 0},
+        20: {"cicilan": 0, "total": 0},
+      },
+      "developer_dp": {
+        1: {"cicilan": 0, "total": 0},
+        2: {"cicilan": 0, "total": 0},
+        3: {"cicilan": 0, "total": 0},
+        4: {"cicilan": 0, "total": 0},
+      },
+      "developer_tanpa_dp": {
+        1: {"cicilan": 0, "total": 0},
+        2: {"cicilan": 0, "total": 0},
+        3: {"cicilan": 0, "total": 0},
+        4: {"cicilan": 0, "total": 0},
+      },
+    },
+  ),
+  HouseModel(
     type: "193/235",
     model: "Foresta",
+    tahap: "1",
+    isAddendum: false,
     blok: ["F2"],
     jumlahUnit: 1,
     hargaCash: 5422000000,
@@ -432,6 +579,127 @@ const List<HouseModel> houseModels = [
         2: {"cicilan": 249456458, "total": 6005725000},
         3: {"cicilan": 174236319, "total": 6291892500},
         4: {"cicilan": 136676042, "total": 6578060000},
+      },
+    },
+  ),
+  HouseModel(
+    type: "261/186",
+    model: "Foresta",
+    tahap: "1",
+    isAddendum: false,
+    blok: [],
+    jumlahUnit: 2,
+    hargaCash: 0,
+    galeri: {
+      "image": {
+        //gaada asetnya, pakai yang 144/190
+        "assets/rumah/fasad_foresta_144_190.png",
+        "assets/rumah/fasad_foresta_144_190_kanopi.png",
+        "assets/rumah/fasad_foresta_144_190_siang.png",
+        "assets/rumah/foresta_144_190_lt_1.png",
+        "assets/rumah/foresta_144_190_lt_2.png",
+        "assets/rumah/foresta_144_190_lt_rt.png",
+      },
+    },
+    cicilanData: {
+      "kpr_syariah": {
+        5: {"cicilan": 0, "total": 0},
+        10: {"cicilan": 0, "total": 0},
+        15: {"cicilan": 0, "total": 0},
+        20: {"cicilan": 0, "total": 0},
+      },
+      "developer_dp": {
+        1: {"cicilan": 0, "total": 0},
+        2: {"cicilan": 0, "total": 0},
+        3: {"cicilan": 0, "total": 0},
+        4: {"cicilan": 0, "total": 0},
+      },
+      "developer_tanpa_dp": {
+        1: {"cicilan": 0, "total": 0},
+        2: {"cicilan": 0, "total": 0},
+        3: {"cicilan": 0, "total": 0},
+        4: {"cicilan": 0, "total": 0},
+      },
+    },
+  ),
+  // --- Tropica --
+  HouseModel(
+    type: "118/60",
+    model: "Tropica",
+    tahap: "1",
+    isAddendum: false,
+    blok: [],
+    jumlahUnit: 2,
+    hargaCash: 0,
+    galeri: {
+      "image": {
+        //gaada asetnya, pakai yang 144/190
+        "assets/rumah/fasad_foresta_144_190.png",
+        "assets/rumah/fasad_foresta_144_190_kanopi.png",
+        "assets/rumah/fasad_foresta_144_190_siang.png",
+        "assets/rumah/foresta_144_190_lt_1.png",
+        "assets/rumah/foresta_144_190_lt_2.png",
+        "assets/rumah/foresta_144_190_lt_rt.png",
+      },
+    },
+    cicilanData: {
+      "kpr_syariah": {
+        5: {"cicilan": 0, "total": 0},
+        10: {"cicilan": 0, "total": 0},
+        15: {"cicilan": 0, "total": 0},
+        20: {"cicilan": 0, "total": 0},
+      },
+      "developer_dp": {
+        1: {"cicilan": 0, "total": 0},
+        2: {"cicilan": 0, "total": 0},
+        3: {"cicilan": 0, "total": 0},
+        4: {"cicilan": 0, "total": 0},
+      },
+      "developer_tanpa_dp": {
+        1: {"cicilan": 0, "total": 0},
+        2: {"cicilan": 0, "total": 0},
+        3: {"cicilan": 0, "total": 0},
+        4: {"cicilan": 0, "total": 0},
+      },
+    },
+  ),
+  HouseModel(
+    type: "118/90",
+    model: "Tropica",
+    tahap: "1",
+    isAddendum: false,
+    blok: [],
+    jumlahUnit: 2,
+    hargaCash: 0,
+    galeri: {
+      "image": {
+        //gaada asetnya, pakai yang 144/190
+        "assets/rumah/fasad_foresta_144_190.png",
+        "assets/rumah/fasad_foresta_144_190_kanopi.png",
+        "assets/rumah/fasad_foresta_144_190_siang.png",
+        "assets/rumah/foresta_144_190_lt_1.png",
+        "assets/rumah/foresta_144_190_lt_2.png",
+        "assets/rumah/foresta_144_190_lt_rt.png",
+      },
+    },
+    cicilanData: {
+      "kpr_syariah": {
+        5: {"cicilan": 0, "total": 0},
+        10: {"cicilan": 0, "total": 0},
+        15: {"cicilan": 0, "total": 0},
+        20: {"cicilan": 0, "total": 0},
+      },
+      "developer_dp": {
+        1: {"cicilan": 0, "total": 0},
+        2: {"cicilan": 0, "total": 0},
+        3: {"cicilan": 0, "total": 0},
+        4: {"cicilan": 0, "total": 0},
+      },
+      "developer_tanpa_dp": {
+        1: {"cicilan": 0, "total": 0},
+        2: {"cicilan": 0, "total": 0},
+        3: {"cicilan": 0, "total": 0},
+        4: {"cicilan": 0, "total": 0},
       },
     },
   ),
