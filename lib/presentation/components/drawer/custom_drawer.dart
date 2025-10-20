@@ -19,8 +19,8 @@ class CustomDrawer extends GetView<SidebarController> {
           child: AnimatedContainer(
             curve: Curves.easeInOutCubic,
             duration: const Duration(milliseconds: 500),
-            width: controller.isCollapsed ? 300 : 85,
-            margin: const EdgeInsets.only(bottom: 10, top: 10, left: 10),
+            width: controller.isCollapsed ? 300 : 120,
+            margin: const EdgeInsets.only(bottom: 10, top: 10, left: 20),
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(16)),
               // color: HexColor("EBEBEB"),

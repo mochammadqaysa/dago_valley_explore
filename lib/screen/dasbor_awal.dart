@@ -54,11 +54,11 @@ class _DasborAwalState extends State<DasborAwal> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(24.0),
             child: Column(
               children: [
                 Container(
-                  height: 450,
+                  height: 350,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -113,61 +113,72 @@ class _DasborAwalState extends State<DasborAwal> {
                   ),
                 ),
                 SizedBox(height: 16),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Wrap(
-                    spacing: 55,
-                    crossAxisAlignment: WrapCrossAlignment.end,
-                    children: [
-                      SitePlanCard(
+
+                // Ganti dengan Row + MainAxisAlignment.spaceBetween
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: SitePlanCard(
                         title: 'Site Plan',
                         imageUrl: 'assets/siteplan.jpg',
                         buttonText: 'Check',
                         onButtonPressed: () {
-                          print('Button pressed!');
+                          print('Site Plan pressed!');
                         },
                         titleBackgroundColor: Colors.white,
                         buttonColor: Colors.white,
                       ),
-                      SitePlanCard(
+                    ),
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: SitePlanCard(
                         title: 'Event',
                         imageUrl: 'assets/event.jpg',
                         buttonText: 'Check',
                         onButtonPressed: () {
-                          print('Button pressed!');
+                          print('Event pressed!');
                         },
                         titleBackgroundColor: Colors.white,
                         buttonColor: Colors.white,
                       ),
-                      SitePlanCard(
+                    ),
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: SitePlanCard(
                         title: 'Tipe Rumah',
                         imageUrl: 'assets/tiperumah.jpg',
                         buttonText: 'Check',
                         onButtonPressed: () {
-                          print('Button pressed!');
+                          print('Tipe Rumah pressed!');
                         },
                         titleBackgroundColor: Colors.white,
                         buttonColor: Colors.white,
                       ),
-                      SitePlanCard(
+                    ),
+                    SizedBox(width: 20),
+                    Expanded(
+                      child: SitePlanCard(
                         title: 'Akad',
                         imageUrl: 'assets/akad.jpg',
                         buttonText: 'Check',
                         onButtonPressed: () {
-                          print('Button pressed!');
+                          print('Akad pressed!');
                         },
                         titleBackgroundColor: Colors.white,
                         buttonColor: Colors.white,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 16),
+
+                SizedBox(height: 17),
                 LiquidGlassContainer(
                   glassColor: Colors.black,
                   glassAccentColor: Colors.black,
-                  height: 60,
+                  height: 90,
                   width: double.infinity,
+                  borderRadius: 17,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -224,14 +235,14 @@ class _DasborAwalState extends State<DasborAwal> {
                       // Tombol di kanan - Trigger QR Modal
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0,
-                          vertical: 4,
+                          horizontal: 10.0,
+                          vertical: 6,
                         ),
                         child: LiquidGlassButton(
                           borderRadius: 16,
                           text: 'Rate Us',
                           icon: Icons.qr_code_2,
-                          glassColor: Colors.teal.withOpacity(0.3),
+                          glassColor: Colors.grey.withOpacity(0.3),
                           onPressed: _showQRCodeModal, // Panggil QR Modal
                         ),
                       ),
