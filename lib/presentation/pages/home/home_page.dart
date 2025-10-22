@@ -2,6 +2,7 @@ import 'package:dago_valley_explore/app/extensions/color.dart';
 import 'package:dago_valley_explore/app/types/tab_type.dart';
 import 'package:dago_valley_explore/presentation/components/drawer/custom_drawer.dart';
 import 'package:dago_valley_explore/presentation/controllers/sidebar/sidebar_controller.dart';
+import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/bookingonline/bookingonline_binding.dart';
 import 'package:dago_valley_explore/presentation/controllers/cashcalculator/cashcalculator_binding.dart';
 import 'package:dago_valley_explore/presentation/controllers/dashboard/dashboard_binding.dart';
@@ -26,7 +27,6 @@ class HomePage extends GetView<SidebarController> {
     switch (tab) {
       case TabType.homepage:
         DashboardBinding().dependencies();
-        // return DashboardPage();
         return DasborAwal();
       case TabType.siteplanpage:
         SiteplanBinding().dependencies();
@@ -51,6 +51,9 @@ class HomePage extends GetView<SidebarController> {
 
   @override
   Widget build(BuildContext context) {
+    // Get ThemeController
+    final themeController = Get.find<ThemeController>();
+
     return GetX<SidebarController>(
       builder: (_) {
         return Scaffold(
@@ -68,6 +71,35 @@ class HomePage extends GetView<SidebarController> {
                 ),
               ),
             ],
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
+          floatingActionButton: Obx(
+            () => Container(
+              margin: EdgeInsets.all(8),
+              child: FloatingActionButton(
+                onPressed: () {
+                  themeController.toggleTheme();
+                },
+                backgroundColor: themeController.isDarkMode
+                    ? Colors.grey[800]
+                    : Colors.white,
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  transitionBuilder: (child, animation) {
+                    return RotationTransition(turns: animation, child: child);
+                  },
+                  child: Icon(
+                    themeController.isDarkMode
+                        ? Icons.light_mode
+                        : Icons.dark_mode,
+                    key: ValueKey(themeController.isDarkMode),
+                    color: themeController.isDarkMode
+                        ? Colors.yellow
+                        : Colors.grey[800],
+                  ),
+                ),
+              ),
+            ),
           ),
         );
       },
