@@ -1,6 +1,8 @@
 import 'package:dago_valley_explore/app/extensions/color.dart';
+import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 class CustomListTile extends StatelessWidget {
   final bool isCollapsed;
@@ -26,6 +28,7 @@ class CustomListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
@@ -34,7 +37,9 @@ class CustomListTile extends StatelessWidget {
         width: isCollapsed ? 300 : 70,
         margin: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
-          color: HexColor("282924"),
+          color: themeController.isDarkMode
+              ? HexColor("282924")
+              : HexColor("FFFFFF"),
           border: isActive
               ? Border.all(width: 4, color: HexColor("5C5C5A"))
               : Border.all(width: 4, color: Colors.transparent),
@@ -50,7 +55,12 @@ class CustomListTile extends StatelessWidget {
                   children: [
                     Container(
                       padding: const EdgeInsets.all(18),
-                      child: SvgPicture.asset(svgIcon, color: Colors.white),
+                      child: SvgPicture.asset(
+                        svgIcon,
+                        color: themeController.isDarkMode
+                            ? Colors.white
+                            : Colors.black,
+                      ),
                     ),
                     if (infoCount > 0)
                       Positioned(

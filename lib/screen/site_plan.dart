@@ -80,7 +80,6 @@ class SitePlanCard extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
                   ),
                 ),
               ),
@@ -117,7 +116,7 @@ class SitePlanCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          title,
+                          buttonText,
                           style: const TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.normal,

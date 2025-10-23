@@ -50,7 +50,7 @@ class _DasborAwalState extends State<DasborAwal> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: HexColor("121212"),
+      // backgroundColor: HexColor("121212"),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(

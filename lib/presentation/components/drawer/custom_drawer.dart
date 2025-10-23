@@ -4,6 +4,7 @@ import 'package:dago_valley_explore/presentation/components/drawer/bottom_user_i
 import 'package:dago_valley_explore/presentation/components/drawer/custom_list_tile.dart';
 import 'package:dago_valley_explore/presentation/components/drawer/header.dart';
 import 'package:dago_valley_explore/presentation/controllers/sidebar/sidebar_controller.dart';
+import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,6 +13,7 @@ class CustomDrawer extends GetView<SidebarController> {
 
   @override
   Widget build(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
     return GetX<SidebarController>(
       init: controller,
       builder: (_) {
@@ -24,7 +26,10 @@ class CustomDrawer extends GetView<SidebarController> {
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(16)),
               // color: HexColor("EBEBEB"),
-              color: HexColor("1C1C19"),
+              // color: HexColor("1C1C19"),
+              color: themeController.isDarkMode
+                  ? HexColor("1C1C19")
+                  : HexColor("EBEBEB"),
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),

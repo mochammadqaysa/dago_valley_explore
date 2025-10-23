@@ -1,3 +1,4 @@
+import 'package:dago_valley_explore/app/extensions/color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -30,14 +31,14 @@ class ThemeController extends GetxController {
     // Save preference (optional)
     // _saveThemePreference();
 
-    Get.snackbar(
-      'Theme Changed',
-      _isDarkMode.value ? 'Dark mode activated' : 'Light mode activated',
-      snackPosition: SnackPosition.BOTTOM,
-      duration: const Duration(seconds: 1),
-      backgroundColor: _isDarkMode.value ? Colors.grey[800] : Colors.grey[200],
-      colorText: _isDarkMode.value ? Colors.white : Colors.black,
-    );
+    // Get.snackbar(
+    //   'Theme Changed',
+    //   _isDarkMode.value ? 'Dark mode activated' : 'Light mode activated',
+    //   snackPosition: SnackPosition.BOTTOM,
+    //   duration: const Duration(seconds: 1),
+    //   backgroundColor: _isDarkMode.value ? Colors.grey[800] : Colors.grey[200],
+    //   colorText: _isDarkMode.value ? Colors.white : Colors.black,
+    // );
   }
 
   // Get current theme data
@@ -49,11 +50,11 @@ class ThemeController extends GetxController {
   ThemeData get darkTheme {
     return ThemeData(
       brightness: Brightness.dark,
-      primarySwatch: Colors.teal,
-      scaffoldBackgroundColor: Color(0xFF121212),
-      cardColor: Color(0xFF1E1E1E),
+      primarySwatch: createMaterialColor(HexColor("636A5A")),
+      scaffoldBackgroundColor: HexColor("121212"),
+      cardColor: HexColor("1C1C19"),
       appBarTheme: AppBarTheme(
-        backgroundColor: Color(0xFF1C1C19),
+        backgroundColor: HexColor("1C1C19"),
         elevation: 0,
       ),
       textTheme: TextTheme(
@@ -67,11 +68,11 @@ class ThemeController extends GetxController {
   ThemeData get lightTheme {
     return ThemeData(
       brightness: Brightness.light,
-      primarySwatch: Colors.teal,
-      scaffoldBackgroundColor: Color(0xFFF5F5F5),
-      cardColor: Colors.white,
+      primarySwatch: createMaterialColor(HexColor("636A5A")),
+      scaffoldBackgroundColor: HexColor("F4F4F4"),
+      cardColor: HexColor("EBEBEB"),
       appBarTheme: AppBarTheme(
-        backgroundColor: Colors.white,
+        backgroundColor: HexColor("EBEBEB"),
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black),
       ),
