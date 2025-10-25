@@ -22,7 +22,7 @@ class CustomDrawer extends GetView<SidebarController> {
             curve: Curves.easeInOutCubic,
             duration: const Duration(milliseconds: 500),
             width: controller.isCollapsed ? 300 : 120,
-            margin: const EdgeInsets.only(bottom: 10, top: 10, left: 20),
+            margin: const EdgeInsets.only(bottom: 23, top: 23, left: 20),
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(16)),
               // color: HexColor("EBEBEB"),
@@ -58,20 +58,23 @@ class CustomDrawer extends GetView<SidebarController> {
                       )
                       .toList(),
                   const Spacer(),
-                  CustomListTile(
-                    isActive: false,
-                    isCollapsed: controller.isCollapsed,
-                    icon: Icons.settings,
-                    svgIcon: "assets/menu/hotline_icon.svg",
-                    title: 'Settings',
-                    infoCount: 0,
-                    onTap: () {
-                      Get.snackbar(
-                        'Settings',
-                        'Settings menu clicked',
-                        snackPosition: SnackPosition.BOTTOM,
-                      );
-                    },
+                  Visibility(
+                    visible: false,
+                    child: CustomListTile(
+                      isActive: false,
+                      isCollapsed: controller.isCollapsed,
+                      icon: Icons.settings,
+                      svgIcon: "assets/menu/hotline_icon.svg",
+                      title: 'Settings',
+                      infoCount: 0,
+                      onTap: () {
+                        Get.snackbar(
+                          'Settings',
+                          'Settings menu clicked',
+                          snackPosition: SnackPosition.BOTTOM,
+                        );
+                      },
+                    ),
                   ),
                   const SizedBox(height: 10),
                   // BottomUserInfo(isCollapsed: controller.isCollapsed),

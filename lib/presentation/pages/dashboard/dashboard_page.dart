@@ -60,7 +60,7 @@ class _DashboardPageState extends State<DashboardPage> {
             child: Column(
               children: [
                 Container(
-                  height: 350,
+                  height: 400,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(10)),

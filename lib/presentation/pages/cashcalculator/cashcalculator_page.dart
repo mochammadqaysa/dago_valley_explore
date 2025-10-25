@@ -1,8 +1,11 @@
+import 'package:dago_valley_explore/app/config/app_colors.dart';
 import 'package:dago_valley_explore/app/extensions/color.dart';
 import 'package:dago_valley_explore/data/models/house_model.dart';
 import 'package:dago_valley_explore/presentation/controllers/cashcalculator/cashcalculator_controller.dart';
+import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:get/get.dart';
 
 class CashcalculatorPage extends StatefulWidget {
   const CashcalculatorPage({Key? key}) : super(key: key);
@@ -34,6 +37,8 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
+
     final result = selectedModel != null
         ? controller.compute(
             model: selectedModel!,
@@ -45,18 +50,25 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
           )
         : null;
 
-    final cardColor = Colors.grey[900];
+    final cardColor = themeController.isDarkMode
+        ? Colors.grey[900]
+        : AppColors.lightGrey;
+
+    final textColor = themeController.isDarkMode ? Colors.white : Colors.black;
 
     return Scaffold(
-      backgroundColor: Color(121212),
       body: SafeArea(
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             // Kalkulator - 60%
             Expanded(
               flex: 5,
               child: Padding(
-                padding: const EdgeInsets.all(18.0),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 32.0,
+                  horizontal: 8.0,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -76,7 +88,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                 'Simulasi KPR',
                                 style: TextStyle(
                                   fontSize: 32,
-                                  color: Colors.white,
+                                  color: textColor,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -84,17 +96,17 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                 'Simulasi KPR membantu Anda menghitung perkiraan cicilan rumah berdasarkan harga, uang muka, dan lama cicilan. Dengan fitur ini, Anda bisa mengetahui estimasi angsuran bulanan agar lebih mudah merencanakan pembelian rumah impian.',
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.white,
+                                  color: textColor,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               const SizedBox(height: 24),
-                              const Text(
+                              Text(
                                 'Model & Tipe',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: textColor,
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -114,7 +126,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                 child: DropdownButton<HouseModel>(
                                   isExpanded: true,
                                   value: selectedModel,
-                                  hint: const Text(
+                                  hint: Text(
                                     'Pilih model rumah',
                                     style: TextStyle(color: Colors.grey),
                                   ),
@@ -127,9 +139,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                       value: m,
                                       child: Text(
                                         '${m.displayName} - Rp. ${_formatCurrency(m.hargaCash.round())}',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                        ),
+                                        style: TextStyle(color: textColor),
                                       ),
                                     );
                                   }).toList(),
@@ -139,20 +149,20 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                               ),
                               const SizedBox(height: 16),
 
-                              const Text(
+                              Text(
                                 'Metode Pembayaran',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: textColor,
                                 ),
                               ),
                               Row(
                                 children: [
                                   Expanded(
                                     child: RadioListTile<PaymentMethod>(
-                                      title: const Text(
+                                      title: Text(
                                         'KPR Syariah (DP 20%)',
-                                        style: TextStyle(color: Colors.white),
+                                        style: TextStyle(color: textColor),
                                       ),
                                       value: PaymentMethod.kprSyariah,
                                       groupValue: paymentMethod,
@@ -167,9 +177,9 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   ),
                                   Expanded(
                                     child: RadioListTile<PaymentMethod>(
-                                      title: const Text(
+                                      title: Text(
                                         'Developer (DP 30%)',
-                                        style: TextStyle(color: Colors.white),
+                                        style: TextStyle(color: textColor),
                                       ),
                                       value: PaymentMethod.developer,
                                       groupValue: paymentMethod,
@@ -183,11 +193,11 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   ),
                                 ],
                               ),
-                              const Text(
+                              Text(
                                 'Tenor (tahun)',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: textColor,
                                 ),
                               ),
                               const SizedBox(height: 16),
@@ -204,9 +214,9 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                               Center(
                                 child: Text(
                                   '$tenor Tahun',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                    color: textColor,
                                   ),
                                 ),
                               ),
@@ -215,9 +225,9 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                               if (paymentMethod == PaymentMethod.developer)
                                 Row(
                                   children: [
-                                    const Text(
+                                    Text(
                                       'Tanpa DP',
-                                      style: TextStyle(color: Colors.white),
+                                      style: TextStyle(color: textColor),
                                     ),
                                     const SizedBox(width: 10),
                                     Switch(
@@ -229,11 +239,11 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                 ),
 
                               const SizedBox(height: 16),
-                              const Text(
+                              Text(
                                 'DP',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: textColor,
                                 ),
                               ),
                               const SizedBox(height: 8),
@@ -242,25 +252,27 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(4),
-                                  color: Colors.grey.shade800,
+                                  color: themeController.isDarkMode
+                                      ? Colors.grey[800]
+                                      : Colors.grey[200],
                                 ),
                                 child: Text(
                                   selectedModel == null
                                       ? 'Pilih model dulu'
                                       : 'Rp ${_formatCurrency(controller.calculateDp(harga: selectedModel!.hargaCash, method: paymentMethod, tanpaDp: tanpaDp).round())}',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 16,
-                                    color: Colors.white,
+                                    color: textColor,
                                   ),
                                 ),
                               ),
                               const SizedBox(height: 16),
 
-                              const Text(
+                              Text(
                                 'Diskon',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color: textColor,
                                 ),
                               ),
                               const SizedBox(height: 8),
@@ -292,8 +304,10 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                                 : null,
                                           ),
                                           keyboardType: TextInputType.number,
-                                          style: const TextStyle(
-                                            color: Colors.grey,
+                                          style: TextStyle(
+                                            color: themeController.isDarkMode
+                                                ? Colors.grey
+                                                : Colors.black,
                                           ),
                                           onChanged: (v) {
                                             String cleaned = v.replaceAll(
@@ -355,8 +369,10 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                                 : null,
                                           ),
                                           keyboardType: TextInputType.number,
-                                          style: const TextStyle(
-                                            color: Colors.grey,
+                                          style: TextStyle(
+                                            color: themeController.isDarkMode
+                                                ? Colors.grey
+                                                : Colors.black,
                                           ),
                                           onChanged: (v) => setState(() {
                                             diskonPersen = (v.trim().isEmpty)
@@ -395,19 +411,19 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const Text(
+                                    Text(
                                       'Angsuran / Bulan',
                                       style: TextStyle(
                                         fontSize: 18,
-                                        color: Colors.white,
+                                        color: textColor,
                                       ),
                                     ),
                                     Text(
                                       'Rp ${(diskonNominal != null || diskonPersen != null) ? _formatCurrency(result.cicilanBulananSetelahDiskon.round()) : _formatCurrency(result.cicilanBulanan.round())}',
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                         fontSize: 32,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.white,
+                                        color: textColor,
                                       ),
                                     ),
                                     const SizedBox(height: 6),
@@ -417,18 +433,18 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                         children: [
                                           Text(
                                             'Rp ${_formatCurrency(result.totalPembayaran.round())}',
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 16,
                                               decoration:
                                                   TextDecoration.lineThrough,
                                               decorationColor: Colors.red,
                                               decorationThickness: 2,
-                                              color: Colors.white,
+                                              color: textColor,
                                             ),
                                           ),
                                           Text(
                                             'Rp ${_formatCurrency(result.hargaSetelahDiskon.round())}',
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.green,
@@ -439,9 +455,9 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                     else
                                       Text(
                                         'Rp ${_formatCurrency(result.totalPembayaran.round())}',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 16,
-                                          color: Colors.white,
+                                          color: textColor,
                                         ),
                                       ),
                                   ],
@@ -460,7 +476,10 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
             Expanded(
               flex: 6,
               child: Padding(
-                padding: const EdgeInsets.all(18.0),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 32.0,
+                  horizontal: 8.0,
+                ),
                 child: Card(
                   color: cardColor,
                   shape: RoundedRectangleBorder(
@@ -476,7 +495,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                           Material(
                             color: cardColor,
                             child: TabBar(
-                              labelColor: Colors.white,
+                              labelColor: textColor,
                               unselectedLabelColor: Colors.grey,
                               indicatorColor: Colors.green.shade700,
                               tabs: const [
@@ -495,12 +514,12 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
+                                      Text(
                                         'Syarat & Ketentuan:',
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.white,
+                                          color: textColor,
                                         ),
                                       ),
                                       const SizedBox(height: 8),
@@ -517,9 +536,12 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                             children: [
                                               Text(
                                                 '${index + 1}. ',
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                   fontSize: 14,
-                                                  color: Colors.grey,
+                                                  color:
+                                                      themeController.isDarkMode
+                                                      ? Colors.grey
+                                                      : Colors.black,
                                                   height: 1.5,
                                                 ),
                                               ),
@@ -528,9 +550,13 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                                   _ringkasanList[index],
                                                   textAlign: TextAlign
                                                       .justify, // ✅ teks rata kiri-kanan
-                                                  style: const TextStyle(
+                                                  style: TextStyle(
                                                     fontSize: 14,
-                                                    color: Colors.grey,
+                                                    color:
+                                                        themeController
+                                                            .isDarkMode
+                                                        ? Colors.grey
+                                                        : Colors.black,
                                                     height: 1.5,
                                                   ),
                                                 ),
@@ -546,11 +572,13 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: selectedModel == null || result == null
-                                      ? const Center(
+                                      ? Center(
                                           child: Text(
                                             'Pilih model & hitung terlebih dahulu',
                                             style: TextStyle(
-                                              color: Colors.grey,
+                                              color: themeController.isDarkMode
+                                                  ? Colors.grey
+                                                  : Colors.black,
                                             ),
                                           ),
                                         )
@@ -612,7 +640,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
           padding: const EdgeInsets.only(bottom: 8),
           child: Text(
             'Periode: $startLabel - $endLabel',
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
         Expanded(

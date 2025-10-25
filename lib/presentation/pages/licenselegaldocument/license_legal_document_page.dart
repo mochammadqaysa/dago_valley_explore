@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:dago_valley_explore/app/config/app_colors.dart';
+import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 
 class LicenseLegalDocumentPage extends StatefulWidget {
@@ -79,18 +82,18 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage> {
   Widget build(BuildContext context) {
     final isTV = MediaQuery.of(context).size.width > 800;
     final crossAxisCount = isTV ? 5 : 1;
+    final themeController = Get.find<ThemeController>();
 
     return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: const Text('Dokumentasi Perizinan dan Legalitas '),
-        backgroundColor: Colors.black,
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Dokumentasi Perizinan dan Legalitas '),
+
+      //   titleTextStyle: const TextStyle(
+      //     color: themeController.isDarkMode ? Colors.white : Colors.grey,
+      //     fontSize: 20,
+      //     fontWeight: FontWeight.bold,
+      //   ),
+      // ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator(color: Colors.white))
           : GridView.builder(
@@ -111,12 +114,21 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage> {
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 150),
                       decoration: BoxDecoration(
-                        color: Colors.grey[900],
+                        color: themeController.isDarkMode
+                            ? Colors.grey[900]
+                            : AppColors.lightGrey,
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.grey.shade700),
+                        border: Border.all(
+                          color: themeController.isDarkMode
+                              ? Colors.grey.shade700
+                              : Colors.grey.shade300,
+                          width: 2,
+                        ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.4),
+                            color: themeController.isDarkMode
+                                ? Colors.black.withOpacity(0.4)
+                                : Colors.grey.withOpacity(0.4),
                             blurRadius: 8,
                             offset: const Offset(0, 4),
                           ),
@@ -132,7 +144,9 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage> {
                             fileName.replaceAll('.pdf', '').toUpperCase(),
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: Colors.white,
+                              color: themeController.isDarkMode
+                                  ? Colors.white
+                                  : Colors.grey,
                               fontSize: isTV ? 18 : 16,
                               fontWeight: FontWeight.bold,
                             ),
