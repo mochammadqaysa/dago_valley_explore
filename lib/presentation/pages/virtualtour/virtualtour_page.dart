@@ -112,7 +112,7 @@ class VirtualtourPage extends StatelessWidget {
               width: baseWidth * scaleFactor,
               height: baseHeight * scaleFactor,
               margin: const EdgeInsets.only(right: 16),
-              child: _buildHouseCard(),
+              child: _buildHouseCard(house),
             ),
           );
         }).toList(),
@@ -121,16 +121,16 @@ class VirtualtourPage extends StatelessWidget {
   }
 
   // ===== Widget Kartu Rumah =====
-  Widget _buildHouseCard() {
+  Widget _buildHouseCard(HouseModel house) {
     return Container(
       margin: const EdgeInsets.only(right: 35),
       decoration: BoxDecoration(
-        color: Colors.red,
+        // color: Colors.red,
         borderRadius: BorderRadius.circular(12),
-        // image: DecorationImage(
-        //   image: AssetImage(house.galeri!['image']!.first),
-        //   fit: BoxFit.cover,
-        // ),
+        image: DecorationImage(
+          image: AssetImage(house.gambar.first),
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }

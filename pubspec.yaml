@@ -78,6 +78,7 @@ flutter:
   assets:
     - assets/
     - assets/menu/
+    - assets/rumah/
     - assets/promo/
     - assets/legalitas/
   # assets:
