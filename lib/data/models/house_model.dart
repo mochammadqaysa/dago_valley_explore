@@ -8,6 +8,7 @@ class HouseModel {
   final List<String> blok;
   final int jumlahUnit;
   final int hargaCash;
+  final List<String> gambar;
   final Map<String, Set<String>>? galeri;
 
   /// Struktur:
@@ -25,6 +26,7 @@ class HouseModel {
     required this.isAddendum,
     required this.blok,
     required this.jumlahUnit,
+    required this.gambar,
     required this.hargaCash,
     required this.galeri,
     required this.cicilanData,
@@ -43,6 +45,13 @@ const List<HouseModel> houseModels = [
     blok: ["I3", "I5", "I7", "I8"],
     jumlahUnit: 4,
     hargaCash: 2499000000,
+    gambar: [
+      "assets/rumah/fasad_harmoni_100_108.png",
+      "assets/rumah/fasad_harmoni_100_108_kanopi.png",
+      "assets/rumah/harmoni_100_108_lt_1.png",
+      "assets/rumah/harmoni_100_108_lt_2.png",
+      "assets/rumah/harmoni_100_108_lt_rt.png",
+    ],
     galeri: {
       "image": {
         "assets/rumah/fasad_harmoni_100_108.png",
@@ -81,6 +90,13 @@ const List<HouseModel> houseModels = [
     blok: [],
     jumlahUnit: 0,
     hargaCash: 0,
+    gambar: [
+      "assets/rumah/fasad_harmoni_100_108.png",
+      "assets/rumah/fasad_harmoni_100_108_kanopi.png",
+      "assets/rumah/harmoni_100_108_lt_1.png",
+      "assets/rumah/harmoni_100_108_lt_2.png",
+      "assets/rumah/harmoni_100_108_lt_rt.png",
+    ],
     galeri: {
       "image": {
         // gaada asetnya, pakai yang 100/108
@@ -120,6 +136,13 @@ const List<HouseModel> houseModels = [
     blok: ["G3", "G5", "G7"],
     jumlahUnit: 3,
     hargaCash: 2670000000,
+    gambar: [
+      "assets/rumah/fasad_harmoni_100_108.png",
+      "assets/rumah/fasad_harmoni_100_108_kanopi.png",
+      "assets/rumah/harmoni_100_108_lt_1.png",
+      "assets/rumah/harmoni_100_108_lt_2.png",
+      "assets/rumah/harmoni_100_108_lt_rt.png",
+    ],
     galeri: {
       "image": {
         // gaada asetnya, pakai yang 100/108
@@ -177,6 +200,13 @@ const List<HouseModel> houseModels = [
     blok: ["F3", "F5"],
     jumlahUnit: 2,
     hargaCash: 2820000000,
+    gambar: [
+      "assets/rumah/fasad_harmoni_100_108.png",
+      "assets/rumah/fasad_harmoni_100_108_kanopi.png",
+      "assets/rumah/harmoni_100_108_lt_1.png",
+      "assets/rumah/harmoni_100_108_lt_2.png",
+      "assets/rumah/harmoni_100_108_lt_rt.png",
+    ],
     galeri: {
       "image": {
         // gaada asetnya, pakai yang 100/108
@@ -234,6 +264,14 @@ const List<HouseModel> houseModels = [
     blok: ["H1", "H2", "H9", "H10", "I2", "I9", "I10"],
     jumlahUnit: 7,
     hargaCash: 3333000000,
+    gambar: [
+      "assets/rumah/fasad_harmoni_129_144.png",
+      "assets/rumah/fasad_harmoni_129_144_kanopi.png",
+      "assets/rumah/fasad_harmoni_129_144_siang.png",
+      "assets/rumah/harmoni_129_144_lt_1.png",
+      "assets/rumah/harmoni_129_144_lt_2.png",
+      "assets/rumah/harmoni_129_144_lt_rt.png",
+    ],
     galeri: {
       "image": {
         "assets/rumah/fasad_harmoni_129_144.png",
@@ -273,6 +311,14 @@ const List<HouseModel> houseModels = [
     blok: [],
     jumlahUnit: 0,
     hargaCash: 0,
+    gambar: [
+      "assets/rumah/fasad_harmoni_129_144.png",
+      "assets/rumah/fasad_harmoni_129_144_kanopi.png",
+      "assets/rumah/fasad_harmoni_129_144_siang.png",
+      "assets/rumah/harmoni_129_144_lt_1.png",
+      "assets/rumah/harmoni_129_144_lt_2.png",
+      "assets/rumah/harmoni_129_144_lt_rt.png",
+    ],
     galeri: {
       "image": {
         // gaada asetnya, pakai yang 129/144
@@ -313,6 +359,13 @@ const List<HouseModel> houseModels = [
     blok: ["G1", "G9"],
     jumlahUnit: 2,
     hargaCash: 3443000000,
+    gambar: [
+      "assets/rumah/fasad_harmoni_131_150.png",
+      "assets/rumah/fasad_harmoni_131_150_siang.png",
+      "assets/rumah/harmoni_131_150_lt_1.png",
+      "assets/rumah/harmoni_131_150_lt_2.png",
+      "assets/rumah/harmoni_131_150_lt_rt.png",
+    ],
     galeri: {
       "image": {
         "assets/rumah/fasad_harmoni_131_150.png",
@@ -360,6 +413,13 @@ const List<HouseModel> houseModels = [
     blok: ["F1", "F7"],
     jumlahUnit: 2,
     hargaCash: 3787000000,
+    gambar: [
+      "assets/rumah/fasad_harmoni_131_150.png",
+      "assets/rumah/fasad_harmoni_131_150_siang.png",
+      "assets/rumah/harmoni_131_150_lt_1.png",
+      "assets/rumah/harmoni_131_150_lt_2.png",
+      "assets/rumah/harmoni_131_150_lt_rt.png",
+    ],
     galeri: {
       "image": {
         //gaada asetnya, pakai yang 131/150
@@ -410,6 +470,14 @@ const List<HouseModel> houseModels = [
     blok: ["E3", "E5"],
     jumlahUnit: 2,
     hargaCash: 4351000000,
+    gambar: [
+      "assets/rumah/fasad_foresta_144_190.png",
+      "assets/rumah/fasad_foresta_144_190_kanopi.png",
+      "assets/rumah/fasad_foresta_144_190_siang.png",
+      "assets/rumah/foresta_144_190_lt_1.png",
+      "assets/rumah/foresta_144_190_lt_2.png",
+      "assets/rumah/foresta_144_190_lt_rt.png",
+    ],
     galeri: {
       "image": {
         "assets/rumah/fasad_foresta_144_190.png",
@@ -490,6 +558,13 @@ const List<HouseModel> houseModels = [
     blok: ["F4"],
     jumlahUnit: 1,
     hargaCash: 4957000000,
+    gambar: [
+      "assets/rumah/fasad_foresta_193_228.png",
+      "assets/rumah/fasad_foresta_193_228_kanopi.png",
+      "assets/rumah/foresta_193_228_lt_1.png",
+      "assets/rumah/foresta_193_228_lt_2.png",
+      "assets/rumah/foresta_193_228_lt_rt.png",
+    ],
     galeri: {
       "image": {
         //gaada asetnya, pakai yang 193/228
@@ -529,6 +604,13 @@ const List<HouseModel> houseModels = [
     blok: ["E1", "E7"],
     jumlahUnit: 2,
     hargaCash: 5311000000,
+    gambar: [
+      "assets/rumah/fasad_foresta_193_228.png",
+      "assets/rumah/fasad_foresta_193_228_kanopi.png",
+      "assets/rumah/foresta_193_228_lt_1.png",
+      "assets/rumah/foresta_193_228_lt_2.png",
+      "assets/rumah/foresta_193_228_lt_rt.png",
+    ],
     galeri: {
       "image": {
         "assets/rumah/fasad_foresta_193_228.png",
@@ -567,6 +649,13 @@ const List<HouseModel> houseModels = [
     blok: [],
     jumlahUnit: 2,
     hargaCash: 0,
+    gambar: [
+      "assets/rumah/fasad_foresta_193_228.png",
+      "assets/rumah/fasad_foresta_193_228_kanopi.png",
+      "assets/rumah/foresta_193_228_lt_1.png",
+      "assets/rumah/foresta_193_228_lt_2.png",
+      "assets/rumah/foresta_193_228_lt_rt.png",
+    ],
     galeri: {
       "image": {
         //gaada asetnya, pakai yang 193/228
@@ -606,6 +695,13 @@ const List<HouseModel> houseModels = [
     blok: ["F2"],
     jumlahUnit: 1,
     hargaCash: 5422000000,
+    gambar: [
+      "assets/rumah/fasad_foresta_193_228.png",
+      "assets/rumah/fasad_foresta_193_228_kanopi.png",
+      "assets/rumah/foresta_193_228_lt_1.png",
+      "assets/rumah/foresta_193_228_lt_2.png",
+      "assets/rumah/foresta_193_228_lt_rt.png",
+    ],
     galeri: {
       "image": {
         //gaada asetnya, pakai yang 193/228
@@ -653,6 +749,14 @@ const List<HouseModel> houseModels = [
     blok: [],
     jumlahUnit: 2,
     hargaCash: 0,
+    gambar: [
+      "assets/rumah/fasad_foresta_144_190.png",
+      "assets/rumah/fasad_foresta_144_190_kanopi.png",
+      "assets/rumah/fasad_foresta_144_190_siang.png",
+      "assets/rumah/foresta_144_190_lt_1.png",
+      "assets/rumah/foresta_144_190_lt_2.png",
+      "assets/rumah/foresta_144_190_lt_rt.png",
+    ],
     galeri: {
       "image": {
         //gaada asetnya, pakai yang 144/190
@@ -694,6 +798,14 @@ const List<HouseModel> houseModels = [
     blok: [],
     jumlahUnit: 2,
     hargaCash: 0,
+    gambar: [
+      "assets/rumah/fasad_foresta_144_190.png",
+      "assets/rumah/fasad_foresta_144_190_kanopi.png",
+      "assets/rumah/fasad_foresta_144_190_siang.png",
+      "assets/rumah/foresta_144_190_lt_1.png",
+      "assets/rumah/foresta_144_190_lt_2.png",
+      "assets/rumah/foresta_144_190_lt_rt.png",
+    ],
     galeri: {
       "image": {
         //gaada asetnya, pakai yang 144/190
@@ -734,6 +846,14 @@ const List<HouseModel> houseModels = [
     blok: [],
     jumlahUnit: 2,
     hargaCash: 0,
+    gambar: [
+      "assets/rumah/fasad_foresta_144_190.png",
+      "assets/rumah/fasad_foresta_144_190_kanopi.png",
+      "assets/rumah/fasad_foresta_144_190_siang.png",
+      "assets/rumah/foresta_144_190_lt_1.png",
+      "assets/rumah/foresta_144_190_lt_2.png",
+      "assets/rumah/foresta_144_190_lt_rt.png",
+    ],
     galeri: {
       "image": {
         //gaada asetnya, pakai yang 144/190
