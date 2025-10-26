@@ -1,12 +1,17 @@
 import 'package:dago_valley_explore/app/config/app_colors.dart';
 import 'package:dago_valley_explore/app/extensions/color.dart';
+import 'package:dago_valley_explore/app/types/tab_type.dart';
 import 'package:dago_valley_explore/presentation/components/liquidglass/liquid_glass_button.dart';
 import 'package:dago_valley_explore/presentation/components/liquidglass/liquid_glass_container.dart';
+import 'package:dago_valley_explore/presentation/controllers/event/event_binding.dart';
 import 'package:dago_valley_explore/presentation/controllers/promo/promo_binding.dart';
 import 'package:dago_valley_explore/presentation/controllers/qrcode/qrcode_binding.dart';
+import 'package:dago_valley_explore/presentation/controllers/sidebar/sidebar_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
+import 'package:dago_valley_explore/presentation/pages/event/event_detail_page.dart';
 import 'package:dago_valley_explore/presentation/pages/promo/promo_detail_page.dart';
 import 'package:dago_valley_explore/presentation/pages/qrcode/qrcode_page.dart';
+import 'package:dago_valley_explore/screen/sample.dart';
 import 'package:dago_valley_explore/screen/site_plan.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -46,6 +51,26 @@ class _DashboardPageState extends State<DashboardPage> {
       opaque: false,
       fullscreenDialog: true,
     );
+  }
+
+  void _showEventModal() {
+    // Panggil binding secara manual sesuai pattern Anda
+    EventBinding().dependencies();
+
+    // Navigasi dengan fade transition
+    Get.to(
+      () => EventDetailPage(),
+      transition: Transition.fade,
+      duration: const Duration(milliseconds: 400),
+      opaque: false,
+      fullscreenDialog: true,
+    );
+  }
+
+  // Method untuk navigasi ke tab lain via sidebar
+  void _navigateToTab(TabType tab) {
+    final sidebarController = Get.find<SidebarController>();
+    sidebarController.setActiveTab(tab);
   }
 
   @override
@@ -126,7 +151,8 @@ class _DashboardPageState extends State<DashboardPage> {
                         imageUrl: 'assets/siteplan.jpg',
                         buttonText: 'check_availability'.tr,
                         onButtonPressed: () {
-                          print('Site Plan pressed!');
+                          // Navigate ke SitePlanPage via sidebar
+                          _navigateToTab(TabType.siteplanpage);
                         },
                         titleBackgroundColor: themeController.isDarkMode
                             ? Colors.black
@@ -140,9 +166,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         title: 'event'.tr,
                         imageUrl: 'assets/event.jpg',
                         buttonText: 'check_availability'.tr,
-                        onButtonPressed: () {
-                          print('Event pressed!');
-                        },
+                        onButtonPressed: _showEventModal,
                         titleBackgroundColor: themeController.isDarkMode
                             ? Colors.black
                             : Colors.white,
@@ -156,7 +180,8 @@ class _DashboardPageState extends State<DashboardPage> {
                         imageUrl: 'assets/tiperumah.jpg',
                         buttonText: 'check_availability'.tr,
                         onButtonPressed: () {
-                          print('Tipe Rumah pressed!');
+                          // Navigate ke VirtualTourPage (Product Page) via sidebar
+                          _navigateToTab(TabType.productpage);
                         },
                         titleBackgroundColor: themeController.isDarkMode
                             ? Colors.black
@@ -171,7 +196,8 @@ class _DashboardPageState extends State<DashboardPage> {
                         imageUrl: 'assets/akad.jpg',
                         buttonText: 'check_availability'.tr,
                         onButtonPressed: () {
-                          print('Akad pressed!');
+                          // Navigate ke LicenseLegalDocumentPage via sidebar
+                          _navigateToTab(TabType.licenselegaldocumentpage);
                         },
                         titleBackgroundColor: themeController.isDarkMode
                             ? Colors.black

@@ -80,6 +80,7 @@ flutter:
     - assets/menu/
     - assets/rumah/
     - assets/promo/
+    - assets/event/
     - assets/legalitas/
   # assets:
   #   - images/a_dot_burr.jpeg

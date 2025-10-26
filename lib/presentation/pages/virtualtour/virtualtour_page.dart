@@ -1,53 +1,243 @@
+import 'package:dago_valley_explore/app/config/app_colors.dart';
 import 'package:dago_valley_explore/data/models/house_model.dart';
+import 'package:dago_valley_explore/presentation/components/productcard/product_card.dart';
 import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
+import 'package:dago_valley_explore/presentation/controllers/virtualtour/detailproduct/detail_product_binding.dart';
+import 'package:dago_valley_explore/presentation/pages/virtualtour/detail_product/detail_product_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../detail/detail_page.dart';
 
-class VirtualtourPage extends StatelessWidget {
+class VirtualtourPage extends StatefulWidget {
   const VirtualtourPage({super.key});
+
+  @override
+  State<VirtualtourPage> createState() => _VirtualtourPageState();
+}
+
+class _VirtualtourPageState extends State<VirtualtourPage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+  void _showPromoModal() {
+    // Panggil binding secara manual sesuai pattern Anda
+    DetailProductBinding().dependencies();
+
+    // Navigasi dengan fade transition
+    Get.to(
+      () => const ProductDetailPage(),
+      transition: Transition.fade,
+      duration: const Duration(milliseconds: 400),
+      opaque: false,
+      fullscreenDialog: true,
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
 
     return Scaffold(
-      backgroundColor: const Color(0xFF121212), // ✅ Warna benar
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 40),
+      body: Column(
+        children: [
+          // Header dengan Tab Buttons di pojok kanan atas
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 20,
+              right: 24,
+              left: 24,
+              bottom: 16,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                // Title
+                // Text(
+                //   'Virtual Tour',
+                //   style: TextStyle(
+                //     fontSize: 32,
+                //     fontWeight: FontWeight.bold,
+                //     color: themeController.isDarkMode
+                //         ? Colors.white
+                //         : Colors.black,
+                //   ),
+                // ),
 
-              // ========== SECTION HARMONI ==========
-              _buildSectionHeader(
-                title: 'Harmoni',
-                subtitle: 'Hunian nyaman dengan desain modern tropis',
-                themeController: themeController,
-              ),
-              const SizedBox(height: 20),
-              _buildHorizontalHouseList(
-                useAspectRatio: true,
-                modelFilter: 'Harmoni',
-              ),
-
-              const SizedBox(height: 40),
-
-              // ========== SECTION FORESTA ==========
-              _buildSectionHeader(
-                title: 'Foresta',
-                subtitle: 'Keseimbangan kemewahan dan keharmonisan alam',
-                themeController: themeController,
-              ),
-              const SizedBox(height: 20),
-              _buildHorizontalHouseList(
-                useAspectRatio: true,
-                modelFilter: 'Foresta',
-              ),
-            ],
+                // Tab Control Buttons
+                Container(
+                  width: 380, // Fixed width untuk TabBar
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: themeController.isDarkMode
+                        ? Colors.grey[850]
+                        : Colors.grey[200],
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: TabBar(
+                    controller: _tabController,
+                    indicator: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    dividerColor: Colors.transparent,
+                    labelColor: Colors.white,
+                    unselectedLabelColor: themeController.isDarkMode
+                        ? Colors.white70
+                        : Colors.black54,
+                    labelStyle: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    tabs: const [
+                      Tab(text: 'Tahap 1'),
+                      Tab(text: 'Tahap 2'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
+
+          // TabBarView Content
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                // Tab 1: Foresta & Harmoni
+                _buildTab1Content(themeController),
+
+                // Tab 2: Other Models
+                _buildTab2Content(themeController),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ===== TAB 1: Foresta & Harmoni =====
+  Widget _buildTab1Content(ThemeController themeController) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20),
+
+            // SECTION HARMONI
+            _buildSectionHeader(
+              title: 'Harmoni',
+              subtitle: 'Hunian nyaman dengan desain modern tropis',
+              themeController: themeController,
+            ),
+            const SizedBox(height: 20),
+            _buildHorizontalHouseList(
+              useAspectRatio: true,
+              modelFilter: 'Harmoni',
+              tahapFilter: '1',
+            ),
+
+            const SizedBox(height: 40),
+
+            // SECTION FORESTA
+            _buildSectionHeader(
+              title: 'Foresta',
+              subtitle: 'Keseimbangan kemewahan dan keharmonisan alam',
+              themeController: themeController,
+            ),
+            const SizedBox(height: 20),
+            _buildHorizontalHouseList(
+              useAspectRatio: true,
+              modelFilter: 'Foresta',
+              tahapFilter: '1',
+            ),
+
+            const SizedBox(height: 40),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ===== TAB 2: Other Models =====
+  Widget _buildTab2Content(ThemeController themeController) {
+    // Get unique models excluding Foresta and Harmoni
+    final otherModels = houseModels
+        .where(
+          (house) =>
+              house.tahap != 'Foresta' &&
+              house.model != 'Harmoni' &&
+              house.tahap != '1',
+        )
+        .map((house) => house.model)
+        .toSet()
+        .toList();
+
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20),
+
+            // Generate sections for each other model
+            ...otherModels.map((model) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildSectionHeader(
+                    title: model,
+                    subtitle: 'Model $model',
+                    themeController: themeController,
+                  ),
+                  const SizedBox(height: 20),
+                  _buildHorizontalHouseList(
+                    useAspectRatio: true,
+                    modelFilter: model,
+                    tahapFilter: '2',
+                  ),
+                  const SizedBox(height: 40),
+                ],
+              );
+            }).toList(),
+
+            // Jika tidak ada model lain
+            if (otherModels.isEmpty)
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(40.0),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.home_work_outlined,
+                        size: 64,
+                        color: Colors.grey[400],
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'No other models available',
+                        style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );
@@ -64,7 +254,11 @@ class VirtualtourPage extends StatelessWidget {
       children: [
         Text(
           title,
-          style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            color: themeController.isDarkMode ? Colors.white : Colors.black,
+          ),
         ),
         Container(
           margin: const EdgeInsets.only(left: 16),
@@ -81,7 +275,12 @@ class VirtualtourPage extends StatelessWidget {
           ),
           child: Text(
             subtitle,
-            style: const TextStyle(fontSize: 18), // ✅ Lebih proporsional
+            style: TextStyle(
+              fontSize: 18,
+              color: themeController.isDarkMode
+                  ? Colors.white70
+                  : Colors.black87,
+            ),
           ),
         ),
       ],
@@ -92,14 +291,23 @@ class VirtualtourPage extends StatelessWidget {
   Widget _buildHorizontalHouseList({
     bool useAspectRatio = false,
     String modelFilter = 'Harmoni',
+    String tahapFilter = '1',
   }) {
+    final filteredHouses = houseModels
+        .where(
+          (house) => house.model == modelFilter && house.tahap == tahapFilter,
+        )
+        .toList();
+
+    if (filteredHouses.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: houseModels.where((house) => house.model == modelFilter).map((
-          house,
-        ) {
-          // Faktor skala (misal 2x)
+        children: filteredHouses.map((house) {
+          // Faktor skala
           final double scaleFactor = useAspectRatio ? 1.5 : 1.0;
           final double baseWidth = 181;
           final double baseHeight = 242;
@@ -122,16 +330,14 @@ class VirtualtourPage extends StatelessWidget {
 
   // ===== Widget Kartu Rumah =====
   Widget _buildHouseCard(HouseModel house) {
-    return Container(
-      margin: const EdgeInsets.only(right: 35),
-      decoration: BoxDecoration(
-        // color: Colors.red,
-        borderRadius: BorderRadius.circular(12),
-        image: DecorationImage(
-          image: AssetImage(house.gambar.first),
-          fit: BoxFit.cover,
-        ),
-      ),
+    return ProductCard(
+      title: house.model,
+      imageUrl: house.gambar.first,
+      buttonText: 'Lihat 360°',
+      onButtonPressed: _showPromoModal,
+      titleBackgroundColor: Colors.white.withOpacity(0.8),
+      buttonColor: Colors.blueAccent,
+      houseModel: house,
     );
   }
 }

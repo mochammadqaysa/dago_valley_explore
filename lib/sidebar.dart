@@ -1,5 +1,6 @@
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:dago_valley_explore/app/config/app_colors.dart';
+import 'package:dago_valley_explore/presentation/pages/event/event_detail_page.dart';
 import 'package:dago_valley_explore/screen/dasbor_awal.dart';
 import 'package:dago_valley_explore/screen/sample.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +77,7 @@ class _SidebarPageState extends State<SidebarPage> {
         icon: Icons.event,
         onPressed: () => setState(() {
           _headline = 'Event';
-          _currentPage = EventPage();
+          _currentPage = EventDetailPage();
         }),
         onHold: () => ScaffoldMessenger.of(
           context,

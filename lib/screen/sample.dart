@@ -84,25 +84,6 @@ class EcoPage extends StatelessWidget {
   }
 }
 
-class EventPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.event, size: 80, color: Colors.purple),
-          SizedBox(height: 20),
-          Text(
-            'Event Page',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class NoIconPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
