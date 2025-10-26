@@ -9,6 +9,7 @@ class HouseModel {
   final int jumlahUnit;
   final int hargaCash;
   final List<String> gambar;
+  final List<String> video;
 
   /// Struktur:
   /// {
@@ -28,6 +29,7 @@ class HouseModel {
     required this.gambar,
     required this.hargaCash,
     required this.cicilanData,
+    this.video = const [],
   });
 
   String get displayName => "$model ($type)";
@@ -142,7 +144,7 @@ const List<HouseModel> houseModels = [
       "assets/rumah/harmoni_106_112_rt_2.png",
       "assets/rumah/harmoni_106_112_rt_3.png",
     ],
-
+    video: ["assets/rumah/video_harmoni_106_112.mp4"],
     cicilanData: {
       "kpr_syariah": {
         5: {"cicilan": 45373178, "total": 3256390694},
@@ -197,6 +199,7 @@ const List<HouseModel> houseModels = [
       "assets/rumah/harmoni_106_112_rt_2.png",
       "assets/rumah/harmoni_106_112_rt_3.png",
     ],
+    video: ["assets/rumah/video_harmoni_106_112.mp4"],
 
     cicilanData: {
       "kpr_syariah": {
