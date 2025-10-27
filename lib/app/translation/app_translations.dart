@@ -6,6 +6,7 @@ class AppTranslations extends Translations {
     // Indonesian
     'id_ID': {
       //homepage
+      'welcome_title': 'Rumah Mewah di Dago Valley Bandung',
       'welcome_desc':
           'Nikmati kenyamanan hidup dengan fasilitas lengkap dan lingkungan yang asri. Temukan rumah impian Anda di perumahan eksklusif ini.',
       'view_promo': "Lihat Promo",
@@ -14,6 +15,13 @@ class AppTranslations extends Translations {
       'house_type': "Tipe Rumah",
       'agreements_and_legality': "Perjanjian & Legalitas",
       'check_availability': "Periksa ketersediaan",
+
+      // virtual / product page
+      'harmoni_desc': 'Hunian nyaman dengan desain modern tropis',
+      'foresta_desc': 'Keseimbangan kemewahan dan keharmonisan alam',
+      'tropica_desc': 'Keindahan alami dalam sentuhan modern',
+      'view_details': 'Lihat Detail',
+
       // 'rate_us': "Nilai Kami",
       // Common
       'app_name': 'Dago Valley Explore',
@@ -29,6 +37,7 @@ class AppTranslations extends Translations {
       'edit': 'Edit',
       'search': 'Cari',
       'settings': 'Pengaturan',
+      'type': 'Tipe',
 
       // Language
       'language': 'Bahasa',
@@ -94,6 +103,7 @@ class AppTranslations extends Translations {
     // English
     'en_US': {
       //homepage
+      'welcome_title': 'Luxury House in Dago Valley Bandung',
       'welcome_desc':
           'Enjoy the comforts of life with complete facilities and a beautiful environment. Find your dream home in this exclusive residential area.',
       'view_promo': "View Promo",
@@ -102,6 +112,13 @@ class AppTranslations extends Translations {
       'house_type': "House Type",
       'agreements_and_legality': "Agreements & Legality",
       'check_availability': "Check availability",
+
+      // virtual / product page
+      'harmoni_desc': 'Comfortable living with modern tropical design',
+      'foresta_desc': 'A balance of luxury and natural harmony',
+      'tropica_desc': 'Natural beauty with a modern touch',
+      'view_details': 'View Details',
+
       // 'rate_us': "Rate Us",
       // Common
       'app_name': 'Dago Valley Explore',
@@ -117,6 +134,7 @@ class AppTranslations extends Translations {
       'edit': 'Edit',
       'search': 'Search',
       'settings': 'Settings',
+      'type': 'Type',
 
       // Language
       'language': 'Language',

@@ -1,6 +1,7 @@
 import 'package:dago_valley_explore/data/models/house_model.dart';
 import 'package:dago_valley_explore/presentation/components/liquidglass/liquid_glass_container.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 
 class ProductCard extends StatelessWidget {
   final String title;
@@ -84,7 +85,7 @@ class ProductCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Tipe ${houseModel.model}",
+                        "type".tr + " ${houseModel.model}",
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,

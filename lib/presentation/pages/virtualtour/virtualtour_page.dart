@@ -18,13 +18,14 @@ class VirtualtourPage extends StatefulWidget {
 class _VirtualtourPageState extends State<VirtualtourPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  void _showPromoModal() {
+  void _showPromoModal(HouseModel house) {
     // Panggil binding secara manual sesuai pattern Anda
     DetailProductBinding().dependencies();
 
-    // Navigasi dengan fade transition
+    // Navigasi dengan fade transition dan pass house model sebagai argument
     Get.to(
       () => const ProductDetailPage(),
+      arguments: house, // Pass house model di sini
       transition: Transition.fade,
       duration: const Duration(milliseconds: 400),
       opaque: false,
@@ -141,7 +142,7 @@ class _VirtualtourPageState extends State<VirtualtourPage>
             // SECTION HARMONI
             _buildSectionHeader(
               title: 'Harmoni',
-              subtitle: 'Hunian nyaman dengan desain modern tropis',
+              subtitle: 'harmoni_desc'.tr,
               themeController: themeController,
             ),
             const SizedBox(height: 20),
@@ -156,7 +157,7 @@ class _VirtualtourPageState extends State<VirtualtourPage>
             // SECTION FORESTA
             _buildSectionHeader(
               title: 'Foresta',
-              subtitle: 'Keseimbangan kemewahan dan keharmonisan alam',
+              subtitle: 'foresta_desc'.tr,
               themeController: themeController,
             ),
             const SizedBox(height: 20),
@@ -202,7 +203,7 @@ class _VirtualtourPageState extends State<VirtualtourPage>
                 children: [
                   _buildSectionHeader(
                     title: model,
-                    subtitle: 'Model $model',
+                    subtitle: 'tropica_desc'.tr,
                     themeController: themeController,
                   ),
                   const SizedBox(height: 20),
@@ -333,8 +334,8 @@ class _VirtualtourPageState extends State<VirtualtourPage>
     return ProductCard(
       title: house.model,
       imageUrl: house.gambar.first,
-      buttonText: 'Lihat Detail',
-      onButtonPressed: _showPromoModal,
+      buttonText: 'view_details'.tr,
+      onButtonPressed: () => _showPromoModal(house),
       titleBackgroundColor: Colors.white.withOpacity(0.8),
       buttonColor: Colors.blueAccent,
       houseModel: house,

@@ -109,7 +109,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "Rumah Mewah Dago Valley Bandung",
+                              "welcome_title".tr,
                               style: TextStyle(
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold,
