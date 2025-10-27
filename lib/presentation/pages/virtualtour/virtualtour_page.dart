@@ -333,7 +333,7 @@ class _VirtualtourPageState extends State<VirtualtourPage>
     return ProductCard(
       title: house.model,
       imageUrl: house.gambar.first,
-      buttonText: 'Lihat 360°',
+      buttonText: 'Lihat Detail',
       onButtonPressed: _showPromoModal,
       titleBackgroundColor: Colors.white.withOpacity(0.8),
       buttonColor: Colors.blueAccent,
