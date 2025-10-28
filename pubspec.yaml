@@ -53,6 +53,14 @@ dependencies:
   carousel_slider: ^5.1.1
   qr_flutter: ^4.1.0
   syncfusion_flutter_pdfviewer: ^31.2.3
+  video_player: ^2.8.2
+  media_kit: ^1.1.10
+  media_kit_video: ^1.2.4
+  media_kit_libs_windows_video: ^1.0.9 # Windows native library
+
+dependency_overrides:
+  # Override untuk Windows support
+  video_player_platform_interface: ^6.2.0
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +87,7 @@ flutter:
   assets:
     - assets/
     - assets/menu/
+    - assets/rumah/harmoni_106_112.mp4
     - assets/rumah/
     - assets/promo/
     - assets/event/

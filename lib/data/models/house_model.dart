@@ -52,7 +52,7 @@ const List<HouseModel> houseModels = [
       "assets/rumah/harmoni_100_108_lt_2.png",
       "assets/rumah/harmoni_100_108_lt_rt.png",
     ],
-    video: ["assets/rumah/video_harmoni_106_112.mp4"],
+    video: ["assets/rumah/harmoni_106_112.mp4"],
     cicilanData: {
       "kpr_syariah": {
         5: {"cicilan": 42467256, "total": 3047835335},
@@ -144,7 +144,7 @@ const List<HouseModel> houseModels = [
       "assets/rumah/harmoni_106_112_rt_2.png",
       "assets/rumah/harmoni_106_112_rt_3.png",
     ],
-    video: ["assets/rumah/video_harmoni_106_112.mp4"],
+    video: ["assets/rumah/harmoni_106_112.mp4"],
     cicilanData: {
       "kpr_syariah": {
         5: {"cicilan": 45373178, "total": 3256390694},
@@ -199,7 +199,7 @@ const List<HouseModel> houseModels = [
       "assets/rumah/harmoni_106_112_rt_2.png",
       "assets/rumah/harmoni_106_112_rt_3.png",
     ],
-    video: ["assets/rumah/video_harmoni_106_112.mp4"],
+    video: ["assets/rumah/harmoni_106_112.mp4"],
 
     cicilanData: {
       "kpr_syariah": {
