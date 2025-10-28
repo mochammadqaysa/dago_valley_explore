@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:dago_valley_explore/app/config/app_colors.dart';
 import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
 import 'package:flutter/material.dart';
@@ -184,6 +185,9 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
   final TextEditingController _pageController = TextEditingController();
   final ScrollController _thumbnailScrollController = ScrollController();
 
+  // Store PDF bytes for web
+  Uint8List? _pdfBytes;
+
   // Zoom presets mirip Chrome
   final List<double> _zoomLevels = [
     0.25,
@@ -216,8 +220,20 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
     try {
       await Future.delayed(const Duration(milliseconds: 100));
 
+      // Load PDF sebagai bytes (untuk web compatibility)
       if (kIsWeb) {
-        await Future.delayed(const Duration(milliseconds: 200));
+        try {
+          final ByteData data = await rootBundle.load(widget.assetPath);
+          _pdfBytes = data.buffer.asUint8List();
+          print('PDF bytes loaded: ${_pdfBytes?.length} bytes');
+        } catch (e) {
+          print('Error loading PDF bytes: $e');
+          setState(() {
+            _error = 'Gagal memuat file PDF: $e';
+            _isLoading = false;
+          });
+          return;
+        }
       }
 
       if (mounted) {
@@ -242,10 +258,8 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
 
   void _applyZoom() {
     if (_currentZoom >= 1.0) {
-      // Untuk zoom >= 100%, gunakan PdfViewerController
       _pdfViewerController.zoomLevel = _currentZoom;
     } else {
-      // Untuk zoom < 100%, set ke minimum (1.0) dan biarkan Transform handle
       _pdfViewerController.zoomLevel = 1.0;
     }
   }
@@ -402,10 +416,13 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
                 children: [
                   const Icon(Icons.error_outline, color: Colors.red, size: 64),
                   const SizedBox(height: 16),
-                  Text(
-                    _error!,
-                    style: const TextStyle(color: Colors.white70),
-                    textAlign: TextAlign.center,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: Text(
+                      _error!,
+                      style: const TextStyle(color: Colors.white70),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
@@ -432,26 +449,7 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
                                 child: SizedBox(
                                   width: constraints.maxWidth,
                                   height: constraints.maxHeight,
-                                  child: SfPdfViewer.asset(
-                                    widget.assetPath,
-                                    controller: _pdfViewerController,
-                                    enableDoubleTapZooming: true,
-                                    enableTextSelection: true,
-                                    canShowScrollHead: false,
-                                    canShowScrollStatus: false,
-                                    pageLayoutMode:
-                                        PdfPageLayoutMode.continuous,
-                                    initialZoomLevel: 1.0,
-                                    onDocumentLoaded: _onDocumentLoaded,
-                                    onPageChanged: _onPageChanged,
-                                    onDocumentLoadFailed:
-                                        (PdfDocumentLoadFailedDetails details) {
-                                          setState(() {
-                                            _error =
-                                                'Gagal memuat dokumen: ${details.error}';
-                                          });
-                                        },
-                                  ),
+                                  child: _buildPdfViewer(),
                                 ),
                               );
                             },
@@ -464,6 +462,51 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
               ],
             ),
     );
+  }
+
+  // Build PDF Viewer berdasarkan platform
+  Widget _buildPdfViewer() {
+    if (kIsWeb && _pdfBytes != null) {
+      // Untuk web, gunakan SfPdfViewer.memory
+      return SfPdfViewer.memory(
+        _pdfBytes!,
+        controller: _pdfViewerController,
+        enableDoubleTapZooming: true,
+        enableTextSelection: true,
+        canShowScrollHead: false,
+        canShowScrollStatus: false,
+        pageLayoutMode: PdfPageLayoutMode.continuous,
+        initialZoomLevel: 1.0,
+        onDocumentLoaded: _onDocumentLoaded,
+        onPageChanged: _onPageChanged,
+        onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {
+          setState(() {
+            _error =
+                'Gagal memuat dokumen: ${details.error}\nDeskripsi: ${details.description}';
+          });
+        },
+      );
+    } else {
+      // Untuk mobile/desktop, gunakan SfPdfViewer.asset
+      return SfPdfViewer.asset(
+        widget.assetPath,
+        controller: _pdfViewerController,
+        enableDoubleTapZooming: true,
+        enableTextSelection: true,
+        canShowScrollHead: false,
+        canShowScrollStatus: false,
+        pageLayoutMode: PdfPageLayoutMode.continuous,
+        initialZoomLevel: 1.0,
+        onDocumentLoaded: _onDocumentLoaded,
+        onPageChanged: _onPageChanged,
+        onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {
+          setState(() {
+            _error =
+                'Gagal memuat dokumen: ${details.error}\nDeskripsi: ${details.description}';
+          });
+        },
+      );
+    }
   }
 
   Widget _buildTopToolbar() {
@@ -579,36 +622,11 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
             color: Colors.white24,
             margin: const EdgeInsets.symmetric(horizontal: 8),
           ),
-          // IconButton(
-          //   icon: const Icon(
-          //     Icons.rotate_90_degrees_ccw,
-          //     color: Colors.white,
-          //     size: 20,
-          //   ),
-          //   onPressed: () {},
-          //   tooltip: 'Rotate',
-          // ),
           IconButton(
             icon: const Icon(Icons.fit_screen, color: Colors.white, size: 20),
             onPressed: _resetZoom,
             tooltip: 'Fit to Page',
           ),
-          const SizedBox(width: 8),
-          // IconButton(
-          //   icon: const Icon(Icons.download, color: Colors.white, size: 20),
-          //   onPressed: () {},
-          //   tooltip: 'Download',
-          // ),
-          // IconButton(
-          //   icon: const Icon(Icons.print, color: Colors.white, size: 20),
-          //   onPressed: () {},
-          //   tooltip: 'Print',
-          // ),
-          // IconButton(
-          //   icon: const Icon(Icons.more_vert, color: Colors.white, size: 20),
-          //   onPressed: () {},
-          //   tooltip: 'More',
-          // ),
           const SizedBox(width: 8),
           IconButton(
             icon: const Icon(Icons.close, color: Colors.white, size: 20),
