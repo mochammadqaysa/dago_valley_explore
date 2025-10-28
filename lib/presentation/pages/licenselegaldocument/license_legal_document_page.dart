@@ -1,13 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
 import 'package:dago_valley_explore/app/config/app_colors.dart';
 import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get/get.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class LicenseLegalDocumentPage extends StatefulWidget {
   const LicenseLegalDocumentPage({Key? key}) : super(key: key);
@@ -45,37 +43,16 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage> {
   }
 
   Future<void> openPdf(String assetPath, String title) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) =>
-          const Center(child: CircularProgressIndicator(color: Colors.white)),
-    );
-
-    try {
-      final ByteData bytes = await rootBundle.load(
-        'assets/legalitas/$assetPath',
-      );
-      final Uint8List list = bytes.buffer.asUint8List();
-      final tempDir = await getTemporaryDirectory();
-      final file = File('${tempDir.path}/$assetPath');
-      await file.writeAsBytes(list, flush: true);
-
-      if (!mounted) return;
-      Navigator.pop(context); // tutup loading
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => PdfViewerPage(path: file.path, title: title),
+    // Langsung navigate dengan loading di dalam PdfViewerPage
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => PdfViewerPage(
+          assetPath: 'assets/legalitas/$assetPath',
+          title: title,
         ),
-      );
-    } catch (e) {
-      Navigator.pop(context);
-      print('Error membuka PDF: $e');
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Gagal membuka PDF: $e')));
-    }
+      ),
+    );
   }
 
   @override
@@ -85,15 +62,6 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage> {
     final themeController = Get.find<ThemeController>();
 
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Dokumentasi Perizinan dan Legalitas '),
-
-      //   titleTextStyle: const TextStyle(
-      //     color: themeController.isDarkMode ? Colors.white : Colors.grey,
-      //     fontSize: 20,
-      //     fontWeight: FontWeight.bold,
-      //   ),
-      // ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator(color: Colors.white))
           : GridView.builder(
@@ -195,28 +163,134 @@ class _PdfFileIcon extends StatelessWidget {
   }
 }
 
-class PdfViewerPage extends StatelessWidget {
-  final String path;
+class PdfViewerPage extends StatefulWidget {
+  final String assetPath;
   final String title;
 
-  const PdfViewerPage({Key? key, required this.path, required this.title})
+  const PdfViewerPage({Key? key, required this.assetPath, required this.title})
     : super(key: key);
+
+  @override
+  State<PdfViewerPage> createState() => _PdfViewerPageState();
+}
+
+class _PdfViewerPageState extends State<PdfViewerPage> {
+  final PdfViewerController _pdfViewerController = PdfViewerController();
+  bool _isLoading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializePdf();
+  }
+
+  Future<void> _initializePdf() async {
+    try {
+      // Delay sebentar agar UI tidak freeze
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      // Untuk web, pastikan asset sudah ready
+      if (kIsWeb) {
+        await Future.delayed(const Duration(milliseconds: 200));
+      }
+
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = 'Gagal memuat PDF: $e';
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _pdfViewerController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text(title.replaceAll('.pdf', '').toUpperCase()),
+        title: Text(widget.title.replaceAll('.pdf', '').toUpperCase()),
         backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
+        actions: [
+          if (!_isLoading && _error == null)
+            IconButton(
+              icon: const Icon(Icons.zoom_in),
+              onPressed: () {
+                _pdfViewerController.zoomLevel =
+                    _pdfViewerController.zoomLevel + 0.25;
+              },
+            ),
+          if (!_isLoading && _error == null)
+            IconButton(
+              icon: const Icon(Icons.zoom_out),
+              onPressed: () {
+                _pdfViewerController.zoomLevel =
+                    _pdfViewerController.zoomLevel - 0.25;
+              },
+            ),
+        ],
       ),
-      body: PDFView(
-        filePath: path,
-        enableSwipe: true,
-        swipeHorizontal: false,
-        autoSpacing: true,
-        pageFling: true,
-      ),
+      body: _isLoading
+          ? const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(color: Colors.white),
+                  SizedBox(height: 16),
+                  Text(
+                    'Memuat PDF...',
+                    style: TextStyle(color: Colors.white70),
+                  ),
+                ],
+              ),
+            )
+          : _error != null
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, color: Colors.red, size: 64),
+                  const SizedBox(height: 16),
+                  Text(
+                    _error!,
+                    style: const TextStyle(color: Colors.white70),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Kembali'),
+                  ),
+                ],
+              ),
+            )
+          : SfPdfViewer.asset(
+              widget.assetPath,
+              controller: _pdfViewerController,
+              enableDoubleTapZooming: true,
+              enableTextSelection: true,
+              canShowScrollHead: true,
+              canShowScrollStatus: true,
+              pageLayoutMode: PdfPageLayoutMode.continuous,
+              onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {
+                setState(() {
+                  _error = 'Gagal memuat dokumen: ${details.error}';
+                });
+              },
+            ),
     );
   }
 }

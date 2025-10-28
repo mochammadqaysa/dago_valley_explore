@@ -85,7 +85,7 @@ class _DashboardPageState extends State<DashboardPage> {
             child: Column(
               children: [
                 Container(
-                  height: 400,
+                  height: 260,
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -160,7 +160,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         buttonColor: Colors.white,
                       ),
                     ),
-                    SizedBox(width: 20),
+                    SizedBox(width: 24),
                     Expanded(
                       child: SitePlanCard(
                         title: 'event'.tr,
@@ -173,7 +173,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         buttonColor: Colors.white,
                       ),
                     ),
-                    SizedBox(width: 20),
+                    SizedBox(width: 24),
                     Expanded(
                       child: SitePlanCard(
                         title: 'house_type'.tr,
@@ -189,7 +189,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         buttonColor: Colors.white,
                       ),
                     ),
-                    SizedBox(width: 20),
+                    SizedBox(width: 24),
                     Expanded(
                       child: SitePlanCard(
                         title: 'agreements_and_legality'.tr,
@@ -208,7 +208,7 @@ class _DashboardPageState extends State<DashboardPage> {
                   ],
                 ),
 
-                SizedBox(height: 17),
+                SizedBox(height: 16),
                 LiquidGlassContainer(
                   glassColor: Colors.black,
                   glassAccentColor: Colors.black,
@@ -222,7 +222,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                             vertical: 15,
-                            horizontal: 20,
+                            horizontal: 24,
                           ),
                           child: Row(
                             children: [
