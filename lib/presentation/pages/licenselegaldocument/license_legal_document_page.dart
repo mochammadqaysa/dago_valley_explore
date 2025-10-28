@@ -43,7 +43,6 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage> {
   }
 
   Future<void> openPdf(String assetPath, String title) async {
-    // Langsung navigate dengan loading di dalam PdfViewerPage
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -178,19 +177,45 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
   final PdfViewerController _pdfViewerController = PdfViewerController();
   bool _isLoading = true;
   String? _error;
+  int _currentPage = 1;
+  int _totalPages = 0;
+  double _currentZoom = 1.0;
+  bool _showSidebar = true;
+  final TextEditingController _pageController = TextEditingController();
+  final ScrollController _thumbnailScrollController = ScrollController();
+
+  // Zoom presets mirip Chrome
+  final List<double> _zoomLevels = [
+    0.25,
+    0.33,
+    0.5,
+    0.67,
+    0.75,
+    0.8,
+    0.9,
+    1.0,
+    1.1,
+    1.25,
+    1.5,
+    1.75,
+    2.0,
+    2.5,
+    3.0,
+    4.0,
+    5.0,
+  ];
 
   @override
   void initState() {
     super.initState();
     _initializePdf();
+    _pageController.text = '1';
   }
 
   Future<void> _initializePdf() async {
     try {
-      // Delay sebentar agar UI tidak freeze
       await Future.delayed(const Duration(milliseconds: 100));
 
-      // Untuk web, pastikan asset sudah ready
       if (kIsWeb) {
         await Future.delayed(const Duration(milliseconds: 200));
       }
@@ -199,6 +224,11 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
         setState(() {
           _isLoading = false;
         });
+
+        await Future.delayed(const Duration(milliseconds: 500));
+        if (mounted) {
+          _applyZoom();
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -210,39 +240,147 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
     }
   }
 
+  void _applyZoom() {
+    if (_currentZoom >= 1.0) {
+      // Untuk zoom >= 100%, gunakan PdfViewerController
+      _pdfViewerController.zoomLevel = _currentZoom;
+    } else {
+      // Untuk zoom < 100%, set ke minimum (1.0) dan biarkan Transform handle
+      _pdfViewerController.zoomLevel = 1.0;
+    }
+  }
+
+  void _onDocumentLoaded(PdfDocumentLoadedDetails details) {
+    setState(() {
+      _totalPages = details.document.pages.count;
+    });
+
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (mounted) {
+        _applyZoom();
+      }
+    });
+  }
+
+  void _onPageChanged(PdfPageChangedDetails details) {
+    setState(() {
+      _currentPage = details.newPageNumber;
+      _pageController.text = _currentPage.toString();
+    });
+  }
+
+  void _goToPage(int page) {
+    if (page > 0 && page <= _totalPages) {
+      _pdfViewerController.jumpToPage(page);
+    }
+  }
+
+  void _nextPage() {
+    if (_currentPage < _totalPages) {
+      _pdfViewerController.nextPage();
+    }
+  }
+
+  void _previousPage() {
+    if (_currentPage > 1) {
+      _pdfViewerController.previousPage();
+    }
+  }
+
+  void _zoomIn() {
+    final nextZoom = _zoomLevels.firstWhere(
+      (level) => level > _currentZoom + 0.01,
+      orElse: () => _zoomLevels.last,
+    );
+
+    setState(() {
+      _currentZoom = nextZoom;
+    });
+    _applyZoom();
+  }
+
+  void _zoomOut() {
+    final previousZoom = _zoomLevels.lastWhere(
+      (level) => level < _currentZoom - 0.01,
+      orElse: () => _zoomLevels.first,
+    );
+
+    setState(() {
+      _currentZoom = previousZoom;
+    });
+    _applyZoom();
+  }
+
+  void _setZoom(double zoom) {
+    setState(() {
+      _currentZoom = zoom;
+    });
+    _applyZoom();
+  }
+
+  void _resetZoom() {
+    setState(() {
+      _currentZoom = 1.0;
+    });
+    _applyZoom();
+  }
+
+  void _toggleSidebar() {
+    setState(() {
+      _showSidebar = !_showSidebar;
+    });
+  }
+
+  void _showZoomMenu() {
+    showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        MediaQuery.of(context).size.width / 2,
+        100,
+        MediaQuery.of(context).size.width / 2,
+        0,
+      ),
+      color: const Color(0xFF3C4043),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      items: _zoomLevels.map((zoom) {
+        final isSelected = (_currentZoom - zoom).abs() < 0.01;
+        return PopupMenuItem(
+          value: zoom,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '${(zoom * 100).toInt()}%',
+                style: TextStyle(
+                  color: isSelected ? const Color(0xFF1A73E8) : Colors.white,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
+              ),
+              if (isSelected)
+                const Icon(Icons.check, color: Color(0xFF1A73E8), size: 16),
+            ],
+          ),
+        );
+      }).toList(),
+    ).then((value) {
+      if (value != null) {
+        _setZoom(value);
+      }
+    });
+  }
+
   @override
   void dispose() {
     _pdfViewerController.dispose();
+    _pageController.dispose();
+    _thumbnailScrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: Text(widget.title.replaceAll('.pdf', '').toUpperCase()),
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
-        actions: [
-          if (!_isLoading && _error == null)
-            IconButton(
-              icon: const Icon(Icons.zoom_in),
-              onPressed: () {
-                _pdfViewerController.zoomLevel =
-                    _pdfViewerController.zoomLevel + 0.25;
-              },
-            ),
-          if (!_isLoading && _error == null)
-            IconButton(
-              icon: const Icon(Icons.zoom_out),
-              onPressed: () {
-                _pdfViewerController.zoomLevel =
-                    _pdfViewerController.zoomLevel - 0.25;
-              },
-            ),
-        ],
-      ),
+      backgroundColor: const Color(0xFF323639),
       body: _isLoading
           ? const Center(
               child: Column(
@@ -277,20 +415,307 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
                 ],
               ),
             )
-          : SfPdfViewer.asset(
-              widget.assetPath,
-              controller: _pdfViewerController,
-              enableDoubleTapZooming: true,
-              enableTextSelection: true,
-              canShowScrollHead: true,
-              canShowScrollStatus: true,
-              pageLayoutMode: PdfPageLayoutMode.continuous,
-              onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {
-                setState(() {
-                  _error = 'Gagal memuat dokumen: ${details.error}';
-                });
+          : Column(
+              children: [
+                _buildTopToolbar(),
+                Expanded(
+                  child: Row(
+                    children: [
+                      if (_showSidebar) _buildSidebar(),
+                      Expanded(
+                        child: Container(
+                          color: const Color(0xFF525659),
+                          child: LayoutBuilder(
+                            builder: (context, constraints) {
+                              return Transform.scale(
+                                scale: _currentZoom < 1.0 ? _currentZoom : 1.0,
+                                child: SizedBox(
+                                  width: constraints.maxWidth,
+                                  height: constraints.maxHeight,
+                                  child: SfPdfViewer.asset(
+                                    widget.assetPath,
+                                    controller: _pdfViewerController,
+                                    enableDoubleTapZooming: true,
+                                    enableTextSelection: true,
+                                    canShowScrollHead: false,
+                                    canShowScrollStatus: false,
+                                    pageLayoutMode:
+                                        PdfPageLayoutMode.continuous,
+                                    initialZoomLevel: 1.0,
+                                    onDocumentLoaded: _onDocumentLoaded,
+                                    onPageChanged: _onPageChanged,
+                                    onDocumentLoadFailed:
+                                        (PdfDocumentLoadFailedDetails details) {
+                                          setState(() {
+                                            _error =
+                                                'Gagal memuat dokumen: ${details.error}';
+                                          });
+                                        },
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+    );
+  }
+
+  Widget _buildTopToolbar() {
+    return Container(
+      height: 56,
+      color: const Color(0xFF323639),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.menu, color: Colors.white),
+            onPressed: _toggleSidebar,
+            tooltip: 'Toggle Sidebar',
+          ),
+          Expanded(
+            child: Text(
+              widget.title.replaceAll('.pdf', '').toUpperCase(),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF3C4043),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: 40,
+                  child: TextField(
+                    controller: _pageController,
+                    keyboardType: TextInputType.number,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.white, fontSize: 13),
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      isDense: true,
+                      contentPadding: EdgeInsets.symmetric(vertical: 8),
+                    ),
+                    onSubmitted: (value) {
+                      final page = int.tryParse(value);
+                      if (page != null) {
+                        _goToPage(page);
+                      }
+                    },
+                  ),
+                ),
+                Text(
+                  ' / $_totalPages',
+                  style: const TextStyle(color: Colors.white70, fontSize: 13),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          IconButton(
+            icon: Icon(
+              Icons.remove,
+              color: _currentZoom > _zoomLevels.first
+                  ? Colors.white
+                  : Colors.white38,
+              size: 20,
+            ),
+            onPressed: _currentZoom > _zoomLevels.first ? _zoomOut : null,
+            tooltip: 'Zoom Out',
+          ),
+          InkWell(
+            onTap: _showZoomMenu,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              decoration: BoxDecoration(
+                color: const Color(0xFF3C4043),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '${(_currentZoom * 100).toInt()}%',
+                    style: const TextStyle(color: Colors.white, fontSize: 13),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(
+                    Icons.arrow_drop_down,
+                    color: Colors.white70,
+                    size: 16,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.add,
+              color: _currentZoom < _zoomLevels.last
+                  ? Colors.white
+                  : Colors.white38,
+              size: 20,
+            ),
+            onPressed: _currentZoom < _zoomLevels.last ? _zoomIn : null,
+            tooltip: 'Zoom In',
+          ),
+          Container(
+            width: 1,
+            height: 24,
+            color: Colors.white24,
+            margin: const EdgeInsets.symmetric(horizontal: 8),
+          ),
+          // IconButton(
+          //   icon: const Icon(
+          //     Icons.rotate_90_degrees_ccw,
+          //     color: Colors.white,
+          //     size: 20,
+          //   ),
+          //   onPressed: () {},
+          //   tooltip: 'Rotate',
+          // ),
+          IconButton(
+            icon: const Icon(Icons.fit_screen, color: Colors.white, size: 20),
+            onPressed: _resetZoom,
+            tooltip: 'Fit to Page',
+          ),
+          const SizedBox(width: 8),
+          // IconButton(
+          //   icon: const Icon(Icons.download, color: Colors.white, size: 20),
+          //   onPressed: () {},
+          //   tooltip: 'Download',
+          // ),
+          // IconButton(
+          //   icon: const Icon(Icons.print, color: Colors.white, size: 20),
+          //   onPressed: () {},
+          //   tooltip: 'Print',
+          // ),
+          // IconButton(
+          //   icon: const Icon(Icons.more_vert, color: Colors.white, size: 20),
+          //   onPressed: () {},
+          //   tooltip: 'More',
+          // ),
+          const SizedBox(width: 8),
+          IconButton(
+            icon: const Icon(Icons.close, color: Colors.white, size: 20),
+            onPressed: () => Navigator.pop(context),
+            tooltip: 'Close',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSidebar() {
+    return Container(
+      width: 240,
+      color: const Color(0xFF3C4043),
+      child: Column(
+        children: [
+          Container(
+            height: 48,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: const BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: Colors.white12, width: 1),
+              ),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.list, color: Colors.white70, size: 20),
+                SizedBox(width: 8),
+                Text(
+                  'Thumbnails',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              controller: _thumbnailScrollController,
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              itemCount: _totalPages,
+              itemBuilder: (context, index) {
+                final pageNumber = index + 1;
+                final isCurrentPage = pageNumber == _currentPage;
+
+                return GestureDetector(
+                  onTap: () => _goToPage(pageNumber),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: isCurrentPage
+                          ? const Color(0xFF1A73E8).withOpacity(0.2)
+                          : Colors.transparent,
+                      border: Border.all(
+                        color: isCurrentPage
+                            ? const Color(0xFF1A73E8)
+                            : Colors.white12,
+                        width: isCurrentPage ? 2 : 1,
+                      ),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 150,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                          child: Center(
+                            child: Icon(
+                              Icons.description,
+                              size: 40,
+                              color: Colors.grey[400],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '$pageNumber',
+                          style: TextStyle(
+                            color: isCurrentPage
+                                ? const Color(0xFF1A73E8)
+                                : Colors.white70,
+                            fontSize: 12,
+                            fontWeight: isCurrentPage
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
               },
             ),
+          ),
+        ],
+      ),
     );
   }
 }
