@@ -19,8 +19,9 @@ class DetailProductController extends GetxController {
   // House model yang akan ditampilkan
   final Rx<HouseModel?> houseModel = Rx<HouseModel?>(null);
 
-  // List gambar dari house model
+  // List gambar dan video dari house model
   final RxList<String> images = <String>[].obs;
+  final RxList<String> videos = <String>[].obs;
 
   @override
   void onInit() {
@@ -29,6 +30,13 @@ class DetailProductController extends GetxController {
     if (Get.arguments != null && Get.arguments is HouseModel) {
       houseModel.value = Get.arguments as HouseModel;
       images.value = houseModel.value?.gambar ?? [];
+      videos.value = houseModel.value?.video ?? [];
+
+      print('📊 Product Detail Loaded:');
+      print('   Model: ${houseModel.value?.model}');
+      print('   Type: ${houseModel.value?.type}');
+      print('   Images: ${images.length}');
+      print('   Videos: ${videos.length} (not implemented yet)');
     }
   }
 
@@ -46,15 +54,6 @@ class DetailProductController extends GetxController {
   // Go to specific page
   void goToPage(int index) {
     carouselController.animateToPage(index);
-  }
-
-  // Toggle fullscreen mode
-  void toggleFullscreen() {
-    isFullscreen.value = !isFullscreen.value;
-    // Reset zoom when exiting fullscreen
-    if (!isFullscreen.value) {
-      transformationController.value = Matrix4.identity();
-    }
   }
 
   // Open fullscreen
@@ -75,9 +74,10 @@ class DetailProductController extends GetxController {
         'Booking',
         'Booking untuk ${houseModel.value!.model}',
         snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
       );
     }
-    // Tambahkan logic booking di sini
   }
 
   // Close modal
