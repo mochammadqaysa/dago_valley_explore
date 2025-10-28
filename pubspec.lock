@@ -9,14 +9,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.10"
-  archive:
-    dependency: transitive
-    description:
-      name: archive
-      sha256: "2fde1607386ab523f7a36bb3e7edb43bd58e6edaf2ffb29d8a6d578b297fdbbd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.7"
   args:
     dependency: transitive
     description:
@@ -153,14 +145,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
-  dbus:
-    dependency: transitive
-    description:
-      name: dbus
-      sha256: "79e0c23480ff85dc68de79e2cd6334add97e48f7f4865d17686dd6ea81a47e8c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.7.11"
   dchs_motion_sensors:
     dependency: transitive
     description:
@@ -280,6 +264,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  fvp:
+    dependency: "direct main"
+    description:
+      name: fvp
+      sha256: b692043a7f1a789672f70837879853533fbcb0b4c17b86fffa7c642aeee9f70c
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.19.0"
   get:
     dependency: "direct main"
     description:
@@ -312,14 +304,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
-  image:
-    dependency: transitive
-    description:
-      name: image
-      sha256: "4e973fcf4caae1a4be2fa0a13157aa38a8f9cb049db6529aa00b4d71abc4d928"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.5.4"
   intl:
     dependency: transitive
     description:
@@ -376,6 +360,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.1"
+  logging:
+    dependency: transitive
+    description:
+      name: logging
+      sha256: c8245ada5f1717ed44271ed1c26b8ce85ca3228fd2ffdb75468ab01979309d61
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.0"
   matcher:
     dependency: transitive
     description:
@@ -392,30 +384,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.11.1"
-  media_kit:
-    dependency: "direct main"
-    description:
-      name: media_kit
-      sha256: "52a8e989babc431db0aa242f32a4a08e55f60662477ea09759a105d7cd6410da"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.1"
-  media_kit_libs_windows_video:
-    dependency: "direct main"
-    description:
-      name: media_kit_libs_windows_video
-      sha256: dff76da2778729ab650229e6b4ec6ec111eb5151431002cbd7ea304ff1f112ab
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.11"
-  media_kit_video:
-    dependency: "direct main"
-    description:
-      name: media_kit_video
-      sha256: "813858c3fe84eb46679eb698695f60665e2bfbef757766fac4d2e683f926e15a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.1"
   meta:
     dependency: transitive
     description:
@@ -440,22 +408,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
-  package_info_plus:
-    dependency: transitive
-    description:
-      name: package_info_plus
-      sha256: f69da0d3189a4b4ceaeb1a3defb0f329b3b352517f52bed4290f83d4f06bc08d
-      url: "https://pub.dev"
-    source: hosted
-    version: "9.0.0"
-  package_info_plus_platform_interface:
-    dependency: transitive
-    description:
-      name: package_info_plus_platform_interface
-      sha256: "202a487f08836a592a6bd4f901ac69b3a8f146af552bbd14407b6b41e1c3f086"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.2.1"
   panorama_viewer:
     dependency: "direct main"
     description:
@@ -552,14 +504,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
-  posix:
-    dependency: transitive
-    description:
-      name: posix
-      sha256: "6323a5b0fa688b6a010df4905a56b00181479e6d10534cecfecede2aa55add61"
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.0.3"
   qr:
     dependency: transitive
     description:
@@ -584,30 +528,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.28.0"
-  safe_local_storage:
-    dependency: transitive
-    description:
-      name: safe_local_storage
-      sha256: e9a21b6fec7a8aa62cc2585ff4c1b127df42f3185adbd2aca66b47abe2e80236
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.1"
-  screen_brightness_android:
-    dependency: transitive
-    description:
-      name: screen_brightness_android
-      sha256: d34f5321abd03bc3474f4c381f53d189117eba0b039eac1916aa92cca5fd0a96
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.3"
-  screen_brightness_platform_interface:
-    dependency: transitive
-    description:
-      name: screen_brightness_platform_interface
-      sha256: "737bd47b57746bc4291cab1b8a5843ee881af499514881b0247ec77447ee769c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -861,22 +781,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.0"
-  universal_platform:
-    dependency: transitive
-    description:
-      name: universal_platform
-      sha256: "64e16458a0ea9b99260ceb5467a214c1f298d647c659af1bff6d3bf82536b1ec"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
-  uri_parser:
-    dependency: transitive
-    description:
-      name: uri_parser
-      sha256: ff4d2c720aca3f4f7d5445e23b11b2d15ef8af5ddce5164643f38ff962dcb270
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
   url_launcher:
     dependency: transitive
     description:
@@ -1037,30 +941,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "15.0.0"
-  volume_controller:
-    dependency: transitive
-    description:
-      name: volume_controller
-      sha256: d75039e69c0d90e7810bfd47e3eedf29ff8543ea7a10392792e81f9bded7edf5
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.4.0"
-  wakelock_plus:
-    dependency: transitive
-    description:
-      name: wakelock_plus
-      sha256: "9296d40c9adbedaba95d1e704f4e0b434be446e2792948d0e4aa977048104228"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.4.0"
-  wakelock_plus_platform_interface:
-    dependency: transitive
-    description:
-      name: wakelock_plus_platform_interface
-      sha256: "036deb14cd62f558ca3b73006d52ce049fabcdcb2eddfe0bf0fe4e8a943b5cf2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.0"
   web:
     dependency: transitive
     description:
