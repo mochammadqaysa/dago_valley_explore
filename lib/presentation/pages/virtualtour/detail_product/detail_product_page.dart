@@ -1,3 +1,4 @@
+import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/virtualtour/detailproduct/detail_product_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -9,6 +10,7 @@ class ProductDetailPage extends GetView<DetailProductController> {
 
   @override
   Widget build(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
     // ScrollController untuk thumbnail list
     final ScrollController thumbnailScrollController = ScrollController();
 
@@ -43,7 +45,9 @@ class ProductDetailPage extends GetView<DetailProductController> {
         return false;
       },
       child: Scaffold(
-        backgroundColor: Colors.black87,
+        backgroundColor: themeController.isDarkMode
+            ? Colors.black
+            : Colors.white,
         body: Obx(() {
           // Check if images are loaded
           if (controller.images.isEmpty) {
@@ -52,7 +56,11 @@ class ProductDetailPage extends GetView<DetailProductController> {
                 Positioned.fill(
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: Container(color: Colors.black.withOpacity(0.8)),
+                    child: Container(
+                      color: themeController.isDarkMode
+                          ? Colors.black.withOpacity(0.8)
+                          : Colors.white.withOpacity(0.8),
+                    ),
                   ),
                 ),
                 const Center(
@@ -68,7 +76,11 @@ class ProductDetailPage extends GetView<DetailProductController> {
               Positioned.fill(
                 child: BackdropFilter(
                   filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Container(color: Colors.black.withOpacity(0.8)),
+                  child: Container(
+                    color: themeController.isDarkMode
+                        ? Colors.black.withOpacity(0.8)
+                        : Colors.white.withOpacity(0.8),
+                  ),
                 ),
               ),
 
@@ -92,16 +104,22 @@ class ProductDetailPage extends GetView<DetailProductController> {
                               child: Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.2),
+                                  color: themeController.isDarkMode
+                                      ? Colors.white.withOpacity(0.2)
+                                      : Colors.black.withOpacity(0.2),
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                    color: Colors.white.withOpacity(0.3),
+                                    color: themeController.isDarkMode
+                                        ? Colors.white.withOpacity(0.3)
+                                        : Colors.black.withOpacity(0.2),
                                     width: 1,
                                   ),
                                 ),
-                                child: const Icon(
+                                child: Icon(
                                   Icons.close,
-                                  color: Colors.white,
+                                  color: themeController.isDarkMode
+                                      ? Colors.white
+                                      : Colors.black,
                                   size: 24,
                                 ),
                               ),
@@ -149,13 +167,13 @@ class ProductDetailPage extends GetView<DetailProductController> {
                                   margin: const EdgeInsets.only(bottom: 20),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.3),
-                                        blurRadius: 20,
-                                        offset: const Offset(0, 10),
-                                      ),
-                                    ],
+                                    // boxShadow: [
+                                    //   BoxShadow(
+                                    //     color: Colors.black.withOpacity(0.3),
+                                    //     blurRadius: 20,
+                                    //     offset: const Offset(0, 10),
+                                    //   ),
+                                    // ],
                                   ),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(20),
@@ -177,8 +195,10 @@ class ProductDetailPage extends GetView<DetailProductController> {
                                       itemBuilder: (context, index, realIndex) {
                                         return Container(
                                           width: double.infinity,
-                                          decoration: const BoxDecoration(
-                                            color: Colors.black,
+                                          decoration: BoxDecoration(
+                                            color: themeController.isDarkMode
+                                                ? Colors.white.withOpacity(0.4)
+                                                : Colors.transparent,
                                           ),
                                           child: Image.asset(
                                             controller.images[index],
@@ -256,9 +276,14 @@ class ProductDetailPage extends GetView<DetailProductController> {
                                               10,
                                             ),
                                             border: Border.all(
-                                              color: isActive
-                                                  ? Colors.white
-                                                  : Colors.white.withOpacity(
+                                              color: themeController.isDarkMode
+                                                  ? isActive
+                                                        ? Colors.white
+                                                        : Colors.white
+                                                              .withOpacity(0.3)
+                                                  : isActive
+                                                  ? Colors.black
+                                                  : Colors.black.withOpacity(
                                                       0.3,
                                                     ),
                                               width: isActive ? 3 : 1,

@@ -30,9 +30,8 @@ class ArticleCell extends StatelessWidget {
                 ),
               ),
               placeholder: (context, url) => CupertinoActivityIndicator(),
-              errorWidget: (context, url, error) => Container(
-                color: Colors.grey,
-              ),
+              errorWidget: (context, url, error) =>
+                  Container(color: Colors.grey),
               imageUrl: article.urlToImage ?? "",
             ),
           ),
@@ -52,7 +51,7 @@ class ArticleCell extends StatelessWidget {
                   style: AppTextStyles.body,
                 ),
                 Text(
-                  Jiffy(article.publishedAt).yMMMMd,
+                  "Jiffy(article.publishedAt).yMMMMd",
                   maxLines: 1,
                   style: AppTextStyles.body,
                 ),
