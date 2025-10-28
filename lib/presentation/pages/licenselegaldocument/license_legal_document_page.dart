@@ -4,7 +4,7 @@ import 'package:dago_valley_explore/app/config/app_colors.dart';
 import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart'; // Ubah ini - import lengkap
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
@@ -185,7 +185,7 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
   final TextEditingController _pageController = TextEditingController();
   final ScrollController _thumbnailScrollController = ScrollController();
 
-  // Store PDF bytes for web
+  // Store PDF bytes
   Uint8List? _pdfBytes;
 
   // Zoom presets mirip Chrome
@@ -218,23 +218,40 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
 
   Future<void> _initializePdf() async {
     try {
-      await Future.delayed(const Duration(milliseconds: 100));
-
-      // Load PDF sebagai bytes (untuk web compatibility)
-      if (kIsWeb) {
-        try {
-          final ByteData data = await rootBundle.load(widget.assetPath);
-          _pdfBytes = data.buffer.asUint8List();
-          print('PDF bytes loaded: ${_pdfBytes?.length} bytes');
-        } catch (e) {
-          print('Error loading PDF bytes: $e');
-          setState(() {
-            _error = 'Gagal memuat file PDF: $e';
-            _isLoading = false;
-          });
-          return;
-        }
+      if (kDebugMode) {
+        print('Loading PDF from: ${widget.assetPath}');
       }
+
+      // Load PDF sebagai bytes (untuk semua platform)
+      try {
+        final ByteData data = await rootBundle.load(widget.assetPath);
+        _pdfBytes = data.buffer.asUint8List();
+
+        if (kDebugMode) {
+          print('PDF bytes loaded successfully: ${_pdfBytes?.length} bytes');
+          // Check PDF header
+          if (_pdfBytes != null && _pdfBytes!.length > 4) {
+            final header = String.fromCharCodes(_pdfBytes!.sublist(0, 4));
+            print('PDF Header: $header (should be %PDF)');
+          }
+        }
+
+        if (_pdfBytes == null || _pdfBytes!.isEmpty) {
+          throw Exception('PDF file is empty');
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print('Error loading PDF bytes: $e');
+        }
+        setState(() {
+          _error =
+              'Gagal memuat file PDF: $e\n\nPastikan file PDF ada di folder assets/legalitas/';
+          _isLoading = false;
+        });
+        return;
+      }
+
+      await Future.delayed(const Duration(milliseconds: 100));
 
       if (mounted) {
         setState(() {
@@ -247,6 +264,9 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
         }
       }
     } catch (e) {
+      if (kDebugMode) {
+        print('Error in _initializePdf: $e');
+      }
       if (mounted) {
         setState(() {
           _error = 'Gagal memuat PDF: $e';
@@ -257,16 +277,29 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
   }
 
   void _applyZoom() {
-    if (_currentZoom >= 1.0) {
-      _pdfViewerController.zoomLevel = _currentZoom;
-    } else {
-      _pdfViewerController.zoomLevel = 1.0;
+    try {
+      if (_currentZoom >= 1.0) {
+        _pdfViewerController.zoomLevel = _currentZoom;
+      } else {
+        _pdfViewerController.zoomLevel = 1.0;
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error applying zoom: $e');
+      }
     }
   }
 
   void _onDocumentLoaded(PdfDocumentLoadedDetails details) {
+    if (kDebugMode) {
+      print(
+        'Document loaded successfully. Total pages: ${details.document.pages.count}',
+      );
+    }
+
     setState(() {
       _totalPages = details.document.pages.count;
+      _error = null; // Clear any previous errors
     });
 
     Future.delayed(const Duration(milliseconds: 300), () {
@@ -420,14 +453,44 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 40),
                     child: Text(
                       _error!,
-                      style: const TextStyle(color: Colors.white70),
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
+                  const SizedBox(height: 24),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        _error = null;
+                        _isLoading = true;
+                      });
+                      _initializePdf();
+                    },
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Coba Lagi'),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  OutlinedButton.icon(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Kembali'),
+                    icon: const Icon(Icons.arrow_back),
+                    label: const Text('Kembali'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      side: const BorderSide(color: Colors.white),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -464,49 +527,44 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
     );
   }
 
-  // Build PDF Viewer berdasarkan platform
+  // Build PDF Viewer - Always use memory for consistency
   Widget _buildPdfViewer() {
-    if (kIsWeb && _pdfBytes != null) {
-      // Untuk web, gunakan SfPdfViewer.memory
-      return SfPdfViewer.memory(
-        _pdfBytes!,
-        controller: _pdfViewerController,
-        enableDoubleTapZooming: true,
-        enableTextSelection: true,
-        canShowScrollHead: false,
-        canShowScrollStatus: false,
-        pageLayoutMode: PdfPageLayoutMode.continuous,
-        initialZoomLevel: 1.0,
-        onDocumentLoaded: _onDocumentLoaded,
-        onPageChanged: _onPageChanged,
-        onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {
-          setState(() {
-            _error =
-                'Gagal memuat dokumen: ${details.error}\nDeskripsi: ${details.description}';
-          });
-        },
-      );
-    } else {
-      // Untuk mobile/desktop, gunakan SfPdfViewer.asset
-      return SfPdfViewer.asset(
-        widget.assetPath,
-        controller: _pdfViewerController,
-        enableDoubleTapZooming: true,
-        enableTextSelection: true,
-        canShowScrollHead: false,
-        canShowScrollStatus: false,
-        pageLayoutMode: PdfPageLayoutMode.continuous,
-        initialZoomLevel: 1.0,
-        onDocumentLoaded: _onDocumentLoaded,
-        onPageChanged: _onPageChanged,
-        onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {
-          setState(() {
-            _error =
-                'Gagal memuat dokumen: ${details.error}\nDeskripsi: ${details.description}';
-          });
-        },
+    if (_pdfBytes == null) {
+      return const Center(
+        child: Text(
+          'PDF data tidak tersedia',
+          style: TextStyle(color: Colors.white70),
+        ),
       );
     }
+
+    return SfPdfViewer.memory(
+      _pdfBytes!,
+      key: ValueKey(widget.assetPath),
+      controller: _pdfViewerController,
+      enableDoubleTapZooming: true,
+      enableTextSelection: true,
+      canShowScrollHead: false,
+      canShowScrollStatus: false,
+      pageLayoutMode: PdfPageLayoutMode.continuous,
+      initialZoomLevel: 1.0,
+      onDocumentLoaded: _onDocumentLoaded,
+      onPageChanged: _onPageChanged,
+      onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {
+        if (kDebugMode) {
+          print('PDF Load Failed - Error: ${details.error}');
+          print('PDF Load Failed - Description: ${details.description}');
+        }
+
+        setState(() {
+          _error =
+              'Gagal memuat dokumen PDF\n\n'
+              'Error: ${details.error}\n'
+              'Detail: ${details.description}\n\n'
+              'File: ${widget.assetPath}';
+        });
+      },
+    );
   }
 
   Widget _buildTopToolbar() {
