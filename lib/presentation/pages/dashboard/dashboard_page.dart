@@ -163,10 +163,13 @@ class _DashboardPageState extends State<DashboardPage> {
                     SizedBox(width: 24),
                     Expanded(
                       child: SitePlanCard(
-                        title: 'event'.tr,
-                        imageUrl: 'assets/event.jpg',
+                        title: 'house_type'.tr,
+                        imageUrl: 'assets/tiperumah.jpg',
                         buttonText: 'check_availability'.tr,
-                        onButtonPressed: _showEventModal,
+                        onButtonPressed: () {
+                          // Navigate ke VirtualTourPage (Product Page) via sidebar
+                          _navigateToTab(TabType.productpage);
+                        },
                         titleBackgroundColor: themeController.isDarkMode
                             ? Colors.black
                             : Colors.white,
@@ -176,13 +179,10 @@ class _DashboardPageState extends State<DashboardPage> {
                     SizedBox(width: 24),
                     Expanded(
                       child: SitePlanCard(
-                        title: 'house_type'.tr,
-                        imageUrl: 'assets/tiperumah.jpg',
+                        title: 'event'.tr,
+                        imageUrl: 'assets/event.jpg',
                         buttonText: 'check_availability'.tr,
-                        onButtonPressed: () {
-                          // Navigate ke VirtualTourPage (Product Page) via sidebar
-                          _navigateToTab(TabType.productpage);
-                        },
+                        onButtonPressed: _showEventModal,
                         titleBackgroundColor: themeController.isDarkMode
                             ? Colors.black
                             : Colors.white,

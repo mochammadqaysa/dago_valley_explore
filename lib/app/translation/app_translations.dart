@@ -13,7 +13,7 @@ class AppTranslations extends Translations {
       'site_plan': "Site Plan",
       'event': "Event",
       'house_type': "Tipe Rumah",
-      'agreements_and_legality': "Perjanjian & Legalitas",
+      'agreements_and_legality': "Legalitas & Perizinan",
       'check_availability': "Periksa ketersediaan",
 
       // virtual / product page
@@ -110,7 +110,7 @@ class AppTranslations extends Translations {
       'site_plan': "Site Plan",
       'event': "Event",
       'house_type': "House Type",
-      'agreements_and_legality': "Agreements & Legality",
+      'agreements_and_legality': "Legality & Agreements",
       'check_availability': "Check availability",
 
       // virtual / product page
