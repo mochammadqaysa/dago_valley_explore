@@ -53,7 +53,8 @@ dependencies:
   carousel_slider: ^5.1.1
   qr_flutter: ^4.1.0
   syncfusion_flutter_pdfviewer: ^31.2.3
-  video_player: ^2.8.1
+  video_player: ^2.10.0
+  video_player_win: ^3.2.0
 
 dev_dependencies:
   flutter_test:
