@@ -3,6 +3,7 @@ import 'package:dago_valley_explore/presentation/controllers/virtualtour/detailp
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
+import 'package:video_player/video_player.dart';
 import 'dart:ui';
 
 class ProductDetailPage extends GetView<DetailProductController> {
@@ -11,10 +12,8 @@ class ProductDetailPage extends GetView<DetailProductController> {
   @override
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
-    // ScrollController untuk thumbnail list
     final ScrollController thumbnailScrollController = ScrollController();
 
-    // Function untuk auto scroll thumbnail
     void scrollThumbnailToIndex(int index) {
       if (thumbnailScrollController.hasClients) {
         const double thumbnailWidth = 110.0;
@@ -37,7 +36,6 @@ class ProductDetailPage extends GetView<DetailProductController> {
 
     return WillPopScope(
       onWillPop: () async {
-        // Check if fullscreen is active
         if (controller.isFullscreen.value) {
           controller.closeFullscreen();
           return false;
@@ -52,9 +50,8 @@ class ProductDetailPage extends GetView<DetailProductController> {
             : Colors.white,
         body: Stack(
           children: [
-            // Main Content
             Obx(() {
-              if (controller.images.isEmpty) {
+              if (controller.images.isEmpty && controller.videos.isEmpty) {
                 return Stack(
                   children: [
                     Positioned.fill(
@@ -76,7 +73,6 @@ class ProductDetailPage extends GetView<DetailProductController> {
 
               return Stack(
                 children: [
-                  // Background blur effect
                   Positioned.fill(
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -88,11 +84,9 @@ class ProductDetailPage extends GetView<DetailProductController> {
                     ),
                   ),
 
-                  // Content
                   SafeArea(
                     child: Column(
                       children: [
-                        // Close Button
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Row(
@@ -130,7 +124,6 @@ class ProductDetailPage extends GetView<DetailProductController> {
                                 ),
                               ),
                               const SizedBox(width: 16),
-                              // Title
                               if (controller.houseModel.value != null)
                                 Expanded(
                                   child: Column(
@@ -162,7 +155,6 @@ class ProductDetailPage extends GetView<DetailProductController> {
                           ),
                         ),
 
-                        // Main Content
                         Expanded(
                           child: Center(
                             child: Container(
@@ -173,7 +165,6 @@ class ProductDetailPage extends GetView<DetailProductController> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  // Main Image Display (Large)
                                   Expanded(
                                     flex: 8,
                                     child: Container(
@@ -186,7 +177,7 @@ class ProductDetailPage extends GetView<DetailProductController> {
                                         child: CarouselSlider.builder(
                                           carouselController:
                                               controller.carouselController,
-                                          itemCount: controller.images.length,
+                                          itemCount: controller.totalItems,
                                           options: CarouselOptions(
                                             viewportFraction: 1.0,
                                             enlargeCenterPage: false,
@@ -198,6 +189,18 @@ class ProductDetailPage extends GetView<DetailProductController> {
                                             },
                                           ),
                                           itemBuilder: (context, index, realIndex) {
+                                            // Check if video
+                                            if (controller.isVideoIndex(
+                                              index,
+                                            )) {
+                                              return _buildVideoItem(
+                                                context,
+                                                index,
+                                                themeController,
+                                              );
+                                            }
+
+                                            // Image
                                             return MouseRegion(
                                               cursor: SystemMouseCursors.click,
                                               child: GestureDetector(
@@ -262,7 +265,6 @@ class ProductDetailPage extends GetView<DetailProductController> {
                                                               );
                                                             },
                                                       ),
-                                                      // Hover overlay dengan icon zoom
                                                       Positioned(
                                                         bottom: 16,
                                                         right: 16,
@@ -322,7 +324,7 @@ class ProductDetailPage extends GetView<DetailProductController> {
                                     ),
                                   ),
 
-                                  // Gallery Thumbnails (Bottom)
+                                  // Gallery Thumbnails
                                   Obx(() {
                                     final currentIdx =
                                         controller.currentIndex.value;
@@ -335,9 +337,12 @@ class ProductDetailPage extends GetView<DetailProductController> {
                                       child: ListView.builder(
                                         controller: thumbnailScrollController,
                                         scrollDirection: Axis.horizontal,
-                                        itemCount: controller.images.length,
+                                        itemCount: controller.totalItems,
                                         itemBuilder: (context, index) {
                                           final isActive = index == currentIdx;
+                                          final isVideo = controller
+                                              .isVideoIndex(index);
+
                                           return GestureDetector(
                                             onTap: () {
                                               controller.goToPage(index);
@@ -384,32 +389,66 @@ class ProductDetailPage extends GetView<DetailProductController> {
                                               child: ClipRRect(
                                                 borderRadius:
                                                     BorderRadius.circular(10),
-                                                child: Opacity(
-                                                  opacity: isActive ? 1.0 : 0.5,
-                                                  child: Image.asset(
-                                                    controller.images[index],
-                                                    fit: BoxFit.cover,
-                                                    errorBuilder:
-                                                        (
-                                                          context,
-                                                          error,
-                                                          stackTrace,
-                                                        ) {
-                                                          return Container(
-                                                            color: Colors
-                                                                .grey[800],
-                                                            child: Icon(
-                                                              Icons
-                                                                  .broken_image,
-                                                              color: Colors
-                                                                  .white
-                                                                  .withOpacity(
-                                                                    0.3,
-                                                                  ),
+                                                child: Stack(
+                                                  fit: StackFit.expand,
+                                                  children: [
+                                                    Opacity(
+                                                      opacity: isActive
+                                                          ? 1.0
+                                                          : 0.5,
+                                                      child: isVideo
+                                                          ? _buildVideoThumbnail(
+                                                              index,
+                                                            )
+                                                          : Image.asset(
+                                                              controller
+                                                                  .images[index],
+                                                              fit: BoxFit.cover,
+                                                              errorBuilder:
+                                                                  (
+                                                                    context,
+                                                                    error,
+                                                                    stackTrace,
+                                                                  ) {
+                                                                    return Container(
+                                                                      color: Colors
+                                                                          .grey[800],
+                                                                      child: Icon(
+                                                                        Icons
+                                                                            .broken_image,
+                                                                        color: Colors
+                                                                            .white
+                                                                            .withOpacity(
+                                                                              0.3,
+                                                                            ),
+                                                                      ),
+                                                                    );
+                                                                  },
                                                             ),
-                                                          );
-                                                        },
-                                                  ),
+                                                    ),
+                                                    if (isVideo)
+                                                      Center(
+                                                        child: Container(
+                                                          padding:
+                                                              EdgeInsets.all(8),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                color: Colors
+                                                                    .black
+                                                                    .withOpacity(
+                                                                      0.6,
+                                                                    ),
+                                                                shape: BoxShape
+                                                                    .circle,
+                                                              ),
+                                                          child: Icon(
+                                                            Icons.play_arrow,
+                                                            color: Colors.white,
+                                                            size: 24,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                  ],
                                                 ),
                                               ),
                                             ),
@@ -418,7 +457,6 @@ class ProductDetailPage extends GetView<DetailProductController> {
                                       ),
                                     );
                                   }),
-
                                   const SizedBox(height: 20),
                                 ],
                               ),
@@ -432,7 +470,7 @@ class ProductDetailPage extends GetView<DetailProductController> {
               );
             }),
 
-            // Fullscreen Overlay dengan Zoom
+            // Fullscreen Overlay
             Obx(() {
               if (!controller.isFullscreen.value) {
                 return const SizedBox.shrink();
@@ -446,16 +484,118 @@ class ProductDetailPage extends GetView<DetailProductController> {
     );
   }
 
-  // Widget untuk fullscreen overlay dengan zoom
+  // Widget untuk video item
+  Widget _buildVideoItem(
+    BuildContext context,
+    int index,
+    ThemeController themeController,
+  ) {
+    final videoController = controller.getVideoController(index);
+
+    if (videoController == null || !videoController.value.isInitialized) {
+      return Container(
+        color: Colors.black,
+        child: Center(child: CircularProgressIndicator(color: Colors.white)),
+      );
+    }
+
+    return Container(
+      color: Colors.black,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Center(
+            child: AspectRatio(
+              aspectRatio: videoController.value.aspectRatio,
+              child: VideoPlayer(videoController),
+            ),
+          ),
+          Center(
+            child: Obx(() {
+              final isPlaying = controller.playingVideoIndex.value == index;
+              return GestureDetector(
+                onTap: () => controller.toggleVideoPlayback(index),
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.5),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    isPlaying ? Icons.pause : Icons.play_arrow,
+                    size: 50,
+                    color: Colors.white,
+                  ),
+                ),
+              );
+            }),
+          ),
+          Positioned(
+            top: 16,
+            left: 16,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.videocam, color: Colors.white, size: 16),
+                  SizedBox(width: 4),
+                  Text(
+                    'VIDEO',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Widget untuk video thumbnail
+  Widget _buildVideoThumbnail(int index) {
+    final videoController = controller.getVideoController(index);
+
+    if (videoController != null && videoController.value.isInitialized) {
+      return FittedBox(
+        fit: BoxFit.cover,
+        child: SizedBox(
+          width: videoController.value.size.width,
+          height: videoController.value.size.height,
+          child: VideoPlayer(videoController),
+        ),
+      );
+    }
+
+    return Container(
+      color: Colors.grey[800],
+      child: Icon(
+        Icons.videocam,
+        color: Colors.white.withOpacity(0.5),
+        size: 32,
+      ),
+    );
+  }
+
+  // Fullscreen overlay
   Widget _buildFullscreenOverlay(
     BuildContext context,
     ThemeController themeController,
   ) {
     return Material(
-      color: Colors.grey.withOpacity(0.95),
+      color: Colors.black.withOpacity(0.95),
       child: Stack(
         children: [
-          // Interactive Viewer untuk zoom
           Center(
             child: InteractiveViewer(
               transformationController: controller.transformationController,
@@ -490,8 +630,6 @@ class ProductDetailPage extends GetView<DetailProductController> {
               ),
             ),
           ),
-
-          // Close Button
           Positioned(
             top: 40,
             right: 40,
@@ -515,10 +653,7 @@ class ProductDetailPage extends GetView<DetailProductController> {
               ),
             ),
           ),
-
-          // Navigation Arrows
           if (controller.images.length > 1) ...[
-            // Previous Button
             Positioned(
               left: 40,
               top: 0,
@@ -532,7 +667,6 @@ class ProductDetailPage extends GetView<DetailProductController> {
                           ? controller.currentIndex.value - 1
                           : controller.images.length - 1;
                       controller.goToPage(newIndex);
-                      // Reset zoom saat ganti gambar
                       controller.transformationController.value =
                           Matrix4.identity();
                     },
@@ -557,8 +691,6 @@ class ProductDetailPage extends GetView<DetailProductController> {
                 ),
               ),
             ),
-
-            // Next Button
             Positioned(
               right: 40,
               top: 0,
@@ -574,7 +706,6 @@ class ProductDetailPage extends GetView<DetailProductController> {
                           ? controller.currentIndex.value + 1
                           : 0;
                       controller.goToPage(newIndex);
-                      // Reset zoom saat ganti gambar
                       controller.transformationController.value =
                           Matrix4.identity();
                     },
@@ -600,11 +731,8 @@ class ProductDetailPage extends GetView<DetailProductController> {
               ),
             ),
           ],
-
-          // Info Text (Bottom Center)
           Positioned(
             bottom: 40,
-            // left: 0,
             right: 30,
             child: Center(
               child: Container(
