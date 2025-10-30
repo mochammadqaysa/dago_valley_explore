@@ -4,8 +4,8 @@ import '../api_endpoint.dart';
 import '../api_provider.dart';
 import '../api_request_representable.dart';
 
-class ArticleAPI implements APIRequestRepresentable {
-  ArticleAPI._();
+class HousingApi implements APIRequestRepresentable {
+  HousingApi._();
 
   @override
   String get endpoint => APIEndpoint.housingData;

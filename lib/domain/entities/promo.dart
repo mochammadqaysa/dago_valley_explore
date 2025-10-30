@@ -5,6 +5,7 @@ class Promo {
   final String imageUrl;
   final String tag1;
   final String tag2;
+  Promo? en;
 
   Promo({
     required this.title,
@@ -13,6 +14,7 @@ class Promo {
     required this.imageUrl,
     required this.tag1,
     required this.tag2,
+    this.en,
   });
 }
 

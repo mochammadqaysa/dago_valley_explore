@@ -1,10 +1,11 @@
-import '../models/paging_model.dart';
-import '../../domain/repositories/article_repository.dart';
+import 'package:dago_valley_explore/data/providers/network/apis/housing_api.dart';
 
-class ArticleRepositoryImpl extends ArticleRepository {
+import '../models/paging_model.dart';
+
+class HouseRepositoryImpl extends ArticleRepository {
   @override
   Future<PagingModel> fetchHeadline(int page, int pageSize) async {
-    final response = await ArticleAPI.fetchHeadline(page, pageSize).request();
+    final response = await HousingApi.fetchHeadline(page, pageSize).request();
     return PagingModel.fromJson(response);
   }
 
