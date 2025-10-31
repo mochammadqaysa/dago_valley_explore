@@ -1,6 +1,5 @@
-import '../entities/paging.dart';
+import 'package:dago_valley_explore/domain/entities/payload/housing_response.dart';
 
 abstract class HouseRepository {
-  Future<Paging> fetchHeadline(int page, int pageSize);
-  Future<Paging> fetchNewsByCategory(String keyword, int page, int pageSize);
+  Future<HousingResponse> fetchHousingData();
 }

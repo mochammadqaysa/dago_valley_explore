@@ -1,4 +1,6 @@
-class PromoTranslation {
+class Event {
+  final int id;
+  final String housingId;
   final String title;
   final String subtitle;
   final String description;
@@ -6,7 +8,9 @@ class PromoTranslation {
   final String tag1;
   final String tag2;
 
-  PromoTranslation({
+  Event({
+    required this.id,
+    required this.housingId,
     required this.title,
     required this.subtitle,
     required this.description,

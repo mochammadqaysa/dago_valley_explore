@@ -7,6 +7,8 @@ import '../api_request_representable.dart';
 class HousingApi implements APIRequestRepresentable {
   HousingApi._();
 
+  HousingApi.fetchHousingData();
+
   @override
   String get endpoint => APIEndpoint.housingData;
 
