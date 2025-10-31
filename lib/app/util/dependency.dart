@@ -1,9 +1,7 @@
-import 'package:dago_valley_explore/presentation/controllers/auth/auth_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/locale/locale_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
 import 'package:get/get.dart';
 
-import '../../data/repositories/article_repository.dart';
 import '../../data/repositories/auth_repository.dart';
 
 class DependencyCreator {
@@ -13,6 +11,6 @@ class DependencyCreator {
     Get.put<LocaleController>(LocaleController(), permanent: true);
     print('ThemeController injected');
     Get.lazyPut(() => AuthenticationRepositoryIml());
-    Get.lazyPut(() => ArticleRepositoryIml());
+    // Get.lazyPut(() => ArticleRepositoryIml());
   }
 }

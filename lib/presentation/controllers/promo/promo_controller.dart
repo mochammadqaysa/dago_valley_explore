@@ -20,45 +20,11 @@ class PromoController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchPromos();
   }
 
   @override
   void onClose() {
     super.onClose();
-  }
-
-  // Fetch data promo (bisa diganti dengan API call)
-  void fetchPromos() {
-    _promos.value = [
-      Promo(
-        title: 'Open House\nDago Valley',
-        subtitle: 'Sabtu-Minggu, 31 Mei - 1 Juni 2025',
-        description:
-            'Lorem ipsum dolor sit amet consectetur adipiscing elit, quisque venenatis dis vulputate facilisi lectus proin, varius at auctor sociis. Jangan lewatkan kesempatan emas ini untuk memiliki hunian impian Anda di Dago Valley!',
-        imageUrl: 'assets/1.png',
-        tag1: 'GRATIS 3 UNIT AC*',
-        tag2: 'RATUSAN JUTA RUPIAH',
-      ),
-      Promo(
-        title: 'Promo Spesial\nLebaran 2025',
-        subtitle: 'Periode: 1-30 April 2025',
-        description:
-            'Dapatkan diskon hingga ratusan juta rupiah untuk pembelian unit terpilih. Promo terbatas hanya untuk 10 pembeli pertama!',
-        imageUrl: 'assets/1.png',
-        tag1: 'DISKON 20%',
-        tag2: 'FREE KPR',
-      ),
-      Promo(
-        title: 'Grand Opening\nShow Unit',
-        subtitle: 'Setiap Weekend Mei 2025',
-        description:
-            'Kunjungi show unit kami dan rasakan langsung kenyamanan hunian di Dago Valley. Konsultasi gratis dengan team marketing kami.',
-        imageUrl: 'assets/1.png',
-        tag1: 'FREE CANOPY',
-        tag2: 'BONUS FURNITURE',
-      ),
-    ];
   }
 
   // Set index carousel

@@ -1,8 +1,8 @@
 import 'package:dago_valley_explore/data/models/promo_translation_model.dart';
-import 'package:dago_valley_explore/domain/entities/promo.dart';
+import 'package:dago_valley_explore/domain/entities/event.dart';
 
-class PromoModel extends Promo {
-  PromoModel({
+class EventModel extends Event {
+  EventModel({
     required this.id,
     required this.housingId,
     required this.title,
@@ -35,7 +35,7 @@ class PromoModel extends Promo {
   final PromoTranslationModel en;
 
   @override
-  factory PromoModel.fromJson(Map<String, dynamic> json) => PromoModel(
+  factory EventModel.fromJson(Map<String, dynamic> json) => EventModel(
     id: json["id"],
     housingId: json["housing_id"],
     title: json["title"],

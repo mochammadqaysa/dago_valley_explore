@@ -1,4 +1,4 @@
-class Versions {
+class Version {
   final String promoVersion;
   final String eventVersion;
   final String productVersion;
@@ -6,7 +6,7 @@ class Versions {
   final String siteplanVersion;
   final String kprCalculatorVersion;
 
-  Versions({
+  Version({
     required this.promoVersion,
     required this.eventVersion,
     required this.productVersion,

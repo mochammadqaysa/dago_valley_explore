@@ -1,3 +1,5 @@
+import 'package:dago_valley_explore/domain/entities/promo_translation.dart';
+
 class Event {
   final int id;
   final String housingId;
@@ -7,6 +9,7 @@ class Event {
   final String imageUrl;
   final String tag1;
   final String tag2;
+  final PromoTranslation en;
 
   Event({
     required this.id,
@@ -17,5 +20,6 @@ class Event {
     required this.imageUrl,
     required this.tag1,
     required this.tag2,
+    required this.en,
   });
 }

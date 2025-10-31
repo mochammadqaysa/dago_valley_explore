@@ -1,25 +1,12 @@
+import 'package:dago_valley_explore/data/models/payload/housing_response_model.dart';
 import 'package:dago_valley_explore/data/providers/network/apis/housing_api.dart';
+import 'package:dago_valley_explore/domain/entities/payload/housing_response.dart';
+import 'package:dago_valley_explore/domain/repositories/house_repository.dart';
 
-import '../models/paging_model.dart';
-
-class HouseRepositoryImpl extends ArticleRepository {
+class HouseRepositoryImpl extends HouseRepository {
   @override
-  Future<PagingModel> fetchHeadline(int page, int pageSize) async {
-    final response = await HousingApi.fetchHeadline(page, pageSize).request();
-    return PagingModel.fromJson(response);
-  }
-
-  @override
-  Future<PagingModel> fetchNewsByCategory(
-    String keyword,
-    int page,
-    int pageSize,
-  ) async {
-    final response = await ArticleAPI.fetchNews(
-      keyword,
-      page,
-      pageSize,
-    ).request();
-    return PagingModel.fromJson(response);
+  Future<HousingResponse> fetchHousingData() async {
+    final response = await HousingApi.fetchHousingData().request();
+    return HousingResponseModel.fromJson(response);
   }
 }

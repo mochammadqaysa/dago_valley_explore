@@ -1,10 +1,9 @@
+import 'package:dago_valley_explore/data/models/brochure_model.dart';
+import 'package:dago_valley_explore/data/models/event_model.dart';
+import 'package:dago_valley_explore/data/models/kpr_calculator_model.dart';
 import 'package:dago_valley_explore/data/models/promo_model.dart';
-import 'package:dago_valley_explore/domain/entities/brochure.dart';
-import 'package:dago_valley_explore/domain/entities/event.dart';
+import 'package:dago_valley_explore/data/models/site_plan_model.dart';
 import 'package:dago_valley_explore/domain/entities/housing.dart';
-import 'package:dago_valley_explore/domain/entities/kpr_calculator.dart';
-import 'package:dago_valley_explore/domain/entities/promo.dart';
-import 'package:dago_valley_explore/domain/entities/site_plan.dart';
 
 class HousingModel extends Housing {
   HousingModel({
@@ -33,48 +32,39 @@ class HousingModel extends Housing {
          kprCalculators: kprCalculators,
        );
 
-  int? id;
-  String? name;
-  String? alamat;
-  String? logo;
-  String? createdAt;
-  String? updatedAt;
-  List<PromoModel>? promos;
-  List<Event>? events;
-  List<Brochure>? brochures;
-  List<SitePlan>? siteplans;
-  List<KprCalculator>? kprCalculators;
+  final int? id;
+  final String? name;
+  final String? alamat;
+  final String? logo;
+  final String? createdAt;
+  final String? updatedAt;
+  final List<PromoModel>? promos;
+  final List<EventModel>? events;
+  final List<BrochureModel>? brochures;
+  final List<SitePlanModel>? siteplans;
+  final List<KprCalculatorModel>? kprCalculators;
 
   factory HousingModel.fromJson(Map<String, dynamic> json) => HousingModel(
     id: json['id'] as int?,
     name: json['name'] as String?,
     alamat: json['alamat'] as String?,
     logo: json['logo'] as String?,
-    createdAt: json['createdAt'] as String?,
-    updatedAt: json['updatedAt'] as String?,
+    createdAt: json['created_at'] as String?,
+    updatedAt: json['updated_at'] as String?,
     promos: (json['promos'] as List<dynamic>?)
         ?.map((e) => PromoModel.fromJson(e as Map<String, dynamic>))
         .toList(),
     events: (json['events'] as List<dynamic>?)
-        ?.map((e) => Event.fromJson(e as Map<String, dynamic>))
+        ?.map((e) => EventModel.fromJson(e as Map<String, dynamic>))
         .toList(),
     brochures: (json['brochures'] as List<dynamic>?)
-        ?.map((e) => Brochure.fromJson(e as Map<String, dynamic>))
+        ?.map((e) => BrochureModel.fromJson(e as Map<String, dynamic>))
         .toList(),
     siteplans: (json['siteplans'] as List<dynamic>?)
-        ?.map((e) => SitePlan.fromJson(e as Map<String, dynamic>))
+        ?.map((e) => SitePlanModel.fromJson(e as Map<String, dynamic>))
         .toList(),
-    kprCalculators: (json['kprCalculators'] as List<dynamic>?)
-        ?.map((e) => KprCalculator.fromJson(e as Map<String, dynamic>))
+    kprCalculators: (json['kpr_calculators'] as List<dynamic>?)
+        ?.map((e) => KprCalculatorModel.fromJson(e as Map<String, dynamic>))
         .toList(),
   );
-  Map<String, dynamic> toJson() => <String, dynamic>{
-    'author': instance.author,
-    'title': instance.title,
-    'description': instance.description,
-    'url': instance.url,
-    'urlToImage': instance.urlToImage,
-    'publishedAt': instance.publishedAt?.toIso8601String(),
-    'content': instance.content,
-  };
 }

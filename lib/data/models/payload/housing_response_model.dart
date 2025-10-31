@@ -1,18 +1,20 @@
-import 'package:dago_valley_explore/domain/entities/housing.dart';
+import 'package:dago_valley_explore/data/models/housing_model.dart';
+import 'package:dago_valley_explore/data/models/version_model.dart';
 import 'package:dago_valley_explore/domain/entities/payload/housing_response.dart';
-import 'package:dago_valley_explore/domain/entities/versions.dart';
 
 class HousingResponseModel extends HousingResponse {
-  HousingResponseModel({required this.housing, required this.versions})
-    : super(housing: housing, versions: versions);
+  HousingResponseModel({required this.housing, required this.version})
+    : super(housing: housing, version: version);
 
-  final List<Housing> housing;
-  final Versions versions;
+  final List<HousingModel> housing;
+  final VersionModel version;
 
   @override
   factory HousingResponseModel.fromJson(Map<String, dynamic> json) =>
       HousingResponseModel(
-        housing: List.from(json["housing"].map((x) => Housing.fromJson(x))),
-        versions: Versions.fromJson(json["versions"]),
+        housing: List.from(
+          json["housing"].map((x) => HousingModel.fromJson(x)),
+        ),
+        version: VersionModel.fromJson(json["version"]),
       );
 }
