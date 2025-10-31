@@ -6,7 +6,7 @@ import 'package:dago_valley_explore/presentation/controllers/promo/promo_binding
 import 'package:dago_valley_explore/presentation/controllers/qrcode/qrcode_binding.dart';
 import 'package:dago_valley_explore/presentation/pages/promo/promo_detail_page.dart';
 import 'package:dago_valley_explore/presentation/pages/qrcode/qrcode_page.dart';
-import 'package:dago_valley_explore/screen/site_plan.dart';
+import 'package:dago_valley_explore/presentation/components/site_plan_card/site_plan_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';

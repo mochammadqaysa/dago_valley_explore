@@ -1,5 +1,4 @@
 import 'package:dago_valley_explore/app/config/app_colors.dart';
-import 'package:dago_valley_explore/app/extensions/color.dart';
 import 'package:dago_valley_explore/app/types/tab_type.dart';
 import 'package:dago_valley_explore/presentation/components/liquidglass/liquid_glass_button.dart';
 import 'package:dago_valley_explore/presentation/components/liquidglass/liquid_glass_container.dart';
@@ -11,8 +10,7 @@ import 'package:dago_valley_explore/presentation/controllers/theme/theme_control
 import 'package:dago_valley_explore/presentation/pages/event/event_detail_page.dart';
 import 'package:dago_valley_explore/presentation/pages/promo/promo_detail_page.dart';
 import 'package:dago_valley_explore/presentation/pages/qrcode/qrcode_page.dart';
-import 'package:dago_valley_explore/screen/sample.dart';
-import 'package:dago_valley_explore/screen/site_plan.dart';
+import 'package:dago_valley_explore/presentation/components/site_plan_card/site_plan_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';

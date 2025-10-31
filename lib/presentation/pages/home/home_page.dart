@@ -17,7 +17,7 @@ import 'package:dago_valley_explore/presentation/pages/dashboard/dashboard_page.
 import 'package:dago_valley_explore/presentation/pages/licenselegaldocument/license_legal_document_page.dart';
 import 'package:dago_valley_explore/presentation/pages/siteplan/siteplan_page.dart';
 import 'package:dago_valley_explore/presentation/pages/virtualtour/virtualtour_page.dart';
-import 'package:dago_valley_explore/screen/dasbor_awal.dart';
+import 'package:dago_valley_explore/deletedsoon/dasbor_awal.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

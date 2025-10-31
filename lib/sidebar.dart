@@ -1,8 +1,9 @@
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:dago_valley_explore/app/config/app_colors.dart';
+import 'package:dago_valley_explore/presentation/pages/dashboard/dashboard_page.dart';
 import 'package:dago_valley_explore/presentation/pages/event/event_detail_page.dart';
-import 'package:dago_valley_explore/screen/dasbor_awal.dart';
-import 'package:dago_valley_explore/screen/sample.dart';
+import 'package:dago_valley_explore/deletedsoon/dasbor_awal.dart';
+import 'package:dago_valley_explore/deletedsoon/sample.dart';
 import 'package:flutter/material.dart';
 
 class SidebarPage extends StatefulWidget {
@@ -16,7 +17,7 @@ class _SidebarPageState extends State<SidebarPage> {
   AssetImage _avatarImg = AssetImage('assets/logo-dago.webp');
 
   // Widget untuk menyimpan halaman yang aktif
-  Widget _currentPage = DasborAwal();
+  Widget _currentPage = DashboardPage();
 
   @override
   void initState() {
@@ -32,7 +33,7 @@ class _SidebarPageState extends State<SidebarPage> {
         icon: Icons.home_work,
         onPressed: () => setState(() {
           _headline = 'Home';
-          _currentPage = DasborAwal();
+          _currentPage = DashboardPage();
         }),
         isSelected: true,
         onHold: () => ScaffoldMessenger.of(

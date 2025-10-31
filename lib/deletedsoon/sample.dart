@@ -1,4 +1,4 @@
-import 'package:dago_valley_explore/screen/example_screen_1.dart';
+import 'package:dago_valley_explore/deletedsoon/example_screen_1.dart';
 import 'package:flutter/material.dart';
 
 class SearchPage extends StatelessWidget {
