@@ -22,6 +22,21 @@ class Promo {
     required this.tag2,
     required this.en,
   });
+
+  factory Promo.fromJson(Map<String, dynamic> json) => Promo(
+    id: json["id"],
+    housingId: json["housing_id"],
+    title: json["title"],
+    subtitle: json["subtitle"],
+    description: json["description"],
+    imageUrl: json["image_url"],
+    tag1: json["tag1"],
+    tag2: json["tag2"],
+    en: PromoTranslation.fromJson(json["en"]),
+  );
+
+  // make toJson function
+  Map<String, dynamic> toJson() => {};
 }
 
 final List<Promo> dummyPromos = [

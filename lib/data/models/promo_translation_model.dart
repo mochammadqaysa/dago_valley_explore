@@ -1,7 +1,5 @@
 import 'package:dago_valley_explore/domain/entities/promo_translation.dart';
 
-import 'article_model.dart';
-
 class PromoTranslationModel extends PromoTranslation {
   PromoTranslationModel({
     required this.title,

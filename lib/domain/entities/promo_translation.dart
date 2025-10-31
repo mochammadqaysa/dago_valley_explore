@@ -14,4 +14,14 @@ class PromoTranslation {
     required this.tag1,
     required this.tag2,
   });
+
+  factory PromoTranslation.fromJson(Map<String, dynamic> json) =>
+      PromoTranslation(
+        title: json["title"],
+        subtitle: json["subtitle"],
+        description: json["description"],
+        imageUrl: json["imageUrl"],
+        tag1: json["tag1"],
+        tag2: json["tag2"],
+      );
 }
