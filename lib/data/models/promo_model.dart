@@ -46,4 +46,16 @@ class PromoModel extends Promo {
     tag2: json["tag2"],
     en: PromoTranslationModel.fromJson(json["en"]),
   );
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'housing_id': housingId,
+    'title': title,
+    'subtitle': subtitle,
+    'description': description,
+    'imageUrl': imageUrl,
+    'tag1': tag1,
+    'tag2': tag2,
+    'en': en?.toJson(),
+  };
 }

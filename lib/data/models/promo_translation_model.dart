@@ -34,4 +34,13 @@ class PromoTranslationModel extends PromoTranslation {
         tag1: json["tag1"],
         tag2: json["tag2"],
       );
+
+  Map<String, dynamic> toJson() => {
+    'title': title,
+    'subtitle': subtitle,
+    'description': description,
+    'imageUrl': imageUrl,
+    'tag1': tag1,
+    'tag2': tag2,
+  };
 }

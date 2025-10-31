@@ -35,7 +35,6 @@ class Promo {
     en: PromoTranslation.fromJson(json["en"]),
   );
 
-  // make toJson function
   Map<String, dynamic> toJson() => {
     "id": id,
     "housing_id": housingId,

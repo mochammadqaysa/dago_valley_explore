@@ -1,5 +1,4 @@
 import 'package:dago_valley_explore/presentation/controllers/event/event_controller.dart';
-import 'package:dago_valley_explore/presentation/controllers/promo/promo_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart' as cs;
 import 'package:get/get.dart';
@@ -16,7 +15,7 @@ class EventDetailPage extends GetView<EventController> {
         // Init jika diperlukan
       },
       builder: (_) {
-        if (controller.promos.isEmpty) {
+        if (controller.events.isEmpty) {
           return const Scaffold(
             backgroundColor: Colors.black87,
             body: Center(child: CircularProgressIndicator(color: Colors.white)),
@@ -37,7 +36,7 @@ class EventDetailPage extends GetView<EventController> {
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                     child: Image.asset(
-                      controller.currentPromo.imageUrl,
+                      controller.currentEvent.imageUrl,
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -107,15 +106,6 @@ class EventDetailPage extends GetView<EventController> {
                                           borderRadius: BorderRadius.circular(
                                             20,
                                           ),
-                                          // boxShadow: [
-                                          //   BoxShadow(
-                                          //     color: Colors.black.withOpacity(
-                                          //       0.3,
-                                          //     ),
-                                          //     blurRadius: 20,
-                                          //     offset: const Offset(0, 10),
-                                          //   ),
-                                          // ],
                                         ),
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(
@@ -124,7 +114,7 @@ class EventDetailPage extends GetView<EventController> {
                                           child: cs.CarouselSlider.builder(
                                             carouselController:
                                                 controller.carouselController,
-                                            itemCount: controller.promos.length,
+                                            itemCount: controller.events.length,
                                             options: cs.CarouselOptions(
                                               height: 800,
                                               viewportFraction: 1.0,
@@ -137,38 +127,33 @@ class EventDetailPage extends GetView<EventController> {
                                                 );
                                               },
                                             ),
-                                            itemBuilder: (context, index, realIndex) {
-                                              return Stack(
-                                                fit: StackFit.expand,
-                                                children: [
-                                                  Image.asset(
-                                                    controller
-                                                        .promos[index]
-                                                        .imageUrl,
-                                                    fit: BoxFit.contain,
-                                                  ),
-                                                  // Gradient overlay
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                      gradient: LinearGradient(
-                                                        begin:
-                                                            Alignment.topCenter,
-                                                        end: Alignment
-                                                            .bottomCenter,
-                                                        colors: [
-                                                          // Colors
-                                                          //     .transparent,
-                                                          // Colors.black
-                                                          //     .withOpacity(
-                                                          //       0.3,
-                                                          //     ),
-                                                        ],
+                                            itemBuilder:
+                                                (context, index, realIndex) {
+                                                  return Stack(
+                                                    fit: StackFit.expand,
+                                                    children: [
+                                                      Image.asset(
+                                                        controller
+                                                            .events[index]
+                                                            .imageUrl,
+                                                        fit: BoxFit.contain,
                                                       ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              );
-                                            },
+                                                      // Gradient overlay
+                                                      Container(
+                                                        decoration: BoxDecoration(
+                                                          gradient:
+                                                              LinearGradient(
+                                                                begin: Alignment
+                                                                    .topCenter,
+                                                                end: Alignment
+                                                                    .bottomCenter,
+                                                                colors: [],
+                                                              ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
                                           ),
                                         ),
                                       ),
@@ -214,7 +199,7 @@ class EventDetailPage extends GetView<EventController> {
                                                   children: [
                                                     Text(
                                                       controller
-                                                          .currentPromo
+                                                          .currentEvent
                                                           .title,
                                                       style: const TextStyle(
                                                         fontSize: 36,
@@ -227,7 +212,7 @@ class EventDetailPage extends GetView<EventController> {
                                                     const SizedBox(height: 12),
                                                     Text(
                                                       controller
-                                                          .currentPromo
+                                                          .currentEvent
                                                           .subtitle,
                                                       style: TextStyle(
                                                         fontSize: 18,
@@ -240,7 +225,7 @@ class EventDetailPage extends GetView<EventController> {
                                                     const SizedBox(height: 24),
                                                     Text(
                                                       controller
-                                                          .currentPromo
+                                                          .currentEvent
                                                           .description,
                                                       style: TextStyle(
                                                         fontSize: 16,
@@ -250,53 +235,6 @@ class EventDetailPage extends GetView<EventController> {
                                                       ),
                                                     ),
                                                     const SizedBox(height: 50),
-                                                    // Wrap(
-                                                    //   spacing: 10,
-                                                    //   runSpacing: 10,
-                                                    //   children: [
-                                                    //     _buildTag(
-                                                    //       controller
-                                                    //           .currentPromo
-                                                    //           .tag1,
-                                                    //       Colors.teal,
-                                                    //     ),
-                                                    //     _buildTag(
-                                                    //       controller
-                                                    //           .currentPromo
-                                                    //           .tag2,
-                                                    //       Colors.green,
-                                                    //     ),
-                                                    //   ],
-                                                    // ),
-                                                    // SizedBox(
-                                                    //   width: double.infinity,
-                                                    //   height: 56,
-                                                    //   child: ElevatedButton(
-                                                    //     onPressed: controller
-                                                    //         .bookPromo,
-                                                    //     style: ElevatedButton.styleFrom(
-                                                    //       backgroundColor:
-                                                    //           Colors.teal,
-                                                    //       foregroundColor:
-                                                    //           Colors.white,
-                                                    //       shape: RoundedRectangleBorder(
-                                                    //         borderRadius:
-                                                    //             BorderRadius.circular(
-                                                    //               30,
-                                                    //             ),
-                                                    //       ),
-                                                    //       elevation: 5,
-                                                    //     ),
-                                                    //     child: const Text(
-                                                    //       'Booking Sekarang',
-                                                    //       style: TextStyle(
-                                                    //         fontSize: 18,
-                                                    //         fontWeight:
-                                                    //             FontWeight.bold,
-                                                    //       ),
-                                                    //     ),
-                                                    //   ),
-                                                    // ),
                                                   ],
                                                 ),
                                               ),
@@ -304,13 +242,14 @@ class EventDetailPage extends GetView<EventController> {
 
                                             const SizedBox(height: 30),
 
+                                            // Thumbnail Navigation
                                             SizedBox(
                                               height: 180,
                                               child: ListView.builder(
                                                 scrollDirection:
                                                     Axis.horizontal,
                                                 itemCount:
-                                                    controller.promos.length,
+                                                    controller.events.length,
                                                 itemBuilder: (context, index) {
                                                   final isActive =
                                                       index ==
@@ -366,7 +305,7 @@ class EventDetailPage extends GetView<EventController> {
                                                               : 0.5,
                                                           child: Image.asset(
                                                             controller
-                                                                .promos[index]
+                                                                .events[index]
                                                                 .imageUrl,
                                                             fit: BoxFit.cover,
                                                           ),

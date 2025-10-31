@@ -1,8 +1,13 @@
 import 'package:carousel_slider/carousel_controller.dart' as cs;
-import 'package:dago_valley_explore/domain/entities/promo.dart';
+import 'package:dago_valley_explore/app/services/local_storage.dart';
+import 'package:dago_valley_explore/domain/entities/event.dart';
 import 'package:get/get.dart';
 
 class EventController extends GetxController {
+  EventController();
+
+  final LocalStorageService _storage = Get.find<LocalStorageService>();
+
   // Carousel controller
   final carouselController = cs.CarouselSliderController();
 
@@ -10,21 +15,39 @@ class EventController extends GetxController {
   final _currentIndex = 0.obs;
   int get currentIndex => _currentIndex.value;
 
-  // List promo (bisa diganti dengan API call)
-  final _promos = <Promo>[].obs;
-  List<Promo> get promos => dummyEvents;
+  // Observable untuk list events
+  final _events = RxList<Event>([]);
+  List<Event> get events => _events;
 
-  // Current promo
-  Promo get currentPromo => dummyEvents[_currentIndex.value];
+  // Current event
+  Event get currentEvent {
+    if (_events.isEmpty) {
+      // Fallback ke dummy atau throw error
+      throw Exception('No events available');
+    }
+    return _events[_currentIndex.value];
+  }
 
   @override
   void onInit() {
     super.onInit();
+    loadEvents();
   }
 
   @override
   void onClose() {
     super.onClose();
+  }
+
+  void loadEvents() {
+    final cachedEvents = _storage.events;
+    if (cachedEvents != null && cachedEvents.isNotEmpty) {
+      print('✅ Using cached events: ${cachedEvents.length} items');
+      _events.assignAll(cachedEvents);
+    } else {
+      print('⚠️ No events available, using empty list');
+      _events.clear();
+    }
   }
 
   // Set index carousel
@@ -38,13 +61,12 @@ class EventController extends GetxController {
   }
 
   // Handle booking action
-  void bookPromo() {
+  void bookEvent() {
     Get.snackbar(
       'Booking',
-      'Booking promo: ${currentPromo.title}',
+      'Booking event: ${currentEvent.title}',
       snackPosition: SnackPosition.BOTTOM,
     );
-    // Tambahkan logic booking di sini
   }
 
   // Close modal

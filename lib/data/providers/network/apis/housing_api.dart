@@ -22,7 +22,7 @@ class HousingApi implements APIRequestRepresentable {
   }
 
   Map<String, String> get headers => {
-    "X-Api-Key": "d809d6a547734a67af23365ce5bc8c02",
+    HttpHeaders.contentTypeHeader: 'application/json',
   };
 
   Map<String, String> get query {

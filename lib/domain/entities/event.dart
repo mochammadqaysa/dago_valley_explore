@@ -22,4 +22,28 @@ class Event {
     required this.tag2,
     required this.en,
   });
+
+  factory Event.fromJson(Map<String, dynamic> json) => Event(
+    id: json["id"],
+    housingId: json["housing_id"],
+    title: json["title"],
+    subtitle: json["subtitle"],
+    description: json["description"],
+    imageUrl: json["image_url"],
+    tag1: json["tag1"],
+    tag2: json["tag2"],
+    en: PromoTranslation.fromJson(json["en"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "housing_id": housingId,
+    "title": title,
+    "subtitle": subtitle,
+    "description": description,
+    "image_url": imageUrl,
+    "tag1": tag1,
+    "tag2": tag2,
+    "en": en.toJson(),
+  };
 }
