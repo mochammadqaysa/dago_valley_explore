@@ -1,7 +1,9 @@
 import 'package:dago_valley_explore/app/translation/app_translations.dart';
 import 'package:dago_valley_explore/presentation/controllers/sidebar/sidebar_binding.dart';
+import 'package:dago_valley_explore/presentation/controllers/splash/splash_binding.dart';
 import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/locale/locale_controller.dart';
+import 'package:dago_valley_explore/presentation/pages/splashscreen/splashscreen_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'pages/home/home_page.dart';
@@ -31,8 +33,10 @@ class App extends StatelessWidget {
         fallbackLocale: Locale('id', 'ID'),
 
         initialRoute: "/",
-        initialBinding: SidebarBinding(),
-        home: HomePage(),
+        // initialBinding: SidebarBinding(),
+        // home: HomePage(),
+        initialBinding: SplashBinding(),
+        home: SplashScreen(),
       ),
     );
   }
