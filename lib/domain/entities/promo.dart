@@ -36,7 +36,17 @@ class Promo {
   );
 
   // make toJson function
-  Map<String, dynamic> toJson() => {};
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "housing_id": housingId,
+    "title": title,
+    "subtitle": subtitle,
+    "description": description,
+    "image_url": imageUrl,
+    "tag1": tag1,
+    "tag2": tag2,
+    "en": en.toJson(),
+  };
 }
 
 final List<Promo> dummyPromos = [
