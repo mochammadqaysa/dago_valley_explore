@@ -15,12 +15,13 @@ class EventDetailPage extends GetView<EventController> {
     return storage.getLocalImage(imageUrl);
   }
 
-  Widget _buildEventImage(
+  Widget _buildPromoImage(
     String imageUrl, {
     BoxFit fit = BoxFit.cover,
     double? height,
     double? width,
   }) {
+    // gunakan FutureBuilder untuk mengecek apakah file tersedia di lokal
     return FutureBuilder<File?>(
       future: _localFile(imageUrl),
       builder: (context, snapshot) {
@@ -38,35 +39,36 @@ class EventDetailPage extends GetView<EventController> {
           return Image.file(file, fit: fit, width: width, height: height);
         }
 
-        if (imageUrl.isNotEmpty &&
-            (imageUrl.startsWith('http://') ||
-                imageUrl.startsWith('https://'))) {
-          return Image.network(
-            imageUrl,
-            fit: fit,
-            width: width,
-            height: height,
-            loadingBuilder: (context, child, progress) {
-              if (progress == null) return child;
-              return Container(
-                width: width,
-                height: height,
-                color: Colors.grey[200],
-                child: const Center(child: CircularProgressIndicator()),
-              );
-            },
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                width: width,
-                height: height,
-                color: Colors.grey[200],
-                child: const Center(child: Icon(Icons.broken_image)),
-              );
-            },
-          );
-        }
+        // fallback ke network jika URL http(s)
+        // if (imageUrl.isNotEmpty &&
+        //     (imageUrl.startsWith('http://') ||
+        //         imageUrl.startsWith('https://'))) {
+        //   return Image.network(
+        //     imageUrl,
+        //     fit: fit,
+        //     width: width,
+        //     height: height,
+        //     loadingBuilder: (context, child, progress) {
+        //       if (progress == null) return child;
+        //       return Container(
+        //         width: width,
+        //         height: height,
+        //         color: Colors.grey[200],
+        //         child: const Center(child: CircularProgressIndicator()),
+        //       );
+        //     },
+        //     errorBuilder: (context, error, stackTrace) {
+        //       return Container(
+        //         width: width,
+        //         height: height,
+        //         color: Colors.grey[200],
+        //         child: const Center(child: Icon(Icons.broken_image)),
+        //       );
+        //     },
+        //   );
+        // }
 
-        // fallback to asset
+        // terakhir, anggap sebagai asset path
         if (imageUrl.isNotEmpty) {
           return Image.asset(
             imageUrl,
@@ -84,6 +86,7 @@ class EventDetailPage extends GetView<EventController> {
           );
         }
 
+        // jika tidak ada imageUrl
         return Container(
           width: width,
           height: height,
@@ -109,8 +112,6 @@ class EventDetailPage extends GetView<EventController> {
           );
         }
 
-        final ev = controller.currentEvent;
-
         return WillPopScope(
           onWillPop: () async {
             controller.closeModal();
@@ -120,11 +121,14 @@ class EventDetailPage extends GetView<EventController> {
             backgroundColor: Colors.black87,
             body: Stack(
               children: [
-                // Background blur effect with image (use cached local file if available)
+                // Background blur effect (background image)
                 Positioned.fill(
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: _buildEventImage(ev.imageUrl, fit: BoxFit.cover),
+                    child: _buildPromoImage(
+                      controller.currentEvent.imageUrl,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 // dark overlay
@@ -212,17 +216,17 @@ class EventDetailPage extends GetView<EventController> {
                                               },
                                             ),
                                             itemBuilder: (context, index, realIndex) {
-                                              final item =
+                                              final promo =
                                                   controller.events[index];
                                               return Stack(
                                                 fit: StackFit.expand,
                                                 children: [
-                                                  // Image from local cache / network / asset
-                                                  _buildEventImage(
-                                                    item.imageUrl,
+                                                  // gunakan _buildPromoImage untuk menampilkan image (lokal/network/asset)
+                                                  _buildPromoImage(
+                                                    promo.imageUrl,
                                                     fit: BoxFit.contain,
                                                   ),
-                                                  // Gradient overlay (if needed)
+                                                  // Gradient overlay (kosongkan atau isi jika perlu)
                                                   Container(
                                                     decoration:
                                                         const BoxDecoration(
@@ -327,7 +331,7 @@ class EventDetailPage extends GetView<EventController> {
 
                                             const SizedBox(height: 30),
 
-                                            // Thumbnail Navigation
+                                            // Thumbnail navigation
                                             SizedBox(
                                               height: 180,
                                               child: ListView.builder(
@@ -339,7 +343,7 @@ class EventDetailPage extends GetView<EventController> {
                                                   final isActive =
                                                       index ==
                                                       controller.currentIndex;
-                                                  final item =
+                                                  final event =
                                                       controller.events[index];
                                                   return GestureDetector(
                                                     onTap: () => controller
@@ -394,8 +398,9 @@ class EventDetailPage extends GetView<EventController> {
                                                             width: 120,
                                                             height: 180,
                                                             child:
-                                                                _buildEventImage(
-                                                                  item.imageUrl,
+                                                                _buildPromoImage(
+                                                                  event
+                                                                      .imageUrl,
                                                                   fit: BoxFit
                                                                       .cover,
                                                                   height: 180,

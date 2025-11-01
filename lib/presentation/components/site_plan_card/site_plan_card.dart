@@ -1,5 +1,7 @@
 import 'package:dago_valley_explore/presentation/components/liquidglass/liquid_glass_container.dart';
+import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SitePlanCard extends StatelessWidget {
   final String title;
@@ -21,10 +23,11 @@ class SitePlanCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
     return Container(
       width: 400,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: themeController.isDarkMode ? Colors.grey[800] : Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -69,7 +72,9 @@ class SitePlanCard extends StatelessWidget {
                   vertical: 8,
                 ),
                 decoration: BoxDecoration(
-                  color: titleBackgroundColor ?? Colors.white,
+                  color: (themeController.isDarkMode
+                      ? Colors.black
+                      : Colors.white),
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(8),
                     bottomRight: Radius.circular(8),
@@ -117,10 +122,12 @@ class SitePlanCard extends StatelessWidget {
                       children: [
                         Text(
                           buttonText,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.normal,
-                            color: Colors.white,
+                            color: themeController.isDarkMode
+                                ? Colors.black
+                                : Colors.white,
                           ),
                         ),
                         // const SizedBox(height: 4),
