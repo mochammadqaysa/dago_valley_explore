@@ -1,11 +1,98 @@
+import 'dart:io';
+import 'dart:ui';
+
+import 'package:dago_valley_explore/app/services/local_storage.dart';
 import 'package:dago_valley_explore/presentation/controllers/event/event_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart' as cs;
 import 'package:get/get.dart';
-import 'dart:ui';
 
 class EventDetailPage extends GetView<EventController> {
   const EventDetailPage({Key? key}) : super(key: key);
+
+  Future<File?> _localFile(String imageUrl) {
+    final storage = Get.find<LocalStorageService>();
+    return storage.getLocalImage(imageUrl);
+  }
+
+  Widget _buildEventImage(
+    String imageUrl, {
+    BoxFit fit = BoxFit.cover,
+    double? height,
+    double? width,
+  }) {
+    return FutureBuilder<File?>(
+      future: _localFile(imageUrl),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(
+            width: width,
+            height: height,
+            color: Colors.grey[200],
+            child: const Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        final file = snapshot.data;
+        if (file != null && file.existsSync()) {
+          return Image.file(file, fit: fit, width: width, height: height);
+        }
+
+        if (imageUrl.isNotEmpty &&
+            (imageUrl.startsWith('http://') ||
+                imageUrl.startsWith('https://'))) {
+          return Image.network(
+            imageUrl,
+            fit: fit,
+            width: width,
+            height: height,
+            loadingBuilder: (context, child, progress) {
+              if (progress == null) return child;
+              return Container(
+                width: width,
+                height: height,
+                color: Colors.grey[200],
+                child: const Center(child: CircularProgressIndicator()),
+              );
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                width: width,
+                height: height,
+                color: Colors.grey[200],
+                child: const Center(child: Icon(Icons.broken_image)),
+              );
+            },
+          );
+        }
+
+        // fallback to asset
+        if (imageUrl.isNotEmpty) {
+          return Image.asset(
+            imageUrl,
+            fit: fit,
+            width: width,
+            height: height,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                width: width,
+                height: height,
+                color: Colors.grey[200],
+                child: const Center(child: Icon(Icons.broken_image)),
+              );
+            },
+          );
+        }
+
+        return Container(
+          width: width,
+          height: height,
+          color: Colors.grey[200],
+          child: const Center(child: Icon(Icons.image_not_supported)),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +109,8 @@ class EventDetailPage extends GetView<EventController> {
           );
         }
 
+        final ev = controller.currentEvent;
+
         return WillPopScope(
           onWillPop: () async {
             controller.closeModal();
@@ -31,21 +120,16 @@ class EventDetailPage extends GetView<EventController> {
             backgroundColor: Colors.black87,
             body: Stack(
               children: [
-                // Background blur effect
+                // Background blur effect with image (use cached local file if available)
                 Positioned.fill(
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: Image.asset(
-                      controller.currentEvent.imageUrl,
-                      fit: BoxFit.cover,
-                    ),
+                    child: _buildEventImage(ev.imageUrl, fit: BoxFit.cover),
                   ),
                 ),
+                // dark overlay
                 Positioned.fill(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: Container(color: Colors.black.withOpacity(0.8)),
-                  ),
+                  child: Container(color: Colors.black.withOpacity(0.8)),
                 ),
 
                 // Content
@@ -127,20 +211,21 @@ class EventDetailPage extends GetView<EventController> {
                                                 );
                                               },
                                             ),
-                                            itemBuilder:
-                                                (context, index, realIndex) {
-                                                  return Stack(
-                                                    fit: StackFit.expand,
-                                                    children: [
-                                                      Image.asset(
-                                                        controller
-                                                            .events[index]
-                                                            .imageUrl,
-                                                        fit: BoxFit.contain,
-                                                      ),
-                                                      // Gradient overlay
-                                                      Container(
-                                                        decoration: BoxDecoration(
+                                            itemBuilder: (context, index, realIndex) {
+                                              final item =
+                                                  controller.events[index];
+                                              return Stack(
+                                                fit: StackFit.expand,
+                                                children: [
+                                                  // Image from local cache / network / asset
+                                                  _buildEventImage(
+                                                    item.imageUrl,
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                  // Gradient overlay (if needed)
+                                                  Container(
+                                                    decoration:
+                                                        const BoxDecoration(
                                                           gradient:
                                                               LinearGradient(
                                                                 begin: Alignment
@@ -150,10 +235,10 @@ class EventDetailPage extends GetView<EventController> {
                                                                 colors: [],
                                                               ),
                                                         ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                },
+                                                  ),
+                                                ],
+                                              );
+                                            },
                                           ),
                                         ),
                                       ),
@@ -254,6 +339,8 @@ class EventDetailPage extends GetView<EventController> {
                                                   final isActive =
                                                       index ==
                                                       controller.currentIndex;
+                                                  final item =
+                                                      controller.events[index];
                                                   return GestureDetector(
                                                     onTap: () => controller
                                                         .goToPage(index),
@@ -303,11 +390,17 @@ class EventDetailPage extends GetView<EventController> {
                                                           opacity: isActive
                                                               ? 1.0
                                                               : 0.5,
-                                                          child: Image.asset(
-                                                            controller
-                                                                .events[index]
-                                                                .imageUrl,
-                                                            fit: BoxFit.cover,
+                                                          child: SizedBox(
+                                                            width: 120,
+                                                            height: 180,
+                                                            child:
+                                                                _buildEventImage(
+                                                                  item.imageUrl,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  height: 180,
+                                                                  width: 120,
+                                                                ),
                                                           ),
                                                         ),
                                                       ),

@@ -1,11 +1,101 @@
+import 'dart:io';
+import 'dart:ui';
+
+import 'package:dago_valley_explore/app/services/local_storage.dart';
 import 'package:dago_valley_explore/presentation/controllers/promo/promo_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart' as cs;
 import 'package:get/get.dart';
-import 'dart:ui';
 
 class PromoDetailPage extends GetView<PromoController> {
   const PromoDetailPage({Key? key}) : super(key: key);
+
+  Future<File?> _localFile(String imageUrl) {
+    final storage = Get.find<LocalStorageService>();
+    return storage.getLocalImage(imageUrl);
+  }
+
+  Widget _buildPromoImage(
+    String imageUrl, {
+    BoxFit fit = BoxFit.cover,
+    double? height,
+    double? width,
+  }) {
+    // gunakan FutureBuilder untuk mengecek apakah file tersedia di lokal
+    return FutureBuilder<File?>(
+      future: _localFile(imageUrl),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(
+            width: width,
+            height: height,
+            color: Colors.grey[200],
+            child: const Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        final file = snapshot.data;
+        if (file != null && file.existsSync()) {
+          return Image.file(file, fit: fit, width: width, height: height);
+        }
+
+        // fallback ke network jika URL http(s)
+        if (imageUrl.isNotEmpty &&
+            (imageUrl.startsWith('http://') ||
+                imageUrl.startsWith('https://'))) {
+          return Image.network(
+            imageUrl,
+            fit: fit,
+            width: width,
+            height: height,
+            loadingBuilder: (context, child, progress) {
+              if (progress == null) return child;
+              return Container(
+                width: width,
+                height: height,
+                color: Colors.grey[200],
+                child: const Center(child: CircularProgressIndicator()),
+              );
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                width: width,
+                height: height,
+                color: Colors.grey[200],
+                child: const Center(child: Icon(Icons.broken_image)),
+              );
+            },
+          );
+        }
+
+        // terakhir, anggap sebagai asset path
+        if (imageUrl.isNotEmpty) {
+          return Image.asset(
+            imageUrl,
+            fit: fit,
+            width: width,
+            height: height,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                width: width,
+                height: height,
+                color: Colors.grey[200],
+                child: const Center(child: Icon(Icons.broken_image)),
+              );
+            },
+          );
+        }
+
+        // jika tidak ada imageUrl
+        return Container(
+          width: width,
+          height: height,
+          color: Colors.grey[200],
+          child: const Center(child: Icon(Icons.image_not_supported)),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,21 +121,19 @@ class PromoDetailPage extends GetView<PromoController> {
             backgroundColor: Colors.black87,
             body: Stack(
               children: [
-                // Background blur effect
+                // Background blur effect (background image)
                 Positioned.fill(
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: Image.asset(
+                    child: _buildPromoImage(
                       controller.currentPromo.imageUrl,
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
+                // dark overlay
                 Positioned.fill(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: Container(color: Colors.black.withOpacity(0.8)),
-                  ),
+                  child: Container(color: Colors.black.withOpacity(0.8)),
                 ),
 
                 // Content
@@ -106,15 +194,6 @@ class PromoDetailPage extends GetView<PromoController> {
                                           borderRadius: BorderRadius.circular(
                                             20,
                                           ),
-                                          // boxShadow: [
-                                          //   BoxShadow(
-                                          //     color: Colors.black.withOpacity(
-                                          //       0.3,
-                                          //     ),
-                                          //     blurRadius: 20,
-                                          //     offset: const Offset(0, 10),
-                                          //   ),
-                                          // ],
                                         ),
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(
@@ -137,33 +216,29 @@ class PromoDetailPage extends GetView<PromoController> {
                                               },
                                             ),
                                             itemBuilder: (context, index, realIndex) {
+                                              final promo =
+                                                  controller.promos[index];
                                               return Stack(
                                                 fit: StackFit.expand,
                                                 children: [
-                                                  Image.asset(
-                                                    controller
-                                                        .promos[index]
-                                                        .imageUrl,
+                                                  // gunakan _buildPromoImage untuk menampilkan image (lokal/network/asset)
+                                                  _buildPromoImage(
+                                                    promo.imageUrl,
                                                     fit: BoxFit.contain,
                                                   ),
-                                                  // Gradient overlay
+                                                  // Gradient overlay (kosongkan atau isi jika perlu)
                                                   Container(
-                                                    decoration: BoxDecoration(
-                                                      gradient: LinearGradient(
-                                                        begin:
-                                                            Alignment.topCenter,
-                                                        end: Alignment
-                                                            .bottomCenter,
-                                                        colors: [
-                                                          // Colors
-                                                          //     .transparent,
-                                                          // Colors.black
-                                                          //     .withOpacity(
-                                                          //       0.3,
-                                                          //     ),
-                                                        ],
-                                                      ),
-                                                    ),
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                          gradient:
+                                                              LinearGradient(
+                                                                begin: Alignment
+                                                                    .topCenter,
+                                                                end: Alignment
+                                                                    .bottomCenter,
+                                                                colors: [],
+                                                              ),
+                                                        ),
                                                   ),
                                                 ],
                                               );
@@ -249,53 +324,6 @@ class PromoDetailPage extends GetView<PromoController> {
                                                       ),
                                                     ),
                                                     const SizedBox(height: 50),
-                                                    // Wrap(
-                                                    //   spacing: 10,
-                                                    //   runSpacing: 10,
-                                                    //   children: [
-                                                    //     _buildTag(
-                                                    //       controller
-                                                    //           .currentPromo
-                                                    //           .tag1,
-                                                    //       Colors.teal,
-                                                    //     ),
-                                                    //     _buildTag(
-                                                    //       controller
-                                                    //           .currentPromo
-                                                    //           .tag2,
-                                                    //       Colors.green,
-                                                    //     ),
-                                                    //   ],
-                                                    // ),
-                                                    // SizedBox(
-                                                    //   width: double.infinity,
-                                                    //   height: 56,
-                                                    //   child: ElevatedButton(
-                                                    //     onPressed: controller
-                                                    //         .bookPromo,
-                                                    //     style: ElevatedButton.styleFrom(
-                                                    //       backgroundColor:
-                                                    //           Colors.teal,
-                                                    //       foregroundColor:
-                                                    //           Colors.white,
-                                                    //       shape: RoundedRectangleBorder(
-                                                    //         borderRadius:
-                                                    //             BorderRadius.circular(
-                                                    //               30,
-                                                    //             ),
-                                                    //       ),
-                                                    //       elevation: 5,
-                                                    //     ),
-                                                    //     child: const Text(
-                                                    //       'Booking Sekarang',
-                                                    //       style: TextStyle(
-                                                    //         fontSize: 18,
-                                                    //         fontWeight:
-                                                    //             FontWeight.bold,
-                                                    //       ),
-                                                    //     ),
-                                                    //   ),
-                                                    // ),
                                                   ],
                                                 ),
                                               ),
@@ -303,6 +331,7 @@ class PromoDetailPage extends GetView<PromoController> {
 
                                             const SizedBox(height: 30),
 
+                                            // Thumbnail navigation
                                             SizedBox(
                                               height: 180,
                                               child: ListView.builder(
@@ -314,6 +343,8 @@ class PromoDetailPage extends GetView<PromoController> {
                                                   final isActive =
                                                       index ==
                                                       controller.currentIndex;
+                                                  final promo =
+                                                      controller.promos[index];
                                                   return GestureDetector(
                                                     onTap: () => controller
                                                         .goToPage(index),
@@ -363,11 +394,18 @@ class PromoDetailPage extends GetView<PromoController> {
                                                           opacity: isActive
                                                               ? 1.0
                                                               : 0.5,
-                                                          child: Image.asset(
-                                                            controller
-                                                                .promos[index]
-                                                                .imageUrl,
-                                                            fit: BoxFit.cover,
+                                                          child: SizedBox(
+                                                            width: 120,
+                                                            height: 180,
+                                                            child:
+                                                                _buildPromoImage(
+                                                                  promo
+                                                                      .imageUrl,
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  height: 180,
+                                                                  width: 120,
+                                                                ),
                                                           ),
                                                         ),
                                                       ),

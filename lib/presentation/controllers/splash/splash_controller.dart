@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:dago_valley_explore/app/services/local_storage.dart';
 import 'package:dago_valley_explore/domain/entities/payload/housing_response.dart';
 import 'package:dago_valley_explore/domain/usecases/fetch_housing_use_case.dart';
+import 'package:dago_valley_explore/presentation/controllers/sidebar/sidebar_binding.dart';
 import 'package:dago_valley_explore/presentation/pages/home/home_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -35,7 +36,7 @@ class SplashController extends GetxController {
       ]);
 
       await Future.delayed(const Duration(milliseconds: 500));
-      Get.off(() => HomePage());
+      Get.off(() => HomePage(), binding: SidebarBinding());
     } catch (e) {
       print('❌ Error initializing app: $e');
       errorMessage.value = 'Terjadi kesalahan: $e';
