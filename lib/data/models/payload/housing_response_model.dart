@@ -15,6 +15,6 @@ class HousingResponseModel extends HousingResponse {
         housing: List.from(
           json["housing"].map((x) => HousingModel.fromJson(x)),
         ),
-        version: VersionModel.fromJson(json["version"]),
+        version: VersionModel.fromJson(json["versions"]),
       );
 }

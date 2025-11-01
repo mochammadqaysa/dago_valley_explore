@@ -29,7 +29,7 @@ class Promo {
     title: json["title"],
     subtitle: json["subtitle"],
     description: json["description"],
-    imageUrl: json["image_url"],
+    imageUrl: json["imageUrl"],
     tag1: json["tag1"],
     tag2: json["tag2"],
     en: PromoTranslation.fromJson(json["en"]),
@@ -41,7 +41,7 @@ class Promo {
     "title": title,
     "subtitle": subtitle,
     "description": description,
-    "image_url": imageUrl,
+    "imageUrl": imageUrl,
     "tag1": tag1,
     "tag2": tag2,
     "en": en.toJson(),
@@ -71,7 +71,6 @@ Hubungi kami sekarang untuk informasi lebih lanjut.''',
 Special Promo Price Only Until May 30, 2024!
 Don't Wait Any Longer!
 Contact us now for more information.''',
-      imageUrl: '',
       tag1: '',
       tag2: '',
     ),
@@ -102,7 +101,6 @@ Enjoy a Kitchen Set Bonus worth 50 million rupiah to complete your dream home.
 Modern residences with elegant designs, strategic locations, and lush environments — perfect for families seeking a better quality of life.
 🎁 Limited promo!
 Secure your chosen unit before the promo ends.''',
-      imageUrl: '',
       tag1: '',
       tag2: '',
     ),
@@ -129,7 +127,6 @@ Hidup lebih sehat, lebih tenang, dan lebih dekat dengan alam — hanya di Dago V
 Now available at a special price starting from 1.9 billion (all in) — including Free BPHTB and VAT, as well as discounts of up to hundreds of millions of rupiah.
 This is the best opportunity to own a premium residence in a calming natural environment.
 Live healthier, calmer, and closer to nature — only in Dago Valley.''',
-      imageUrl: '',
       tag1: '',
       tag2: '',
     ),
@@ -159,7 +156,6 @@ Hubungi kami sekarang untuk informasi lebih lanjut.''',
 Special Promo Price Only Until May 30, 2024!
 Don't Wait Any Longer!
 Contact us now for more information.''',
-      imageUrl: '',
       tag1: '',
       tag2: '',
     ),
@@ -192,7 +188,6 @@ Enjoy a Kitchen Set Bonus worth 50 million rupiah to complete your dream home.
 Modern residences with elegant designs, strategic locations, and lush environments — perfect for families seeking a better quality of life.
 🎁 Limited promo!
 Secure your chosen unit before the promo ends.''',
-      imageUrl: '',
       tag1: '',
       tag2: '',
     ),
@@ -219,7 +214,6 @@ Hidup lebih sehat, lebih tenang, dan lebih dekat dengan alam — hanya di Dago V
 Now available at a special price starting from 1.9 billion (all in) — including Free BPHTB and VAT, as well as discounts of up to hundreds of millions of rupiah.
 This is the best opportunity to own a premium residence with a calming natural environment.
 Live healthier, calmer, and closer to nature — only in Dago Valley.''',
-      imageUrl: '',
       tag1: '',
       tag2: '',
     ),

@@ -25,7 +25,7 @@ class BrochureModel extends Brochure {
   factory BrochureModel.fromJson(Map<String, dynamic> json) => BrochureModel(
     id: json["id"],
     housingId: json["housing_id"],
-    imageUrl: json["image_url"],
+    imageUrl: json["imageUrl"],
     createdAt: json["created_at"],
     updatedAt: json["updated_at"],
   );

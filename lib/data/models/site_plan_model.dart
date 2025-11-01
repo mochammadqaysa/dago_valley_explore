@@ -29,7 +29,7 @@ class SitePlanModel extends SitePlan {
     id: json["id"],
     housingId: json["housing_id"],
     name: json["name"],
-    imageUrl: json["image_url"],
+    imageUrl: json["imageUrl"],
     createdAt: json["created_at"],
     updatedAt: json["updated_at"],
   );

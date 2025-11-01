@@ -3,6 +3,7 @@ import 'package:dago_valley_explore/app/services/local_storage.dart';
 import 'package:dago_valley_explore/domain/entities/payload/housing_response.dart';
 import 'package:dago_valley_explore/domain/usecases/fetch_housing_use_case.dart';
 import 'package:dago_valley_explore/presentation/pages/home/home_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class SplashController extends GetxController {
@@ -115,8 +116,9 @@ class SplashController extends GetxController {
       } else {
         throw Exception('Data housing kosong dari API');
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       print('❌ Error loading housing data: $e');
+      print('Stack trace: ${stackTrace}');
 
       // Cek apakah ada data lokal sebagai fallback
       final localPromos = _storage.promos;

@@ -41,7 +41,7 @@ class PromoModel extends Promo {
     title: json["title"],
     subtitle: json["subtitle"],
     description: json["description"],
-    imageUrl: json["image_url"],
+    imageUrl: json["imageUrl"],
     tag1: json["tag1"],
     tag2: json["tag2"],
     en: PromoTranslationModel.fromJson(json["en"]),
