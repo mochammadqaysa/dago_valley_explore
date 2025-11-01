@@ -110,7 +110,7 @@ class AppTranslations extends Translations {
       'site_plan': "Site Plan",
       'event': "Event",
       'house_type': "House Type",
-      'agreements_and_legality': "Legality & Agreements",
+      'agreements_and_legality': "Legality & Licences",
       'check_availability': "Check availability",
 
       // virtual / product page

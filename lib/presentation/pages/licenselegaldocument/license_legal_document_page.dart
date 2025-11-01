@@ -4,7 +4,7 @@ import 'package:dago_valley_explore/app/config/app_colors.dart';
 import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart'; // Ubah ini - import lengkap
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
@@ -16,118 +16,374 @@ class LicenseLegalDocumentPage extends StatefulWidget {
       _LicenseLegalDocumentPageState();
 }
 
-class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage> {
-  List<String> pdfFiles = [];
+class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage>
+    with TickerProviderStateMixin {
+  late TabController _mainTabController;
+  late TabController _tahap1TabController;
+  late TabController _tahap2TabController;
+
+  // Data untuk setiap kategori
+  Map<String, List<String>> pdfFiles = {
+    'tahap_1_legalitas': [],
+    'tahap_1_perizinan': [],
+    'tahap_2_legalitas': [],
+    'tahap_2_perizinan': [],
+  };
+
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    _mainTabController = TabController(length: 2, vsync: this);
+    _tahap1TabController = TabController(length: 2, vsync: this);
+    _tahap2TabController = TabController(length: 2, vsync: this);
+
+    // Listen to main tab changes to update sub tab controller
+    _mainTabController.addListener(() {
+      if (_mainTabController.indexIsChanging) {
+        setState(() {});
+      }
+    });
+
     loadPdfList();
   }
 
-  Future<void> loadPdfList() async {
-    final manifestContent = await rootBundle.loadString('AssetManifest.json');
-    final Map<String, dynamic> manifestMap = json.decode(manifestContent);
-
-    final pdfPaths = manifestMap.keys
-        .where(
-          (String key) =>
-              key.startsWith('assets/legalitas/') && key.endsWith('.pdf'),
-        )
-        .toList();
-
-    setState(() {
-      pdfFiles = pdfPaths.map((e) => e.split('/').last).toList();
-      isLoading = false;
-    });
+  @override
+  void dispose() {
+    _mainTabController.dispose();
+    _tahap1TabController.dispose();
+    _tahap2TabController.dispose();
+    super.dispose();
   }
 
-  Future<void> openPdf(String assetPath, String title) async {
+  Future<void> loadPdfList() async {
+    try {
+      final manifestContent = await rootBundle.loadString('AssetManifest.json');
+      final Map<String, dynamic> manifestMap = json.decode(manifestContent);
+
+      // Load Tahap 1 - Legalitas
+      final tahap1Legalitas = manifestMap.keys
+          .where(
+            (String key) =>
+                key.startsWith('assets/tahap_1/legalitas/') &&
+                key.endsWith('.pdf'),
+          )
+          .toList();
+
+      // Load Tahap 1 - Perizinan
+      final tahap1Perizinan = manifestMap.keys
+          .where(
+            (String key) =>
+                key.startsWith('assets/tahap_1/perizinan/') &&
+                key.endsWith('.pdf'),
+          )
+          .toList();
+
+      // Load Tahap 2 - Legalitas
+      final tahap2Legalitas = manifestMap.keys
+          .where(
+            (String key) =>
+                key.startsWith('assets/tahap_2/legalitas/') &&
+                key.endsWith('.pdf'),
+          )
+          .toList();
+
+      // Load Tahap 2 - Perizinan
+      final tahap2Perizinan = manifestMap.keys
+          .where(
+            (String key) =>
+                key.startsWith('assets/tahap_2/perizinan/') &&
+                key.endsWith('.pdf'),
+          )
+          .toList();
+
+      setState(() {
+        pdfFiles['tahap_1_legalitas'] = tahap1Legalitas
+            .map((e) => e.split('/').last)
+            .toList();
+        pdfFiles['tahap_1_perizinan'] = tahap1Perizinan
+            .map((e) => e.split('/').last)
+            .toList();
+        pdfFiles['tahap_2_legalitas'] = tahap2Legalitas
+            .map((e) => e.split('/').last)
+            .toList();
+        pdfFiles['tahap_2_perizinan'] = tahap2Perizinan
+            .map((e) => e.split('/').last)
+            .toList();
+        isLoading = false;
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error loading PDF list: $e');
+      }
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> openPdf(String fileName, String title, String basePath) async {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => PdfViewerPage(
-          assetPath: 'assets/legalitas/$assetPath',
-          title: title,
-        ),
+        builder: (_) =>
+            PdfViewerPage(assetPath: '$basePath/$fileName', title: title),
       ),
     );
+  }
+
+  TabController get _activeSubTabController {
+    return _mainTabController.index == 0
+        ? _tahap1TabController
+        : _tahap2TabController;
   }
 
   @override
   Widget build(BuildContext context) {
     final isTV = MediaQuery.of(context).size.width > 800;
-    final crossAxisCount = isTV ? 5 : 1;
     final themeController = Get.find<ThemeController>();
 
     return Scaffold(
       body: isLoading
           ? const Center(child: CircularProgressIndicator(color: Colors.white))
-          : GridView.builder(
-              padding: const EdgeInsets.all(20),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: crossAxisCount,
-                mainAxisSpacing: 24,
-                crossAxisSpacing: 24,
-                childAspectRatio: isTV ? 1.1 : 2.5,
-              ),
-              itemCount: pdfFiles.length,
-              itemBuilder: (context, index) {
-                final fileName = pdfFiles[index];
-                return GestureDetector(
-                  onTap: () => openPdf(fileName, fileName),
-                  child: MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 150),
-                      decoration: BoxDecoration(
-                        color: themeController.isDarkMode
-                            ? Colors.grey[900]
-                            : AppColors.lightGrey,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: themeController.isDarkMode
-                              ? Colors.grey.shade700
-                              : Colors.grey.shade300,
-                          width: 2,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: themeController.isDarkMode
-                                ? Colors.black.withOpacity(0.4)
-                                : Colors.grey.withOpacity(0.4),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _PdfFileIcon(),
-                          const SizedBox(height: 12),
-                          Text(
-                            fileName.replaceAll('.pdf', '').toUpperCase(),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
+          : Column(
+              children: [
+                // Combined TabBar Row (Tahap & Legalitas/Perizinan)
+                Container(
+                  margin: const EdgeInsets.all(20),
+                  child: Row(
+                    children: [
+                      // Main TabBar (Tahap 1 / Tahap 2) with Outline
+                      SizedBox(
+                        width: 200,
+                        child: Container(
+                          height: 45,
+                          decoration: BoxDecoration(
+                            border: Border.all(
                               color: themeController.isDarkMode
-                                  ? Colors.white
-                                  : Colors.grey,
-                              fontSize: isTV ? 18 : 16,
+                                  ? Colors.grey[700]!
+                                  : Colors.grey[300]!,
+                              width: 1.5,
+                            ),
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: TabBar(
+                            controller: _mainTabController,
+                            indicator: BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            dividerColor: Colors.transparent,
+                            labelColor: Colors.white,
+                            unselectedLabelColor: themeController.isDarkMode
+                                ? Colors.white70
+                                : Colors.black54,
+                            labelStyle: const TextStyle(
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ),
-                            softWrap: true,
-                            overflow: TextOverflow.visible,
+                            tabs: const [
+                              Tab(text: 'Tahap 1'),
+                              Tab(text: 'Tahap 2'),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 16),
+                      // Sub TabBar (Legalitas / Perizinan) with Outline
+                      SizedBox(
+                        width: 200,
+                        child: Container(
+                          height: 45,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: themeController.isDarkMode
+                                  ? Colors.grey[700]!
+                                  : Colors.grey[300]!,
+                              width: 1.5,
+                            ),
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          child: TabBar(
+                            controller: _activeSubTabController,
+                            indicator: BoxDecoration(
+                              color: AppColors.primary.withOpacity(0.8),
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            dividerColor: Colors.transparent,
+                            labelColor: Colors.white,
+                            unselectedLabelColor: themeController.isDarkMode
+                                ? Colors.white70
+                                : Colors.black54,
+                            labelStyle: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            tabs: const [
+                              Tab(text: 'Legalitas'),
+                              Tab(text: 'Perizinan'),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              },
+                ),
+                // TabBarView untuk Tahap 1 dan Tahap 2
+                Expanded(
+                  child: TabBarView(
+                    controller: _mainTabController,
+                    children: [
+                      // Tahap 1 Content
+                      _buildTahapContent(
+                        themeController,
+                        isTV,
+                        _tahap1TabController,
+                        'tahap_1',
+                      ),
+                      // Tahap 2 Content
+                      _buildTahapContent(
+                        themeController,
+                        isTV,
+                        _tahap2TabController,
+                        'tahap_2',
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
+    );
+  }
+
+  Widget _buildTahapContent(
+    ThemeController themeController,
+    bool isTV,
+    TabController tabController,
+    String tahap,
+  ) {
+    return TabBarView(
+      controller: tabController,
+      children: [
+        // Legalitas
+        _buildPdfGrid(
+          isTV,
+          themeController,
+          pdfFiles['${tahap}_legalitas']!,
+          'assets/$tahap/legalitas',
+        ),
+        // Perizinan
+        _buildPdfGrid(
+          isTV,
+          themeController,
+          pdfFiles['${tahap}_perizinan']!,
+          'assets/$tahap/perizinan',
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPdfGrid(
+    bool isTV,
+    ThemeController themeController,
+    List<String> files,
+    String basePath,
+  ) {
+    final crossAxisCount = isTV ? 5 : 1;
+
+    if (files.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.folder_open,
+              size: 64,
+              color: themeController.isDarkMode
+                  ? Colors.white38
+                  : Colors.grey[400],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Tidak ada file PDF',
+              style: TextStyle(
+                color: themeController.isDarkMode
+                    ? Colors.white70
+                    : Colors.grey[600],
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return GridView.builder(
+      padding: const EdgeInsets.all(20),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount,
+        mainAxisSpacing: 24,
+        crossAxisSpacing: 24,
+        childAspectRatio: isTV ? 1.1 : 2.5,
+      ),
+      itemCount: files.length,
+      itemBuilder: (context, index) {
+        final fileName = files[index];
+        return GestureDetector(
+          onTap: () => openPdf(fileName, fileName, basePath),
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 150),
+              decoration: BoxDecoration(
+                color: themeController.isDarkMode
+                    ? Colors.grey[900]
+                    : AppColors.lightGrey,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: themeController.isDarkMode
+                      ? Colors.grey.shade700
+                      : Colors.grey.shade300,
+                  width: 2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: themeController.isDarkMode
+                        ? Colors.black.withOpacity(0.4)
+                        : Colors.grey.withOpacity(0.4),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _PdfFileIcon(),
+                  const SizedBox(height: 12),
+                  Text(
+                    fileName.replaceAll('.pdf', '').toUpperCase(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: themeController.isDarkMode
+                          ? Colors.white
+                          : Colors.grey,
+                      fontSize: isTV ? 18 : 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -163,6 +419,7 @@ class _PdfFileIcon extends StatelessWidget {
   }
 }
 
+// PdfViewerPage tetap sama seperti kode asli Anda
 class PdfViewerPage extends StatefulWidget {
   final String assetPath;
   final String title;
@@ -184,11 +441,8 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
   bool _showSidebar = true;
   final TextEditingController _pageController = TextEditingController();
   final ScrollController _thumbnailScrollController = ScrollController();
-
-  // Store PDF bytes
   Uint8List? _pdfBytes;
 
-  // Zoom presets mirip Chrome
   final List<double> _zoomLevels = [
     0.25,
     0.33,
@@ -222,14 +476,12 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
         print('Loading PDF from: ${widget.assetPath}');
       }
 
-      // Load PDF sebagai bytes (untuk semua platform)
       try {
         final ByteData data = await rootBundle.load(widget.assetPath);
         _pdfBytes = data.buffer.asUint8List();
 
         if (kDebugMode) {
           print('PDF bytes loaded successfully: ${_pdfBytes?.length} bytes');
-          // Check PDF header
           if (_pdfBytes != null && _pdfBytes!.length > 4) {
             final header = String.fromCharCodes(_pdfBytes!.sublist(0, 4));
             print('PDF Header: $header (should be %PDF)');
@@ -245,19 +497,17 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
         }
         setState(() {
           _error =
-              'Gagal memuat file PDF: $e\n\nPastikan file PDF ada di folder assets/legalitas/';
+              'Gagal memuat file PDF: $e\n\nPastikan file PDF ada di folder yang sesuai';
           _isLoading = false;
         });
         return;
       }
 
       await Future.delayed(const Duration(milliseconds: 100));
-
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
-
         await Future.delayed(const Duration(milliseconds: 500));
         if (mounted) {
           _applyZoom();
@@ -296,12 +546,10 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
         'Document loaded successfully. Total pages: ${details.document.pages.count}',
       );
     }
-
     setState(() {
       _totalPages = details.document.pages.count;
-      _error = null; // Clear any previous errors
+      _error = null;
     });
-
     Future.delayed(const Duration(milliseconds: 300), () {
       if (mounted) {
         _applyZoom();
@@ -339,7 +587,6 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
       (level) => level > _currentZoom + 0.01,
       orElse: () => _zoomLevels.last,
     );
-
     setState(() {
       _currentZoom = nextZoom;
     });
@@ -351,7 +598,6 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
       (level) => level < _currentZoom - 0.01,
       orElse: () => _zoomLevels.first,
     );
-
     setState(() {
       _currentZoom = previousZoom;
     });
@@ -527,7 +773,6 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
     );
   }
 
-  // Build PDF Viewer - Always use memory for consistency
   Widget _buildPdfViewer() {
     if (_pdfBytes == null) {
       return const Center(
@@ -546,7 +791,8 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
       enableTextSelection: true,
       canShowScrollHead: false,
       canShowScrollStatus: false,
-      pageLayoutMode: PdfPageLayoutMode.continuous,
+      pageLayoutMode:
+          PdfPageLayoutMode.single, // Changed from continuous to single
       initialZoomLevel: 1.0,
       onDocumentLoaded: _onDocumentLoaded,
       onPageChanged: _onPageChanged,
@@ -555,7 +801,6 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
           print('PDF Load Failed - Error: ${details.error}');
           print('PDF Load Failed - Description: ${details.description}');
         }
-
         setState(() {
           _error =
               'Gagal memuat dokumen PDF\n\n'
@@ -733,7 +978,6 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
               itemBuilder: (context, index) {
                 final pageNumber = index + 1;
                 final isCurrentPage = pageNumber == _currentPage;
-
                 return GestureDetector(
                   onTap: () => _goToPage(pageNumber),
                   child: Container(

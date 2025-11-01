@@ -161,7 +161,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   Expanded(
                                     child: RadioListTile<PaymentMethod>(
                                       title: Text(
-                                        'KPR Syariah (DP 20%)',
+                                        'KPR Bank Syariah',
                                         style: TextStyle(color: textColor),
                                       ),
                                       value: PaymentMethod.kprSyariah,
@@ -178,7 +178,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   Expanded(
                                     child: RadioListTile<PaymentMethod>(
                                       title: Text(
-                                        'Developer (DP 30%)',
+                                        'KPR Developer',
                                         style: TextStyle(color: textColor),
                                       ),
                                       value: PaymentMethod.developer,
@@ -186,7 +186,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                       onChanged: (v) {
                                         setState(() {
                                           paymentMethod = v!;
-                                          tenor = 1;
+                                          tenor = 4;
                                         });
                                       },
                                     ),
