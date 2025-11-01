@@ -177,19 +177,6 @@ class _DashboardPageState extends State<DashboardPage> {
                     SizedBox(width: 24),
                     Expanded(
                       child: SitePlanCard(
-                        title: 'event'.tr,
-                        imageUrl: 'assets/event.jpg',
-                        buttonText: 'check_availability'.tr,
-                        onButtonPressed: _showEventModal,
-                        titleBackgroundColor: themeController.isDarkMode
-                            ? Colors.black
-                            : Colors.white,
-                        buttonColor: Colors.white,
-                      ),
-                    ),
-                    SizedBox(width: 24),
-                    Expanded(
-                      child: SitePlanCard(
                         title: 'agreements_and_legality'.tr,
                         imageUrl: 'assets/akad.jpg',
                         buttonText: 'check_availability'.tr,
@@ -197,6 +184,19 @@ class _DashboardPageState extends State<DashboardPage> {
                           // Navigate ke LicenseLegalDocumentPage via sidebar
                           _navigateToTab(TabType.licenselegaldocumentpage);
                         },
+                        titleBackgroundColor: themeController.isDarkMode
+                            ? Colors.black
+                            : Colors.white,
+                        buttonColor: Colors.white,
+                      ),
+                    ),
+                       SizedBox(width: 24),
+                    Expanded(
+                      child: SitePlanCard(
+                        title: 'event'.tr,
+                        imageUrl: 'assets/event.jpg',
+                        buttonText: 'check_availability'.tr,
+                        onButtonPressed: _showEventModal,
                         titleBackgroundColor: themeController.isDarkMode
                             ? Colors.black
                             : Colors.white,

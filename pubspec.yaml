@@ -85,7 +85,10 @@ flutter:
     - assets/rumah/
     - assets/promo/
     - assets/event/
-    - assets/legalitas/
+    - assets/tahap_1/legalitas/
+    - assets/tahap_1/perizinan/
+    - assets/tahap_2/legalitas/
+    - assets/tahap_2/perizinan/
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
