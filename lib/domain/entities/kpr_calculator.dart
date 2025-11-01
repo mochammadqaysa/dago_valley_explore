@@ -2,6 +2,7 @@ class KprCalculator {
   final int id;
   final String housingId;
   final String marginDeveloper;
+  final String marginBankSyariah;
   final String dpDeveloper;
   final String dpSyariah;
   final String createdAt;
@@ -11,6 +12,7 @@ class KprCalculator {
     required this.id,
     required this.housingId,
     required this.marginDeveloper,
+    required this.marginBankSyariah,
     required this.dpDeveloper,
     required this.dpSyariah,
     required this.createdAt,

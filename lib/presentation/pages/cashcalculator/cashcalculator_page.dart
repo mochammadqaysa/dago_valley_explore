@@ -23,6 +23,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
   double? diskonNominal;
   double? diskonPersen;
   int tenor = 5;
+  double marginPersen = 11.0; // Default untuk KPR Syariah
   final controller = CashcalculatorController();
 
   final rupiahFormat = NumberFormat("#,###", "id_ID");
@@ -33,6 +34,13 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
     } else {
       return [1, 2, 3, 4];
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Set default margin berdasarkan metode pembayaran
+    marginPersen = paymentMethod == PaymentMethod.kprSyariah ? 11.0 : 5.25;
   }
 
   @override
@@ -47,12 +55,13 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
             diskonNominal: diskonNominal,
             diskonPersen: diskonPersen,
             tenorYears: tenor,
+            marginPersen: marginPersen,
           )
         : null;
 
     final cardColor = themeController.isDarkMode
         ? Colors.grey[900]
-        : AppColors.lightGrey;
+        : AppColors.white;
 
     final textColor = themeController.isDarkMode ? Colors.white : Colors.black;
 
@@ -116,12 +125,8 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                  ), // outline grey
-                                  borderRadius: BorderRadius.circular(
-                                    4,
-                                  ), // radius 4
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: DropdownButton<HouseModel>(
                                   isExpanded: true,
@@ -132,8 +137,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   ),
                                   dropdownColor: cardColor,
                                   focusColor: cardColor,
-                                  underline:
-                                      const SizedBox(), // hilangkan underline default
+                                  underline: const SizedBox(),
                                   items: houseModels.map((m) {
                                     return DropdownMenuItem(
                                       value: m,
@@ -171,6 +175,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                           paymentMethod = v!;
                                           tanpaDp = false;
                                           tenor = 5;
+                                          marginPersen = 11.0;
                                         });
                                       },
                                     ),
@@ -187,6 +192,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                         setState(() {
                                           paymentMethod = v!;
                                           tenor = 4;
+                                          marginPersen = 5.25;
                                         });
                                       },
                                     ),
@@ -239,35 +245,150 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                 ),
 
                               const SizedBox(height: 16),
-                              Text(
-                                'DP',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: textColor,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
 
-                              Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
-                                  color: themeController.isDarkMode
-                                      ? Colors.grey[800]
-                                      : Colors.grey[200],
-                                ),
-                                child: Text(
-                                  selectedModel == null
-                                      ? 'Pilih model dulu'
-                                      : 'Rp ${_formatCurrency(controller.calculateDp(harga: selectedModel!.hargaCash, method: paymentMethod, tanpaDp: tanpaDp).round())}',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: textColor,
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // === Kolom DP ===
+                                  Expanded(
+                                    flex: 1,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'DP',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: textColor,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Container(
+                                          width: double
+                                              .infinity, // <-- biar ikut lebar Expanded
+                                          padding: const EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
+                                            color: themeController.isDarkMode
+                                                ? Colors.grey[800]
+                                                : Colors.grey[200],
+                                          ),
+                                          child: Text(
+                                            selectedModel == null
+                                                ? 'Pilih model dulu'
+                                                : 'Rp ${_formatCurrency(controller.calculateDp(harga: selectedModel!.hargaCash.toDouble(), method: paymentMethod, tanpaDp: tanpaDp).round())}',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: textColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
 
+                                  const SizedBox(width: 12),
+
+                                  // === Kolom Margin (%) ===
+                                  Expanded(
+                                    flex: 1,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Margin (%)',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: textColor,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        SizedBox(
+                                          width: double
+                                              .infinity, // <-- supaya sama dengan kolom lain
+                                          child: TextField(
+                                            decoration: InputDecoration(
+                                              border:
+                                                  const OutlineInputBorder(),
+                                              hintText: 'Margin %',
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 12,
+                                                    vertical: 12,
+                                                  ),
+                                            ),
+                                            keyboardType:
+                                                const TextInputType.numberWithOptions(
+                                                  decimal: true,
+                                                ),
+                                            style: TextStyle(color: textColor),
+                                            controller: TextEditingController(
+                                              text: marginPersen.toString(),
+                                            ),
+                                            onChanged: (v) {
+                                              double? val = double.tryParse(v);
+                                              if (val != null) {
+                                                setState(
+                                                  () => marginPersen = val,
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  const SizedBox(width: 12),
+
+                                  // === Kolom Margin KPR ===
+                                  Expanded(
+                                    flex: 1,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Margin KPR',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: textColor,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Container(
+                                          width: double.infinity, // <-- penting
+                                          padding: const EdgeInsets.all(12),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
+                                            color: themeController.isDarkMode
+                                                ? Colors.grey[800]
+                                                : Colors.grey[200],
+                                          ),
+                                          child: Text(
+                                            selectedModel == null ||
+                                                    result == null
+                                                ? 'Pilih model dulu'
+                                                : 'Rp ${_formatCurrency(result.marginKpr.round())}',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: textColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              const SizedBox(height: 16),
                               Text(
                                 'Diskon',
                                 style: TextStyle(
@@ -472,7 +593,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
               ),
             ),
 
-            // Panel Kanan tetap sama
+            // Panel Kanan - Tabel Angsuran
             Expanded(
               flex: 6,
               child: Padding(
@@ -487,7 +608,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                   ),
                   elevation: 0,
                   child: DefaultTabController(
-                    length: 3,
+                    length: 2,
                     child: Padding(
                       padding: const EdgeInsets.all(6),
                       child: Column(
@@ -501,7 +622,6 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                               tabs: const [
                                 Tab(text: 'Ringkasan'),
                                 Tab(text: 'Tabel Angsuran'),
-                                Tab(text: 'Perbandingan'),
                               ],
                             ),
                           ),
@@ -548,8 +668,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                               Expanded(
                                                 child: Text(
                                                   _ringkasanList[index],
-                                                  textAlign: TextAlign
-                                                      .justify, // ✅ teks rata kiri-kanan
+                                                  textAlign: TextAlign.justify,
                                                   style: TextStyle(
                                                     fontSize: 14,
                                                     color:
@@ -582,14 +701,10 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                             ),
                                           ),
                                         )
-                                      : _buildScheduleTable(result),
-                                ),
-
-                                const Center(
-                                  child: Text(
-                                    'Perbandingan KPR Syariah vs Developer',
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
+                                      : _buildScheduleTable(
+                                          result,
+                                          themeController,
+                                        ),
                                 ),
                               ],
                             ),
@@ -623,14 +738,11 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
     return rev;
   }
 
-  Widget _buildScheduleTable(CalculatorResult result) {
-    final schedule = controller.generateMonthlySchedule(
-      monthlyInstallment: diskonNominal != null || diskonPersen != null
-          ? result.cicilanBulananSetelahDiskon
-          : result.cicilanBulanan,
-      months: result.months,
-      startDate: DateTime.now(),
-    );
+  Widget _buildScheduleTable(
+    CalculatorResult result,
+    ThemeController themeController,
+  ) {
+    final schedule = result.scheduleTable;
     final startLabel = schedule.first['label'];
     final endLabel = schedule.last['label'];
 
@@ -640,7 +752,10 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
           padding: const EdgeInsets.only(bottom: 8),
           child: Text(
             'Periode: $startLabel - $endLabel',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: themeController.isDarkMode ? Colors.white : Colors.black,
+            ),
           ),
         ),
         Expanded(
@@ -649,17 +764,51 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
             child: SingleChildScrollView(
               child: DataTable(
                 border: TableBorder.all(color: Colors.grey, width: 1),
+                columnSpacing: 16,
                 columns: const [
                   DataColumn(
-                    label: Text('No', style: TextStyle(color: Colors.grey)),
-                  ),
-                  DataColumn(
-                    label: Text('Bulan', style: TextStyle(color: Colors.grey)),
+                    label: Text(
+                      'No',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                   DataColumn(
                     label: Text(
-                      'Nominal',
-                      style: TextStyle(color: Colors.grey),
+                      'Angsuran',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'Pokok',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'Margin',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  DataColumn(
+                    label: Text(
+                      'Sisa Hutang',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
@@ -675,13 +824,25 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                           ),
                           DataCell(
                             Text(
-                              '${r['label']}',
+                              'Rp ${_formatCurrency((r['angsuran'] as double).round())}',
                               style: TextStyle(color: Colors.grey),
                             ),
                           ),
                           DataCell(
                             Text(
-                              'Rp ${_formatCurrency((r['amount'] as double).round())}',
+                              'Rp ${_formatCurrency((r['pokok'] as double).round())}',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                          DataCell(
+                            Text(
+                              'Rp ${_formatCurrency((r['margin'] as double).round())}',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ),
+                          DataCell(
+                            Text(
+                              'Rp ${_formatCurrency((r['sisaHutang'] as double).round())}',
                               style: TextStyle(color: Colors.grey),
                             ),
                           ),

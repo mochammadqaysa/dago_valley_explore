@@ -5,6 +5,7 @@ class KprCalculatorModel extends KprCalculator {
     required this.id,
     required this.housingId,
     required this.marginDeveloper,
+    required this.marginBankSyariah,
     required this.dpDeveloper,
     required this.dpSyariah,
     required this.createdAt,
@@ -13,6 +14,7 @@ class KprCalculatorModel extends KprCalculator {
          id: id,
          housingId: housingId,
          marginDeveloper: marginDeveloper,
+         marginBankSyariah: marginBankSyariah,
          dpDeveloper: dpDeveloper,
          dpSyariah: dpSyariah,
          createdAt: createdAt,
@@ -22,6 +24,7 @@ class KprCalculatorModel extends KprCalculator {
   final int id;
   final String housingId;
   final String marginDeveloper;
+  final String marginBankSyariah;
   final String dpDeveloper;
   final String dpSyariah;
   final String createdAt;
@@ -33,6 +36,7 @@ class KprCalculatorModel extends KprCalculator {
         id: json["id"],
         housingId: json["housing_id"],
         marginDeveloper: json["margin_developer"],
+        marginBankSyariah: json["margin_syariah"],
         dpDeveloper: json["dp_developer"],
         dpSyariah: json["dp_syariah"],
         createdAt: json["created_at"],
