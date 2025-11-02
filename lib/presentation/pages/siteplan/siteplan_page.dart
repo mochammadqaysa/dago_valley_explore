@@ -24,11 +24,7 @@ class SiteplanPage extends StatelessWidget {
     final bg = const Color(0xFF121212);
 
     return CupertinoPageScaffold(
-      backgroundColor: bg,
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Siteplan'),
-        backgroundColor: Color(0xFF1E1E1E),
-      ),
+      // backgroundColor: bg,
       child: SafeArea(
         child: Center(
           child: Padding(
@@ -36,7 +32,7 @@ class SiteplanPage extends StatelessWidget {
             child: ConstrainedBox(
               constraints: BoxConstraints(maxWidth: isWide ? 900 : 600),
               child: Card(
-                color: const Color(0xFF1B1B1B),
+                // color: const Color(0xFF1B1B1B),
                 elevation: 6,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -58,7 +54,7 @@ class SiteplanPage extends StatelessWidget {
                       Text(
                         'Fitur Siteplan',
                         style: TextStyle(
-                          color: Colors.white,
+                          // color: Colors.white,
                           fontSize: isWide ? 28 : 22,
                           fontWeight: FontWeight.bold,
                         ),
@@ -69,7 +65,7 @@ class SiteplanPage extends StatelessWidget {
                         'Segera hadir: tampilan interaktif, zoom, dan detail unit.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.white70,
+                          // color: Colors.white70,
                           fontSize: isWide ? 16 : 14,
                         ),
                       ),
