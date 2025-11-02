@@ -172,6 +172,7 @@ class LocalStorageService extends GetxService {
   Future<File> saveImageToLocal(String url, List<int> bytes) async {
     final directory = await getApplicationDocumentsDirectory();
     final imageDir = Directory('${directory.path}/images');
+    print('Image directory path: ${imageDir.path}');
     if (!await imageDir.exists()) {
       await imageDir.create(recursive: true);
     }

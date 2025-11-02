@@ -152,9 +152,6 @@ class _DashboardPageState extends State<DashboardPage> {
                           // Navigate ke SitePlanPage via sidebar
                           _navigateToTab(TabType.siteplanpage);
                         },
-                        titleBackgroundColor: themeController.isDarkMode
-                            ? Colors.black
-                            : Colors.white,
                         buttonColor: Colors.white,
                       ),
                     ),
@@ -190,7 +187,7 @@ class _DashboardPageState extends State<DashboardPage> {
                         buttonColor: Colors.white,
                       ),
                     ),
-                       SizedBox(width: 24),
+                    SizedBox(width: 24),
                     Expanded(
                       child: SitePlanCard(
                         title: 'event'.tr,

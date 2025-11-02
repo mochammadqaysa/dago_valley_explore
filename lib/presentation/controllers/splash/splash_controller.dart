@@ -6,6 +6,7 @@ import 'package:dago_valley_explore/presentation/controllers/sidebar/sidebar_bin
 import 'package:dago_valley_explore/presentation/pages/home/home_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 class SplashController extends GetxController {
   SplashController(this._fetchHousingDataUseCase);
@@ -182,32 +183,50 @@ class SplashController extends GetxController {
   Future<void> _downloadImages(List<String> imageUrls) async {
     loadingMessage.value = 'Mengunduh gambar...';
 
-    for (var imageUrl in imageUrls) {
-      // Skip jika URL kosong atau dari assets
-      if (imageUrl.isEmpty || imageUrl.startsWith('assets/')) continue;
+    final client = http.Client();
+    try {
+      for (final imageUrl in imageUrls) {
+        if (imageUrl.isEmpty || imageUrl.startsWith('assets/')) continue;
 
-      try {
-        // Cek apakah gambar sudah ada di lokal
-        final localImage = await _storage.getLocalImage(imageUrl);
-        if (localImage != null) {
-          print('✅ Image already cached: $imageUrl');
-          continue;
+        try {
+          final existing = await _storage.getLocalImage(imageUrl);
+          if (existing != null) {
+            print('✅ Image already cached: $imageUrl');
+            continue;
+          }
+
+          print('⬇️ Downloading image: $imageUrl');
+          final uri = Uri.parse(imageUrl);
+          final response = await client
+              .get(
+                uri,
+                headers: {
+                  // Jika server memerlukan user-agent
+                  'User-Agent': 'Mozilla/5.0 (Windows NT) FlutterApp',
+                  'Accept': 'image/*',
+                },
+              )
+              .timeout(const Duration(seconds: 20));
+
+          print(
+            'Response statusCode: ${response.statusCode}, bytes: ${response.bodyBytes.length}',
+          );
+
+          if (response.statusCode == 200) {
+            final bytes = response.bodyBytes;
+            await _storage.saveImageToLocal(imageUrl, bytes);
+            print('✅ Image saved: $imageUrl');
+          } else {
+            print(
+              '❌ Failed to download image ($imageUrl) status: ${response.statusCode}',
+            );
+          }
+        } catch (e) {
+          print('❌ Error downloading image $imageUrl: $e');
         }
-
-        // Download gambar menggunakan GetConnect
-        print('⬇️ Downloading image: $imageUrl');
-        final response = await GetConnect().get(imageUrl);
-
-        if (response.statusCode == 200 && response.bodyBytes != null) {
-          // Convert Stream<List<int>> ke Uint8List
-          final bytes = await _streamToBytes(response.bodyBytes!);
-          await _storage.saveImageToLocal(imageUrl, bytes);
-          print('✅ Image saved: $imageUrl');
-        }
-      } catch (e) {
-        print('❌ Error downloading image $imageUrl: $e');
-        // Continue dengan gambar lain meski ada yang gagal
       }
+    } finally {
+      client.close();
     }
   }
 
