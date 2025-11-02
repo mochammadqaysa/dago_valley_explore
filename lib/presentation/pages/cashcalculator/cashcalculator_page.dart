@@ -1,5 +1,6 @@
 import 'package:dago_valley_explore/app/config/app_colors.dart';
 import 'package:dago_valley_explore/app/extensions/color.dart';
+import 'package:dago_valley_explore/app/services/local_storage.dart';
 import 'package:dago_valley_explore/data/models/house_model.dart';
 import 'package:dago_valley_explore/presentation/controllers/cashcalculator/cashcalculator_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
@@ -24,9 +25,14 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
   double? diskonPersen;
   int tenor = 5;
   double marginPersen = 11.0; // Default untuk KPR Syariah
+  double marginSyariah = 0.0;
+  double marginDeveloper = 0.0;
+
   final controller = CashcalculatorController();
 
   final rupiahFormat = NumberFormat("#,###", "id_ID");
+
+  final LocalStorageService _storage = Get.find<LocalStorageService>();
 
   List<int> get tenorOptions {
     if (paymentMethod == PaymentMethod.kprSyariah) {
@@ -39,8 +45,15 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
   @override
   void initState() {
     super.initState();
+    final cachedKpr = _storage.kprCalculators;
+
+    marginSyariah = cachedKpr?.first.marginBankSyariahValue ?? 11.0;
+    marginDeveloper = cachedKpr?.first.marginDeveloperValue ?? 5.25;
+
     // Set default margin berdasarkan metode pembayaran
-    marginPersen = paymentMethod == PaymentMethod.kprSyariah ? 11.0 : 5.25;
+    marginPersen = paymentMethod == PaymentMethod.kprSyariah
+        ? marginSyariah
+        : marginDeveloper;
   }
 
   @override
@@ -59,47 +72,85 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
           )
         : null;
 
-    return Obx(() {
-      final cardColor = themeController.isDarkMode
-          ? Colors.grey[900]
-          : AppColors.white;
-      final textColor = themeController.isDarkMode
-          ? Colors.white
-          : Colors.black;
-      return Scaffold(
-        body: SafeArea(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              // Kalkulator - 60%
-              Expanded(
-                flex: 5,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 32.0,
-                    horizontal: 8.0,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 8,
-                        child: Card(
-                          elevation: 0,
-                          color: cardColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: ListView(
-                              children: [
-                                Text(
-                                  'Simulasi KPR',
-                                  style: TextStyle(
-                                    fontSize: 32,
-                                    color: textColor,
-                                    fontWeight: FontWeight.bold,
+    final cardColor = themeController.isDarkMode
+        ? Colors.grey[900]
+        : AppColors.white;
+
+    final textColor = themeController.isDarkMode ? Colors.white : Colors.black;
+
+    print(
+      '💾 Cached KPR Calculators for margins: Syariah: $marginSyariah, Developer: $marginDeveloper',
+    );
+
+    return Scaffold(
+      body: SafeArea(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            // Kalkulator - 60%
+            Expanded(
+              flex: 5,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 32.0,
+                  horizontal: 8.0,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 8,
+                      child: Card(
+                        elevation: 0,
+                        color: cardColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: ListView(
+                            children: [
+                              Text(
+                                'Simulasi KPR',
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  color: textColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                'Simulasi KPR membantu Anda menghitung perkiraan cicilan rumah berdasarkan harga, uang muka, dan lama cicilan. Dengan fitur ini, Anda bisa mengetahui estimasi angsuran bulanan agar lebih mudah merencanakan pembelian rumah impian.',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: textColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 24),
+                              Text(
+                                'Model & Tipe',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: DropdownButton<HouseModel>(
+                                  isExpanded: true,
+                                  value: selectedModel,
+                                  hint: Text(
+                                    'Pilih model rumah',
+                                    style: TextStyle(color: Colors.grey),
                                   ),
                                 ),
                                 Text(
@@ -110,31 +161,25 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const SizedBox(height: 24),
-                                Text(
-                                  'Model & Tipe',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: textColor,
-                                  ),
-                                ),
-                                const SizedBox(height: 16),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 4,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: DropdownButton<HouseModel>(
-                                    isExpanded: true,
-                                    value: selectedModel,
-                                    hint: Text(
-                                      'Pilih model rumah',
-                                      style: TextStyle(color: Colors.grey),
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: RadioListTile<PaymentMethod>(
+                                      title: Text(
+                                        'KPR Bank Syariah',
+                                        style: TextStyle(color: textColor),
+                                      ),
+                                      value: PaymentMethod.kprSyariah,
+                                      groupValue: paymentMethod,
+                                      onChanged: (v) {
+                                        setState(() {
+                                          paymentMethod = v!;
+                                          tanpaDp = false;
+                                          tenor = 5;
+                                          marginPersen = marginSyariah;
+                                        });
+                                      },
                                     ),
                                     dropdownColor: cardColor,
                                     focusColor: cardColor,
@@ -151,6 +196,30 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                     onChanged: (v) =>
                                         setState(() => selectedModel = v),
                                   ),
+                                  Expanded(
+                                    child: RadioListTile<PaymentMethod>(
+                                      title: Text(
+                                        'KPR Developer',
+                                        style: TextStyle(color: textColor),
+                                      ),
+                                      value: PaymentMethod.developer,
+                                      groupValue: paymentMethod,
+                                      onChanged: (v) {
+                                        setState(() {
+                                          paymentMethod = v!;
+                                          tenor = 4;
+                                          marginPersen = marginDeveloper;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                'Tenor (tahun)',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: textColor,
                                 ),
                                 const SizedBox(height: 16),
 

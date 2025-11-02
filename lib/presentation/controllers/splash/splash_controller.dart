@@ -77,11 +77,7 @@ class SplashController extends GetxController {
         print('- Versions: ${apiVersions.toJson()}');
 
         // Cek apakah perlu update
-        final needsUpdate = _checkNeedsUpdate(
-          localVersions,
-          apiVersions,
-          housing.kprCalculators != null && housing.kprCalculators!.isNotEmpty,
-        );
+        final needsUpdate = _checkNeedsUpdate(localVersions, apiVersions);
 
         if (needsUpdate) {
           loadingMessage.value = 'Menyimpan data baru...';
@@ -156,11 +152,7 @@ class SplashController extends GetxController {
     }
   }
 
-  bool _checkNeedsUpdate(
-    dynamic localVersions,
-    dynamic apiVersions,
-    bool hasKprCalculators,
-  ) {
+  bool _checkNeedsUpdate(dynamic localVersions, dynamic apiVersions) {
     if (localVersions == null || apiVersions == null) {
       print('⚠️ No local version or API version, forcing update');
       return true;
@@ -184,11 +176,9 @@ class SplashController extends GetxController {
       return true;
     }
 
-    // Cek apakah ada data kpr calculator baru
-    if (hasKprCalculators &&
-        (localVersions.kprCalculatorVersion == null ||
-            localVersions.kprCalculatorVersion !=
-                apiVersions.kprCalculatorVersion)) {
+    if (apiVersions.kprCalculatorVersion != null &&
+        apiVersions.kprCalculatorVersion !=
+            localVersions.kprCalculatorVersion) {
       print(
         '🔄 KPR Calculator version changed: ${localVersions.kprCalculatorVersion} -> ${apiVersions.kprCalculatorVersion}',
       );

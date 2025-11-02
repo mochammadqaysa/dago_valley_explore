@@ -27,7 +27,7 @@ class KprCalculator {
         return double.parse(dpDeveloper.replaceAll('%', '')) / 100;
       } else {
         // If it's already a decimal value as string (e.g. "0.3")
-        return double.parse(dpDeveloper);
+        return double.parse(dpDeveloper) / 100;
       }
     } catch (e) {
       // Default to 0.3 if parsing fails
@@ -42,7 +42,7 @@ class KprCalculator {
         return double.parse(dpSyariah.replaceAll('%', '')) / 100;
       } else {
         // If it's already a decimal value as string (e.g. "0.2")
-        return double.parse(dpSyariah);
+        return double.parse(dpSyariah) / 100;
       }
     } catch (e) {
       // Default to 0.2 if parsing fails
