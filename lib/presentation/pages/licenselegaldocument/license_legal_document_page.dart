@@ -1,10 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:dago_valley_explore/app/config/app_colors.dart';
-import 'package:dago_valley_explore/app/services/local_storage.dart';
-import 'package:dago_valley_explore/presentation/controllers/qrcode/qrcode_binding.dart';
 import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
-import 'package:dago_valley_explore/presentation/pages/qrcode/qrcode_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
@@ -58,50 +55,6 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage>
     _tahap1TabController.dispose();
     _tahap2TabController.dispose();
     super.dispose();
-  }
-
-  /// Show QR modal.
-  /// If [url] is provided, it will be used. Otherwise will try to get first brochure.imageUrl
-  /// from LocalStorageService (if available). If no URL found, show a snackbar message.
-  void _showQRCodeModal([String? url]) {
-    // If caller didn't pass URL, try get from local storage (Brochure list)
-    if (url == null || url.isEmpty) {
-      try {
-        final storage = Get.find<LocalStorageService>();
-        // Assuming LocalStorageService has a 'brochures' getter returning List<Brochure>?
-        // Adjust field name if your implementation uses a different property.
-        final brochures = storage.brochures;
-        print('Fetched brochures from local storage: $brochures');
-        if (brochures != null && brochures.isNotEmpty) {
-          final first = brochures.first;
-          // Brochure entity should have imageUrl property; adjust if different
-          url = (first.imageUrl ?? '').toString();
-        }
-      } catch (e) {
-        if (kDebugMode)
-          print('Error fetching brochures from local storage: $e');
-      }
-    }
-
-    if (url == null || url.isEmpty) {
-      Get.snackbar(
-        'QR Code',
-        'Tidak ada URL brochure yang tersedia.',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-      return;
-    }
-
-    // Navigate to QRCodePage and pass the url via arguments; binding will create controller with this arg
-    Get.to(
-      () => const QRCodePage(),
-      binding: QrCodeBinding(),
-      arguments: url,
-      transition: Transition.fade,
-      duration: const Duration(milliseconds: 400),
-      opaque: false,
-      fullscreenDialog: true,
-    );
   }
 
   Future<void> loadPdfList() async {
@@ -192,6 +145,7 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage>
     final themeController = Get.find<ThemeController>();
 
     return Obx(() {
+      final isDarkMode = themeController.themeMode == ThemeMode.dark;
       return Scaffold(
         body: isLoading
             ? const Center(
@@ -211,7 +165,7 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage>
                             height: 45,
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: themeController.isDarkMode
+                                color: isDarkMode
                                     ? Colors.grey[700]!
                                     : Colors.grey[300]!,
                                 width: 1.5,
@@ -227,7 +181,7 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage>
                               indicatorSize: TabBarIndicatorSize.tab,
                               dividerColor: Colors.transparent,
                               labelColor: Colors.white,
-                              unselectedLabelColor: themeController.isDarkMode
+                              unselectedLabelColor: isDarkMode
                                   ? Colors.white70
                                   : Colors.black54,
                               labelStyle: const TextStyle(
@@ -249,7 +203,7 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage>
                             height: 45,
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: themeController.isDarkMode
+                                color: isDarkMode
                                     ? Colors.grey[700]!
                                     : Colors.grey[300]!,
                                 width: 1.5,
@@ -265,7 +219,7 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage>
                               indicatorSize: TabBarIndicatorSize.tab,
                               dividerColor: Colors.transparent,
                               labelColor: Colors.white,
-                              unselectedLabelColor: themeController.isDarkMode
+                              unselectedLabelColor: isDarkMode
                                   ? Colors.white70
                                   : Colors.black54,
                               labelStyle: const TextStyle(
@@ -289,14 +243,14 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage>
                       children: [
                         // Tahap 1 Content
                         _buildTahapContent(
-                          themeController,
+                          isDarkMode,
                           isTV,
                           _tahap1TabController,
                           'tahap_1',
                         ),
                         // Tahap 2 Content
                         _buildTahapContent(
-                          themeController,
+                          isDarkMode,
                           isTV,
                           _tahap2TabController,
                           'tahap_2',
@@ -306,19 +260,12 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage>
                   ),
                 ],
               ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () =>
-              _showQRCodeModal(), // panggil tanpa arg -> ambil dari localstorage
-          backgroundColor: AppColors.primary,
-          child: const Icon(Icons.file_open_rounded, color: Colors.white),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       );
     });
   }
 
   Widget _buildTahapContent(
-    ThemeController themeController,
+    bool isDarkMode,
     bool isTV,
     TabController tabController,
     String tahap,
@@ -328,15 +275,15 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage>
       children: [
         // Legalitas
         _buildPdfGrid(
+          isDarkMode,
           isTV,
-          themeController,
           pdfFiles['${tahap}_legalitas']!,
           'assets/$tahap/legalitas',
         ),
         // Perizinan
         _buildPdfGrid(
+          isDarkMode,
           isTV,
-          themeController,
           pdfFiles['${tahap}_perizinan']!,
           'assets/$tahap/perizinan',
         ),
@@ -345,8 +292,8 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage>
   }
 
   Widget _buildPdfGrid(
+    bool isDarkMode,
     bool isTV,
-    ThemeController themeController,
     List<String> files,
     String basePath,
   ) {
@@ -360,17 +307,13 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage>
             Icon(
               Icons.folder_open,
               size: 64,
-              color: themeController.isDarkMode
-                  ? Colors.white38
-                  : Colors.grey[400],
+              color: isDarkMode ? Colors.white38 : Colors.grey[400],
             ),
             const SizedBox(height: 16),
             Text(
               'Tidak ada file PDF',
               style: TextStyle(
-                color: themeController.isDarkMode
-                    ? Colors.white70
-                    : Colors.grey[600],
+                color: isDarkMode ? Colors.white70 : Colors.grey[600],
                 fontSize: 16,
               ),
             ),
@@ -397,19 +340,17 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage>
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 150),
               decoration: BoxDecoration(
-                color: themeController.isDarkMode
-                    ? Colors.grey[900]
-                    : AppColors.lightGrey,
+                color: isDarkMode ? Colors.grey[900] : AppColors.lightGrey,
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: themeController.isDarkMode
+                  color: isDarkMode
                       ? Colors.grey.shade700
                       : Colors.grey.shade300,
                   width: 2,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: themeController.isDarkMode
+                    color: isDarkMode
                         ? Colors.black.withOpacity(0.4)
                         : Colors.grey.withOpacity(0.4),
                     blurRadius: 8,
@@ -427,9 +368,7 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage>
                     fileName.replaceAll('.pdf', '').toUpperCase(),
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: themeController.isDarkMode
-                          ? Colors.white
-                          : Colors.grey,
+                      color: isDarkMode ? Colors.white : Colors.grey,
                       fontSize: isTV ? 18 : 16,
                       fontWeight: FontWeight.bold,
                     ),
