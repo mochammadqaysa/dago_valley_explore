@@ -72,671 +72,686 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
           )
         : null;
 
-    final cardColor = themeController.isDarkMode
-        ? Colors.grey[900]
-        : AppColors.white;
-
-    final textColor = themeController.isDarkMode ? Colors.white : Colors.black;
-
     print(
       '💾 Cached KPR Calculators for margins: Syariah: $marginSyariah, Developer: $marginDeveloper',
     );
 
-    return Scaffold(
-      body: SafeArea(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            // Kalkulator - 60%
-            Expanded(
-              flex: 5,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 32.0,
-                  horizontal: 8.0,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 8,
-                      child: Card(
-                        elevation: 0,
-                        color: cardColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: ListView(
-                            children: [
-                              Text(
-                                'Simulasi KPR',
-                                style: TextStyle(
-                                  fontSize: 32,
-                                  color: textColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                'Simulasi KPR membantu Anda menghitung perkiraan cicilan rumah berdasarkan harga, uang muka, dan lama cicilan. Dengan fitur ini, Anda bisa mengetahui estimasi angsuran bulanan agar lebih mudah merencanakan pembelian rumah impian.',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: textColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 24),
-                              Text(
-                                'Model & Tipe',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: textColor,
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 4,
-                                ),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: DropdownButton<HouseModel>(
-                                  isExpanded: true,
-                                  value: selectedModel,
-                                  hint: Text(
-                                    'Pilih model rumah',
-                                    style: TextStyle(color: Colors.grey),
-                                  ),
-                                  dropdownColor: cardColor,
-                                  focusColor: cardColor,
-                                  underline: const SizedBox(),
-                                  items: houseModels.map((m) {
-                                    return DropdownMenuItem(
-                                      value: m,
-                                      child: Text(
-                                        '${m.displayName} - Rp. ${_formatCurrency(m.hargaCash.round())}',
-                                        style: TextStyle(color: textColor),
-                                      ),
-                                    );
-                                  }).toList(),
-                                  onChanged: (v) =>
-                                      setState(() => selectedModel = v),
-                                ),
-                              ),
-                              const SizedBox(height: 16),
+    return Obx(() {
+      final cardColor = themeController.isDarkMode
+          ? Colors.grey[900]
+          : AppColors.white;
 
-                              Text(
-                                'Metode Pembayaran',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: textColor,
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: RadioListTile<PaymentMethod>(
-                                      title: Text(
-                                        'KPR Bank Syariah',
-                                        style: TextStyle(color: textColor),
-                                      ),
-                                      value: PaymentMethod.kprSyariah,
-                                      groupValue: paymentMethod,
-                                      onChanged: (v) {
-                                        setState(() {
-                                          paymentMethod = v!;
-                                          tanpaDp = false;
-                                          tenor = 5;
-                                          marginPersen = marginSyariah;
-                                        });
-                                      },
-                                    ),
+      final textColor = themeController.isDarkMode
+          ? Colors.white
+          : Colors.black;
+      return Scaffold(
+        body: SafeArea(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              // Kalkulator - 60%
+              Expanded(
+                flex: 5,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 32.0,
+                    horizontal: 8.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 8,
+                        child: Card(
+                          elevation: 0,
+                          color: cardColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: ListView(
+                              children: [
+                                Text(
+                                  'Simulasi KPR',
+                                  style: TextStyle(
+                                    fontSize: 32,
+                                    color: textColor,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  Expanded(
-                                    child: RadioListTile<PaymentMethod>(
-                                      title: Text(
-                                        'KPR Developer',
-                                        style: TextStyle(color: textColor),
-                                      ),
-                                      value: PaymentMethod.developer,
-                                      groupValue: paymentMethod,
-                                      onChanged: (v) {
-                                        setState(() {
-                                          paymentMethod = v!;
-                                          tenor = 4;
-                                          marginPersen = marginDeveloper;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                'Tenor (tahun)',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: textColor,
                                 ),
-                              ),
-                              const SizedBox(height: 16),
+                                Text(
+                                  'Simulasi KPR membantu Anda menghitung perkiraan cicilan rumah berdasarkan harga, uang muka, dan lama cicilan. Dengan fitur ini, Anda bisa mengetahui estimasi angsuran bulanan agar lebih mudah merencanakan pembelian rumah impian.',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: textColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                Text(
+                                  'Model & Tipe',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: textColor,
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey),
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: DropdownButton<HouseModel>(
+                                    isExpanded: true,
+                                    value: selectedModel,
+                                    hint: Text(
+                                      'Pilih model rumah',
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                    dropdownColor: cardColor,
+                                    focusColor: cardColor,
+                                    underline: const SizedBox(),
+                                    items: houseModels.map((m) {
+                                      return DropdownMenuItem(
+                                        value: m,
+                                        child: Text(
+                                          '${m.displayName} - Rp. ${_formatCurrency(m.hargaCash.round())}',
+                                          style: TextStyle(color: textColor),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: (v) =>
+                                        setState(() => selectedModel = v),
+                                  ),
+                                ),
+                                const SizedBox(height: 16),
 
-                              Slider(
-                                value: tenor.toDouble(),
-                                divisions: tenorOptions.length - 1,
-                                min: tenorOptions.first.toDouble(),
-                                max: tenorOptions.last.toDouble(),
-                                label: '$tenor Tahun',
-                                onChanged: (v) =>
-                                    setState(() => tenor = v.round()),
-                              ),
-                              Center(
-                                child: Text(
-                                  '$tenor Tahun',
+                                Text(
+                                  'Metode Pembayaran',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: textColor,
                                   ),
                                 ),
-                              ),
-
-                              const SizedBox(height: 16),
-                              if (paymentMethod == PaymentMethod.developer)
                                 Row(
                                   children: [
-                                    Text(
-                                      'Tanpa DP',
-                                      style: TextStyle(color: textColor),
+                                    Expanded(
+                                      child: RadioListTile<PaymentMethod>(
+                                        title: Text(
+                                          'KPR Bank Syariah',
+                                          style: TextStyle(color: textColor),
+                                        ),
+                                        value: PaymentMethod.kprSyariah,
+                                        groupValue: paymentMethod,
+                                        onChanged: (v) {
+                                          setState(() {
+                                            paymentMethod = v!;
+                                            tanpaDp = false;
+                                            tenor = 5;
+                                            marginPersen = marginSyariah;
+                                          });
+                                        },
+                                      ),
                                     ),
-                                    const SizedBox(width: 10),
-                                    Switch(
-                                      value: tanpaDp,
-                                      onChanged: (v) =>
-                                          setState(() => tanpaDp = v),
+                                    Expanded(
+                                      child: RadioListTile<PaymentMethod>(
+                                        title: Text(
+                                          'KPR Developer',
+                                          style: TextStyle(color: textColor),
+                                        ),
+                                        value: PaymentMethod.developer,
+                                        groupValue: paymentMethod,
+                                        onChanged: (v) {
+                                          setState(() {
+                                            paymentMethod = v!;
+                                            tenor = 4;
+                                            marginPersen = marginDeveloper;
+                                          });
+                                        },
+                                      ),
                                     ),
                                   ],
                                 ),
-
-                              const SizedBox(height: 16),
-
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // === Kolom DP ===
-                                  Expanded(
-                                    flex: 1,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'DP',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: textColor,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Container(
-                                          width: double
-                                              .infinity, // <-- biar ikut lebar Expanded
-                                          padding: const EdgeInsets.all(12),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              4,
-                                            ),
-                                            color: themeController.isDarkMode
-                                                ? Colors.grey[800]
-                                                : Colors.grey[200],
-                                          ),
-                                          child: Text(
-                                            selectedModel == null
-                                                ? 'Pilih model dulu'
-                                                : 'Rp ${_formatCurrency(controller.calculateDp(harga: selectedModel!.hargaCash.toDouble(), method: paymentMethod, tanpaDp: tanpaDp).round())}',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: textColor,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                Text(
+                                  'Tenor (tahun)',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: textColor,
                                   ),
-
-                                  const SizedBox(width: 12),
-
-                                  // === Kolom Margin (%) ===
-                                  Expanded(
-                                    flex: 1,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Margin (%)',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: textColor,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        SizedBox(
-                                          width: double
-                                              .infinity, // <-- supaya sama dengan kolom lain
-                                          child: TextField(
-                                            decoration: InputDecoration(
-                                              border:
-                                                  const OutlineInputBorder(),
-                                              hintText: 'Margin %',
-                                              contentPadding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 12,
-                                                    vertical: 12,
-                                                  ),
-                                            ),
-                                            keyboardType:
-                                                const TextInputType.numberWithOptions(
-                                                  decimal: true,
-                                                ),
-                                            style: TextStyle(color: textColor),
-                                            controller: TextEditingController(
-                                              text: marginPersen.toString(),
-                                            ),
-                                            onChanged: (v) {
-                                              double? val = double.tryParse(v);
-                                              if (val != null) {
-                                                setState(
-                                                  () => marginPersen = val,
-                                                );
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  const SizedBox(width: 12),
-
-                                  // === Kolom Margin KPR ===
-                                  Expanded(
-                                    flex: 1,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Margin KPR',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: textColor,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 8),
-                                        Container(
-                                          width: double.infinity, // <-- penting
-                                          padding: const EdgeInsets.all(12),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              4,
-                                            ),
-                                            color: themeController.isDarkMode
-                                                ? Colors.grey[800]
-                                                : Colors.grey[200],
-                                          ),
-                                          child: Text(
-                                            selectedModel == null ||
-                                                    result == null
-                                                ? 'Pilih model dulu'
-                                                : 'Rp ${_formatCurrency(result.marginKpr.round())}',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              color: textColor,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              const SizedBox(height: 16),
-                              Text(
-                                'Diskon',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: textColor,
                                 ),
-                              ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Stack(
-                                      alignment: Alignment.centerRight,
-                                      children: [
-                                        TextField(
-                                          controller: _diskonRpController,
-                                          enabled: diskonPersen == null,
-                                          decoration: InputDecoration(
-                                            labelText: 'Diskon (Rp)',
-                                            border: const OutlineInputBorder(),
-                                            suffixIcon: diskonNominal != null
-                                                ? IconButton(
-                                                    icon: const Icon(
-                                                      Icons.close,
-                                                    ),
-                                                    onPressed: () {
-                                                      _diskonRpController
-                                                          .clear();
-                                                      setState(() {
-                                                        diskonNominal = null;
-                                                      });
-                                                    },
-                                                  )
-                                                : null,
-                                          ),
-                                          keyboardType: TextInputType.number,
-                                          style: TextStyle(
-                                            color: themeController.isDarkMode
-                                                ? Colors.grey
-                                                : Colors.black,
-                                          ),
-                                          onChanged: (v) {
-                                            String cleaned = v.replaceAll(
-                                              '.',
-                                              '',
-                                            );
-                                            double? val = double.tryParse(
-                                              cleaned,
-                                            );
-                                            if (val != null) {
-                                              setState(() {
-                                                diskonNominal = val;
-                                                diskonPersen = null;
-                                              });
-                                              _diskonRpController
-                                                  .value = TextEditingValue(
-                                                text: rupiahFormat.format(val),
-                                                selection:
-                                                    TextSelection.collapsed(
-                                                      offset: rupiahFormat
-                                                          .format(val)
-                                                          .length,
-                                                    ),
-                                              );
-                                            } else if (v.isEmpty) {
-                                              setState(
-                                                () => diskonNominal = null,
-                                              );
-                                            }
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Stack(
-                                      alignment: Alignment.centerRight,
-                                      children: [
-                                        TextField(
-                                          controller: _diskonPersenController,
-                                          enabled: diskonNominal == null,
-                                          decoration: InputDecoration(
-                                            labelText: 'Diskon (%)',
-                                            border: const OutlineInputBorder(),
-                                            suffixIcon: diskonPersen != null
-                                                ? IconButton(
-                                                    icon: const Icon(
-                                                      Icons.close,
-                                                    ),
-                                                    onPressed: () {
-                                                      _diskonPersenController
-                                                          .clear();
-                                                      setState(() {
-                                                        diskonPersen = null;
-                                                      });
-                                                    },
-                                                  )
-                                                : null,
-                                          ),
-                                          keyboardType: TextInputType.number,
-                                          style: TextStyle(
-                                            color: themeController.isDarkMode
-                                                ? Colors.grey
-                                                : Colors.black,
-                                          ),
-                                          onChanged: (v) => setState(() {
-                                            diskonPersen = (v.trim().isEmpty)
-                                                ? null
-                                                : double.tryParse(v.trim());
-                                            if (diskonPersen != null)
-                                              diskonNominal = null;
-                                          }),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                                const SizedBox(height: 16),
 
-                    const SizedBox(height: 8),
-                    if (selectedModel != null && result != null)
-                      Expanded(
-                        flex: 2,
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Card(
-                            color: cardColor,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                Slider(
+                                  value: tenor.toDouble(),
+                                  divisions: tenorOptions.length - 1,
+                                  min: tenorOptions.first.toDouble(),
+                                  max: tenorOptions.last.toDouble(),
+                                  label: '$tenor Tahun',
+                                  onChanged: (v) =>
+                                      setState(() => tenor = v.round()),
+                                ),
+                                Center(
+                                  child: Text(
+                                    '$tenor Tahun',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: textColor,
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(height: 16),
+                                if (paymentMethod == PaymentMethod.developer)
+                                  Row(
+                                    children: [
+                                      Text(
+                                        'Tanpa DP',
+                                        style: TextStyle(color: textColor),
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Switch(
+                                        value: tanpaDp,
+                                        onChanged: (v) =>
+                                            setState(() => tanpaDp = v),
+                                      ),
+                                    ],
+                                  ),
+
+                                const SizedBox(height: 16),
+
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      'Angsuran / Bulan',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: textColor,
-                                      ),
-                                    ),
-                                    Text(
-                                      'Rp ${(diskonNominal != null || diskonPersen != null) ? _formatCurrency(result.cicilanBulananSetelahDiskon.round()) : _formatCurrency(result.cicilanBulanan.round())}',
-                                      style: TextStyle(
-                                        fontSize: 32,
-                                        fontWeight: FontWeight.bold,
-                                        color: textColor,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 6),
-                                    if (diskonNominal != null ||
-                                        diskonPersen != null)
-                                      Column(
+                                    // === Kolom DP ===
+                                    Expanded(
+                                      flex: 1,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Rp ${_formatCurrency(result.totalPembayaran.round())}',
+                                            'DP',
                                             style: TextStyle(
-                                              fontSize: 16,
-                                              decoration:
-                                                  TextDecoration.lineThrough,
-                                              decorationColor: Colors.red,
-                                              decorationThickness: 2,
+                                              fontWeight: FontWeight.bold,
                                               color: textColor,
                                             ),
                                           ),
-                                          Text(
-                                            'Rp ${_formatCurrency(result.hargaSetelahDiskon.round())}',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.green,
+                                          const SizedBox(height: 8),
+                                          Container(
+                                            width: double
+                                                .infinity, // <-- biar ikut lebar Expanded
+                                            padding: const EdgeInsets.all(12),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                              color: themeController.isDarkMode
+                                                  ? Colors.grey[800]
+                                                  : Colors.grey[200],
+                                            ),
+                                            child: Text(
+                                              selectedModel == null
+                                                  ? 'Pilih model dulu'
+                                                  : 'Rp ${_formatCurrency(controller.calculateDp(harga: selectedModel!.hargaCash.toDouble(), method: paymentMethod, tanpaDp: tanpaDp).round())}',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: textColor,
+                                              ),
                                             ),
                                           ),
                                         ],
-                                      )
-                                    else
-                                      Text(
-                                        'Rp ${_formatCurrency(result.totalPembayaran.round())}',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          color: textColor,
-                                        ),
                                       ),
+                                    ),
+
+                                    const SizedBox(width: 12),
+
+                                    // === Kolom Margin (%) ===
+                                    Expanded(
+                                      flex: 1,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Margin (%)',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: textColor,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          SizedBox(
+                                            width: double
+                                                .infinity, // <-- supaya sama dengan kolom lain
+                                            child: TextField(
+                                              decoration: InputDecoration(
+                                                border:
+                                                    const OutlineInputBorder(),
+                                                hintText: 'Margin %',
+                                                contentPadding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 12,
+                                                      vertical: 12,
+                                                    ),
+                                              ),
+                                              keyboardType:
+                                                  const TextInputType.numberWithOptions(
+                                                    decimal: true,
+                                                  ),
+                                              style: TextStyle(
+                                                color: textColor,
+                                              ),
+                                              controller: TextEditingController(
+                                                text: marginPersen.toString(),
+                                              ),
+                                              onChanged: (v) {
+                                                double? val = double.tryParse(
+                                                  v,
+                                                );
+                                                if (val != null) {
+                                                  setState(
+                                                    () => marginPersen = val,
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                    const SizedBox(width: 12),
+
+                                    // === Kolom Margin KPR ===
+                                    Expanded(
+                                      flex: 1,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Margin KPR',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: textColor,
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Container(
+                                            width:
+                                                double.infinity, // <-- penting
+                                            padding: const EdgeInsets.all(12),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                              color: themeController.isDarkMode
+                                                  ? Colors.grey[800]
+                                                  : Colors.grey[200],
+                                            ),
+                                            child: Text(
+                                              selectedModel == null ||
+                                                      result == null
+                                                  ? 'Pilih model dulu'
+                                                  : 'Rp ${_formatCurrency(result.marginKpr.round())}',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: textColor,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ],
                                 ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
 
-            // Panel Kanan - Tabel Angsuran
-            Expanded(
-              flex: 6,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 32.0,
-                  horizontal: 8.0,
-                ),
-                child: Card(
-                  color: cardColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  elevation: 0,
-                  child: DefaultTabController(
-                    length: 2,
-                    child: Padding(
-                      padding: const EdgeInsets.all(6),
-                      child: Column(
-                        children: [
-                          Material(
-                            color: cardColor,
-                            child: TabBar(
-                              labelColor: textColor,
-                              unselectedLabelColor: Colors.grey,
-                              indicatorColor: Colors.green.shade700,
-                              tabs: const [
-                                Tab(text: 'Ringkasan'),
-                                Tab(text: 'Tabel Angsuran'),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: TabBarView(
-                              children: [
-                                SingleChildScrollView(
-                                  padding: const EdgeInsets.all(12),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Syarat & Ketentuan:',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: textColor,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      ...List.generate(_ringkasanList.length, (
-                                        index,
-                                      ) {
-                                        return Padding(
-                                          padding: const EdgeInsets.only(
-                                            bottom: 4,
-                                          ),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                '${index + 1}. ',
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  color:
-                                                      themeController.isDarkMode
-                                                      ? Colors.grey
-                                                      : Colors.black,
-                                                  height: 1.5,
-                                                ),
-                                              ),
-                                              Expanded(
-                                                child: Text(
-                                                  _ringkasanList[index],
-                                                  textAlign: TextAlign.justify,
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    color:
-                                                        themeController
-                                                            .isDarkMode
-                                                        ? Colors.grey
-                                                        : Colors.black,
-                                                    height: 1.5,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      }),
-                                    ],
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Diskon',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: textColor,
                                   ),
                                 ),
-
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: selectedModel == null || result == null
-                                      ? Center(
-                                          child: Text(
-                                            'Pilih model & hitung terlebih dahulu',
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Stack(
+                                        alignment: Alignment.centerRight,
+                                        children: [
+                                          TextField(
+                                            controller: _diskonRpController,
+                                            enabled: diskonPersen == null,
+                                            decoration: InputDecoration(
+                                              labelText: 'Diskon (Rp)',
+                                              border:
+                                                  const OutlineInputBorder(),
+                                              suffixIcon: diskonNominal != null
+                                                  ? IconButton(
+                                                      icon: const Icon(
+                                                        Icons.close,
+                                                      ),
+                                                      onPressed: () {
+                                                        _diskonRpController
+                                                            .clear();
+                                                        setState(() {
+                                                          diskonNominal = null;
+                                                        });
+                                                      },
+                                                    )
+                                                  : null,
+                                            ),
+                                            keyboardType: TextInputType.number,
                                             style: TextStyle(
                                               color: themeController.isDarkMode
                                                   ? Colors.grey
                                                   : Colors.black,
                                             ),
+                                            onChanged: (v) {
+                                              String cleaned = v.replaceAll(
+                                                '.',
+                                                '',
+                                              );
+                                              double? val = double.tryParse(
+                                                cleaned,
+                                              );
+                                              if (val != null) {
+                                                setState(() {
+                                                  diskonNominal = val;
+                                                  diskonPersen = null;
+                                                });
+                                                _diskonRpController
+                                                    .value = TextEditingValue(
+                                                  text: rupiahFormat.format(
+                                                    val,
+                                                  ),
+                                                  selection:
+                                                      TextSelection.collapsed(
+                                                        offset: rupiahFormat
+                                                            .format(val)
+                                                            .length,
+                                                      ),
+                                                );
+                                              } else if (v.isEmpty) {
+                                                setState(
+                                                  () => diskonNominal = null,
+                                                );
+                                              }
+                                            },
                                           ),
-                                        )
-                                      : _buildScheduleTable(
-                                          result,
-                                          themeController,
-                                        ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Stack(
+                                        alignment: Alignment.centerRight,
+                                        children: [
+                                          TextField(
+                                            controller: _diskonPersenController,
+                                            enabled: diskonNominal == null,
+                                            decoration: InputDecoration(
+                                              labelText: 'Diskon (%)',
+                                              border:
+                                                  const OutlineInputBorder(),
+                                              suffixIcon: diskonPersen != null
+                                                  ? IconButton(
+                                                      icon: const Icon(
+                                                        Icons.close,
+                                                      ),
+                                                      onPressed: () {
+                                                        _diskonPersenController
+                                                            .clear();
+                                                        setState(() {
+                                                          diskonPersen = null;
+                                                        });
+                                                      },
+                                                    )
+                                                  : null,
+                                            ),
+                                            keyboardType: TextInputType.number,
+                                            style: TextStyle(
+                                              color: themeController.isDarkMode
+                                                  ? Colors.grey
+                                                  : Colors.black,
+                                            ),
+                                            onChanged: (v) => setState(() {
+                                              diskonPersen = (v.trim().isEmpty)
+                                                  ? null
+                                                  : double.tryParse(v.trim());
+                                              if (diskonPersen != null)
+                                                diskonNominal = null;
+                                            }),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
                           ),
-                        ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 8),
+                      if (selectedModel != null && result != null)
+                        Expanded(
+                          flex: 2,
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Card(
+                              color: cardColor,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Angsuran / Bulan',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: textColor,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Rp ${(diskonNominal != null || diskonPersen != null) ? _formatCurrency(result.cicilanBulananSetelahDiskon.round()) : _formatCurrency(result.cicilanBulanan.round())}',
+                                        style: TextStyle(
+                                          fontSize: 32,
+                                          fontWeight: FontWeight.bold,
+                                          color: textColor,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      if (diskonNominal != null ||
+                                          diskonPersen != null)
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Rp ${_formatCurrency(result.totalPembayaran.round())}',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                                decorationColor: Colors.red,
+                                                decorationThickness: 2,
+                                                color: textColor,
+                                              ),
+                                            ),
+                                            Text(
+                                              'Rp ${_formatCurrency(result.hargaSetelahDiskon.round())}',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.green,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      else
+                                        Text(
+                                          'Rp ${_formatCurrency(result.totalPembayaran.round())}',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: textColor,
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // Panel Kanan - Tabel Angsuran
+              Expanded(
+                flex: 6,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 32.0,
+                    horizontal: 8.0,
+                  ),
+                  child: Card(
+                    color: cardColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 0,
+                    child: DefaultTabController(
+                      length: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(6),
+                        child: Column(
+                          children: [
+                            Material(
+                              color: cardColor,
+                              child: TabBar(
+                                labelColor: textColor,
+                                unselectedLabelColor: Colors.grey,
+                                indicatorColor: Colors.green.shade700,
+                                tabs: const [
+                                  Tab(text: 'Ringkasan'),
+                                  Tab(text: 'Tabel Angsuran'),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: TabBarView(
+                                children: [
+                                  SingleChildScrollView(
+                                    padding: const EdgeInsets.all(12),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Syarat & Ketentuan:',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: textColor,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        ...List.generate(
+                                          _ringkasanList.length,
+                                          (index) {
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                bottom: 4,
+                                              ),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    '${index + 1}. ',
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      color:
+                                                          themeController
+                                                              .isDarkMode
+                                                          ? Colors.grey
+                                                          : Colors.black,
+                                                      height: 1.5,
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: Text(
+                                                      _ringkasanList[index],
+                                                      textAlign:
+                                                          TextAlign.justify,
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        color:
+                                                            themeController
+                                                                .isDarkMode
+                                                            ? Colors.grey
+                                                            : Colors.black,
+                                                        height: 1.5,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child:
+                                        selectedModel == null || result == null
+                                        ? Center(
+                                            child: Text(
+                                              'Pilih model & hitung terlebih dahulu',
+                                              style: TextStyle(
+                                                color:
+                                                    themeController.isDarkMode
+                                                    ? Colors.grey
+                                                    : Colors.black,
+                                              ),
+                                            ),
+                                          )
+                                        : _buildScheduleTable(
+                                            result,
+                                            themeController,
+                                          ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   String _formatCurrency(int v) {
