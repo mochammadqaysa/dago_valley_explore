@@ -1,19 +1,145 @@
+import 'dart:io';
+
 import 'package:dago_valley_explore/app/extensions/color.dart';
 import 'package:dago_valley_explore/app/types/tab_type.dart';
 import 'package:dago_valley_explore/presentation/components/drawer/bottom_user_info.dart';
 import 'package:dago_valley_explore/presentation/components/drawer/custom_list_tile.dart';
 import 'package:dago_valley_explore/presentation/components/drawer/header.dart';
+import 'package:dago_valley_explore/presentation/controllers/fullscreen/fullscreen_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/sidebar/sidebar_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class CustomDrawer extends GetView<SidebarController> {
   const CustomDrawer({Key? key}) : super(key: key);
 
+  void _showExitConfirmation(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
+
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        backgroundColor: themeController.isDarkMode
+            ? HexColor("1C1C19")
+            : HexColor("EBEBEB"),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Icon
+              Icon(Icons.warning_rounded, size: 64, color: Colors.orange),
+              const SizedBox(height: 16),
+
+              // Title
+              Text(
+                'Konfirmasi Keluar',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: themeController.isDarkMode
+                      ? Colors.white
+                      : Colors.black,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Message
+              Text(
+                'Apakah Anda yakin ingin keluar dari aplikasi?',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: themeController.isDarkMode
+                      ? Colors.white70
+                      : Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Buttons
+              Row(
+                children: [
+                  // Tombol Batal
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        Get.back(); // Tutup dialog
+                      },
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        side: BorderSide(
+                          color: themeController.isDarkMode
+                              ? Colors.white54
+                              : Colors.black54,
+                        ),
+                      ),
+                      child: Text(
+                        'Batal',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: themeController.isDarkMode
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+
+                  // Tombol Keluar
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _exitApp(); // ✅ Exit aplikasi
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Keluar',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: true, // Bisa ditutup dengan klik di luar dialog
+    );
+  }
+
+  // ✅ Method untuk exit aplikasi
+  void _exitApp() {
+    if (Platform.isAndroid || Platform.isIOS) {
+      // Untuk Mobile
+      SystemNavigator.pop();
+    } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      // Untuk Desktop
+      exit(0);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
+    final fullscreenController = Get.find<FullscreenController>();
     return GetX<SidebarController>(
       init: controller,
       builder: (_) {
@@ -59,20 +185,16 @@ class CustomDrawer extends GetView<SidebarController> {
                       .toList(),
                   const Spacer(),
                   Visibility(
-                    visible: false,
+                    visible: true,
                     child: CustomListTile(
                       isActive: false,
                       isCollapsed: controller.isCollapsed,
-                      icon: Icons.settings,
+                      icon: Icons.exit_to_app,
                       svgIcon: "assets/menu/hotline_icon.svg",
-                      title: 'Settings',
+                      title: 'Exit App',
                       infoCount: 0,
                       onTap: () {
-                        Get.snackbar(
-                          'Settings',
-                          'Settings menu clicked',
-                          snackPosition: SnackPosition.BOTTOM,
-                        );
+                        _showExitConfirmation(context);
                       },
                     ),
                   ),
