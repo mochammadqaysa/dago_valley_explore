@@ -1,17 +1,27 @@
 import 'package:dago_valley_explore/app/extensions/color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class ThemeController extends GetxController {
   // Observable untuk dark mode
-  final _isDarkMode = true.obs;
+  final RxBool _isDarkMode = false.obs;
   bool get isDarkMode => _isDarkMode.value;
+
+  ThemeMode get themeMode =>
+      _isDarkMode.value ? ThemeMode.dark : ThemeMode.light;
 
   @override
   void onInit() {
     super.onInit();
     print('ThemeController initialized');
-    // Load saved theme preference (optional)
+
+    // Update system chrome whenever theme changes
+    ever<bool>(_isDarkMode, (isDark) {
+      _applySystemUI(isDark);
+    });
+
+    // Optional: load persisted theme preference here
     // _loadThemePreference();
   }
 
@@ -24,21 +34,30 @@ class ThemeController extends GetxController {
   // Toggle theme
   void toggleTheme() {
     _isDarkMode.value = !_isDarkMode.value;
+    // Do NOT call Get.changeThemeMode here if your GetMaterialApp is rebuilt by Obx.
+    // If you prefer Get.changeThemeMode, you may use it instead of Obx at root,
+    // but avoid doing both to prevent inconsistent behavior.
+    // Get.changeThemeMode(_isDarkMode.value ? ThemeMode.dark : ThemeMode.light);
 
-    // Update GetX theme
-    Get.changeThemeMode(_isDarkMode.value ? ThemeMode.dark : ThemeMode.light);
-
-    // Save preference (optional)
+    // Optionally persist preference here
     // _saveThemePreference();
+  }
 
-    // Get.snackbar(
-    //   'Theme Changed',
-    //   _isDarkMode.value ? 'Dark mode activated' : 'Light mode activated',
-    //   snackPosition: SnackPosition.BOTTOM,
-    //   duration: const Duration(seconds: 1),
-    //   backgroundColor: _isDarkMode.value ? Colors.grey[800] : Colors.grey[200],
-    //   colorText: _isDarkMode.value ? Colors.white : Colors.black,
-    // );
+  // Apply System UI overlay (status bar icons etc.)
+  void _applySystemUI(bool isDark) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+        systemNavigationBarColor: isDark
+            ? const Color(0xFF121212)
+            : Colors.white,
+        systemNavigationBarIconBrightness: isDark
+            ? Brightness.light
+            : Brightness.dark,
+      ),
+    );
   }
 
   // Get current theme data
@@ -83,15 +102,7 @@ class ThemeController extends GetxController {
     );
   }
 
-  // Optional: Save theme preference to storage
-  // Future<void> _saveThemePreference() async {
-  //   final storage = Get.find<LocalStorageService>();
-  //   await storage.setBool('isDarkMode', _isDarkMode.value);
-  // }
-
-  // Optional: Load theme preference from storage
-  // Future<void> _loadThemePreference() async {
-  //   final storage = Get.find<LocalStorageService>();
-  //   _isDarkMode.value = storage.getBool('isDarkMode') ?? true;
-  // }
+  // Optional: persistence helpers (implement LocalStorageService usage if needed)
+  // Future<void> _saveThemePreference() async { ... }
+  // Future<void> _loadThemePreference() async { ... }
 }

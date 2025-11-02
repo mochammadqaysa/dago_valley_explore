@@ -49,84 +49,86 @@ class _VirtualtourPageState extends State<VirtualtourPage>
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
 
-    return Scaffold(
-      body: Column(
-        children: [
-          // Header dengan Tab Buttons di pojok kanan atas
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 20,
-              right: 24,
-              left: 24,
-              bottom: 16,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                // Title
-                // Text(
-                //   'Virtual Tour',
-                //   style: TextStyle(
-                //     fontSize: 32,
-                //     fontWeight: FontWeight.bold,
-                //     color: themeController.isDarkMode
-                //         ? Colors.white
-                //         : Colors.black,
-                //   ),
-                // ),
+    return Obx(() {
+      return Scaffold(
+        body: Column(
+          children: [
+            // Header dengan Tab Buttons di pojok kanan atas
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 20,
+                right: 24,
+                left: 24,
+                bottom: 16,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  // Title
+                  // Text(
+                  //   'Virtual Tour',
+                  //   style: TextStyle(
+                  //     fontSize: 32,
+                  //     fontWeight: FontWeight.bold,
+                  //     color: themeController.isDarkMode
+                  //         ? Colors.white
+                  //         : Colors.black,
+                  //   ),
+                  // ),
 
-                // Tab Control Buttons
-                Container(
-                  width: 380, // Fixed width untuk TabBar
-                  height: 45,
-                  decoration: BoxDecoration(
-                    color: themeController.isDarkMode
-                        ? Colors.grey[850]
-                        : Colors.grey[200],
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: TabBar(
-                    controller: _tabController,
-                    indicator: BoxDecoration(
-                      color: AppColors.primary,
+                  // Tab Control Buttons
+                  Container(
+                    width: 380, // Fixed width untuk TabBar
+                    height: 45,
+                    decoration: BoxDecoration(
+                      color: themeController.isDarkMode
+                          ? Colors.grey[850]
+                          : Colors.grey[200],
                       borderRadius: BorderRadius.circular(25),
                     ),
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    dividerColor: Colors.transparent,
-                    labelColor: Colors.white,
-                    unselectedLabelColor: themeController.isDarkMode
-                        ? Colors.white70
-                        : Colors.black54,
-                    labelStyle: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                    child: TabBar(
+                      controller: _tabController,
+                      indicator: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      dividerColor: Colors.transparent,
+                      labelColor: Colors.white,
+                      unselectedLabelColor: themeController.isDarkMode
+                          ? Colors.white70
+                          : Colors.black54,
+                      labelStyle: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      tabs: const [
+                        Tab(text: 'Tahap 1'),
+                        Tab(text: 'Tahap 2'),
+                      ],
                     ),
-                    tabs: const [
-                      Tab(text: 'Tahap 1'),
-                      Tab(text: 'Tahap 2'),
-                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
 
-          // TabBarView Content
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                // Tab 1: Foresta & Harmoni
-                _buildTab1Content(themeController),
+            // TabBarView Content
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  // Tab 1: Foresta & Harmoni
+                  _buildTab1Content(themeController),
 
-                // Tab 2: Other Models
-                _buildTab2Content(themeController),
-              ],
+                  // Tab 2: Other Models
+                  _buildTab2Content(themeController),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 
   // ===== TAB 1: Foresta & Harmoni =====

@@ -191,126 +191,130 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage>
     final isTV = MediaQuery.of(context).size.width > 800;
     final themeController = Get.find<ThemeController>();
 
-    return Scaffold(
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator(color: Colors.white))
-          : Column(
-              children: [
-                // Combined TabBar Row (Tahap & Legalitas/Perizinan)
-                Container(
-                  margin: const EdgeInsets.all(20),
-                  child: Row(
-                    children: [
-                      // Main TabBar (Tahap 1 / Tahap 2) with Outline
-                      SizedBox(
-                        width: 200,
-                        child: Container(
-                          height: 45,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: themeController.isDarkMode
-                                  ? Colors.grey[700]!
-                                  : Colors.grey[300]!,
-                              width: 1.5,
-                            ),
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                          child: TabBar(
-                            controller: _mainTabController,
-                            indicator: BoxDecoration(
-                              color: AppColors.primary,
+    return Obx(() {
+      return Scaffold(
+        body: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(color: Colors.white),
+              )
+            : Column(
+                children: [
+                  // Combined TabBar Row (Tahap & Legalitas/Perizinan)
+                  Container(
+                    margin: const EdgeInsets.all(20),
+                    child: Row(
+                      children: [
+                        // Main TabBar (Tahap 1 / Tahap 2) with Outline
+                        SizedBox(
+                          width: 200,
+                          child: Container(
+                            height: 45,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: themeController.isDarkMode
+                                    ? Colors.grey[700]!
+                                    : Colors.grey[300]!,
+                                width: 1.5,
+                              ),
                               borderRadius: BorderRadius.circular(25),
                             ),
-                            indicatorSize: TabBarIndicatorSize.tab,
-                            dividerColor: Colors.transparent,
-                            labelColor: Colors.white,
-                            unselectedLabelColor: themeController.isDarkMode
-                                ? Colors.white70
-                                : Colors.black54,
-                            labelStyle: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
+                            child: TabBar(
+                              controller: _mainTabController,
+                              indicator: BoxDecoration(
+                                color: AppColors.primary,
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              indicatorSize: TabBarIndicatorSize.tab,
+                              dividerColor: Colors.transparent,
+                              labelColor: Colors.white,
+                              unselectedLabelColor: themeController.isDarkMode
+                                  ? Colors.white70
+                                  : Colors.black54,
+                              labelStyle: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              tabs: const [
+                                Tab(text: 'Tahap 1'),
+                                Tab(text: 'Tahap 2'),
+                              ],
                             ),
-                            tabs: const [
-                              Tab(text: 'Tahap 1'),
-                              Tab(text: 'Tahap 2'),
-                            ],
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 16),
-                      // Sub TabBar (Legalitas / Perizinan) with Outline
-                      SizedBox(
-                        width: 200,
-                        child: Container(
-                          height: 45,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: themeController.isDarkMode
-                                  ? Colors.grey[700]!
-                                  : Colors.grey[300]!,
-                              width: 1.5,
-                            ),
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                          child: TabBar(
-                            controller: _activeSubTabController,
-                            indicator: BoxDecoration(
-                              color: AppColors.primary.withOpacity(0.8),
+                        const SizedBox(width: 16),
+                        // Sub TabBar (Legalitas / Perizinan) with Outline
+                        SizedBox(
+                          width: 200,
+                          child: Container(
+                            height: 45,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: themeController.isDarkMode
+                                    ? Colors.grey[700]!
+                                    : Colors.grey[300]!,
+                                width: 1.5,
+                              ),
                               borderRadius: BorderRadius.circular(25),
                             ),
-                            indicatorSize: TabBarIndicatorSize.tab,
-                            dividerColor: Colors.transparent,
-                            labelColor: Colors.white,
-                            unselectedLabelColor: themeController.isDarkMode
-                                ? Colors.white70
-                                : Colors.black54,
-                            labelStyle: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
+                            child: TabBar(
+                              controller: _activeSubTabController,
+                              indicator: BoxDecoration(
+                                color: AppColors.primary.withOpacity(0.8),
+                                borderRadius: BorderRadius.circular(25),
+                              ),
+                              indicatorSize: TabBarIndicatorSize.tab,
+                              dividerColor: Colors.transparent,
+                              labelColor: Colors.white,
+                              unselectedLabelColor: themeController.isDarkMode
+                                  ? Colors.white70
+                                  : Colors.black54,
+                              labelStyle: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              tabs: const [
+                                Tab(text: 'Legalitas'),
+                                Tab(text: 'Perizinan'),
+                              ],
                             ),
-                            tabs: const [
-                              Tab(text: 'Legalitas'),
-                              Tab(text: 'Perizinan'),
-                            ],
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                // TabBarView untuk Tahap 1 dan Tahap 2
-                Expanded(
-                  child: TabBarView(
-                    controller: _mainTabController,
-                    children: [
-                      // Tahap 1 Content
-                      _buildTahapContent(
-                        themeController,
-                        isTV,
-                        _tahap1TabController,
-                        'tahap_1',
-                      ),
-                      // Tahap 2 Content
-                      _buildTahapContent(
-                        themeController,
-                        isTV,
-                        _tahap2TabController,
-                        'tahap_2',
-                      ),
-                    ],
+                  // TabBarView untuk Tahap 1 dan Tahap 2
+                  Expanded(
+                    child: TabBarView(
+                      controller: _mainTabController,
+                      children: [
+                        // Tahap 1 Content
+                        _buildTahapContent(
+                          themeController,
+                          isTV,
+                          _tahap1TabController,
+                          'tahap_1',
+                        ),
+                        // Tahap 2 Content
+                        _buildTahapContent(
+                          themeController,
+                          isTV,
+                          _tahap2TabController,
+                          'tahap_2',
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            _showQRCodeModal(), // panggil tanpa arg -> ambil dari localstorage
-        backgroundColor: AppColors.primary,
-        child: const Icon(Icons.file_open_rounded, color: Colors.white),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-    );
+                ],
+              ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () =>
+              _showQRCodeModal(), // panggil tanpa arg -> ambil dari localstorage
+          backgroundColor: AppColors.primary,
+          child: const Icon(Icons.file_open_rounded, color: Colors.white),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+      );
+    });
   }
 
   Widget _buildTahapContent(

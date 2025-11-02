@@ -20,12 +20,10 @@ class App extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'app_name'.tr,
 
-        // Theme configuration
+        // Theme configuration (use themeMode from controller)
         theme: themeController.lightTheme,
         darkTheme: themeController.darkTheme,
-        themeMode: themeController.isDarkMode
-            ? ThemeMode.dark
-            : ThemeMode.light,
+        themeMode: themeController.themeMode,
 
         // Locale configuration
         locale: localeController.currentLocale,
@@ -33,8 +31,6 @@ class App extends StatelessWidget {
         fallbackLocale: Locale('id', 'ID'),
 
         initialRoute: "/",
-        // initialBinding: SidebarBinding(),
-        // home: HomePage(),
         initialBinding: SplashBinding(),
         home: SplashScreen(),
       ),
