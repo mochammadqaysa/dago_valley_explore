@@ -1,5 +1,8 @@
+import 'package:dago_valley_explore/app/services/local_storage.dart';
 import 'package:dago_valley_explore/data/models/house_model.dart';
 import 'dart:math' as math;
+
+import 'package:get/get.dart';
 
 enum PaymentMethod { kprSyariah, developer }
 
@@ -30,17 +33,23 @@ class CalculatorResult {
 }
 
 class CashcalculatorController {
+  final LocalStorageService _storage = Get.find<LocalStorageService>();
+
   /// Hitung DP
   double calculateDp({
     required double harga,
     required PaymentMethod method,
     required bool tanpaDp,
   }) {
+    final cacheKpr = _storage.kprCalculators;
+    print(
+      '💾 Cached KPR Calculators: ${cacheKpr!.first.dpDeveloperValue}, ${cacheKpr!.first.dpSyariahValue}',
+    );
     if (method == PaymentMethod.developer) {
       if (tanpaDp) return 0.0;
-      return harga * 0.3;
+      return harga * cacheKpr!.first.dpDeveloperValue;
     } else {
-      return harga * 0.2;
+      return harga * cacheKpr!.first.dpSyariahValue;
     }
   }
 
@@ -171,6 +180,7 @@ class CashcalculatorController {
   }) {
     final harga = model.hargaCash.toDouble();
     final dp = calculateDp(harga: harga, method: method, tanpaDp: tanpaDp);
+    print('💰 Calculating with harga: $harga, dp: $dp');
     final plafon = harga - dp;
     final months = tenorYears * 12;
     final marginRate = marginPersen / 100;

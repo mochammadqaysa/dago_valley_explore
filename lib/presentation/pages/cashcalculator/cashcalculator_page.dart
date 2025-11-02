@@ -1,5 +1,6 @@
 import 'package:dago_valley_explore/app/config/app_colors.dart';
 import 'package:dago_valley_explore/app/extensions/color.dart';
+import 'package:dago_valley_explore/app/services/local_storage.dart';
 import 'package:dago_valley_explore/data/models/house_model.dart';
 import 'package:dago_valley_explore/presentation/controllers/cashcalculator/cashcalculator_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
@@ -24,9 +25,14 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
   double? diskonPersen;
   int tenor = 5;
   double marginPersen = 11.0; // Default untuk KPR Syariah
+  double marginSyariah = 0.0;
+  double marginDeveloper = 0.0;
+
   final controller = CashcalculatorController();
 
   final rupiahFormat = NumberFormat("#,###", "id_ID");
+
+  final LocalStorageService _storage = Get.find<LocalStorageService>();
 
   List<int> get tenorOptions {
     if (paymentMethod == PaymentMethod.kprSyariah) {
@@ -39,8 +45,15 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
   @override
   void initState() {
     super.initState();
+    final cachedKpr = _storage.kprCalculators;
+
+    marginSyariah = cachedKpr?.first.marginBankSyariahValue ?? 11.0;
+    marginDeveloper = cachedKpr?.first.marginDeveloperValue ?? 5.25;
+
     // Set default margin berdasarkan metode pembayaran
-    marginPersen = paymentMethod == PaymentMethod.kprSyariah ? 11.0 : 5.25;
+    marginPersen = paymentMethod == PaymentMethod.kprSyariah
+        ? marginSyariah
+        : marginDeveloper;
   }
 
   @override
@@ -64,6 +77,10 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
         : AppColors.white;
 
     final textColor = themeController.isDarkMode ? Colors.white : Colors.black;
+
+    print(
+      '💾 Cached KPR Calculators for margins: Syariah: $marginSyariah, Developer: $marginDeveloper',
+    );
 
     return Scaffold(
       body: SafeArea(
@@ -175,7 +192,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                           paymentMethod = v!;
                                           tanpaDp = false;
                                           tenor = 5;
-                                          marginPersen = 11.0;
+                                          marginPersen = marginSyariah;
                                         });
                                       },
                                     ),
@@ -192,7 +209,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                         setState(() {
                                           paymentMethod = v!;
                                           tenor = 4;
-                                          marginPersen = 5.25;
+                                          marginPersen = marginDeveloper;
                                         });
                                       },
                                     ),
