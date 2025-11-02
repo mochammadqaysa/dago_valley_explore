@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:dago_valley_explore/app/config/app_colors.dart';
+import 'package:dago_valley_explore/app/services/local_storage.dart';
+import 'package:dago_valley_explore/presentation/controllers/qrcode/qrcode_binding.dart';
 import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
+import 'package:dago_valley_explore/presentation/pages/qrcode/qrcode_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
@@ -55,6 +58,50 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage>
     _tahap1TabController.dispose();
     _tahap2TabController.dispose();
     super.dispose();
+  }
+
+  /// Show QR modal.
+  /// If [url] is provided, it will be used. Otherwise will try to get first brochure.imageUrl
+  /// from LocalStorageService (if available). If no URL found, show a snackbar message.
+  void _showQRCodeModal([String? url]) {
+    // If caller didn't pass URL, try get from local storage (Brochure list)
+    if (url == null || url.isEmpty) {
+      try {
+        final storage = Get.find<LocalStorageService>();
+        // Assuming LocalStorageService has a 'brochures' getter returning List<Brochure>?
+        // Adjust field name if your implementation uses a different property.
+        final brochures = storage.brochures;
+        print('Fetched brochures from local storage: $brochures');
+        if (brochures != null && brochures.isNotEmpty) {
+          final first = brochures.first;
+          // Brochure entity should have imageUrl property; adjust if different
+          url = (first.imageUrl ?? '').toString();
+        }
+      } catch (e) {
+        if (kDebugMode)
+          print('Error fetching brochures from local storage: $e');
+      }
+    }
+
+    if (url == null || url.isEmpty) {
+      Get.snackbar(
+        'QR Code',
+        'Tidak ada URL brochure yang tersedia.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
+    // Navigate to QRCodePage and pass the url via arguments; binding will create controller with this arg
+    Get.to(
+      () => const QRCodePage(),
+      binding: QrCodeBinding(),
+      arguments: url,
+      transition: Transition.fade,
+      duration: const Duration(milliseconds: 400),
+      opaque: false,
+      fullscreenDialog: true,
+    );
   }
 
   Future<void> loadPdfList() async {
@@ -256,6 +303,13 @@ class _LicenseLegalDocumentPageState extends State<LicenseLegalDocumentPage>
                 ),
               ],
             ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () =>
+            _showQRCodeModal(), // panggil tanpa arg -> ambil dari localstorage
+        backgroundColor: AppColors.primary,
+        child: const Icon(Icons.file_open_rounded, color: Colors.white),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 

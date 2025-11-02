@@ -190,7 +190,10 @@ class QRCodePage extends GetView<QRCodeController> {
                                                     QrErrorCorrectLevel.H,
                                               ),
                                             ),
-                                            const SizedBox(height: 24),
+                                            const SizedBox(
+                                              height: 24,
+                                              width: 1000,
+                                            ),
 
                                             // URL Display
                                             Container(
@@ -239,108 +242,113 @@ class QRCodePage extends GetView<QRCodeController> {
                                             const SizedBox(height: 32),
 
                                             // Action Buttons
-                                            Row(
-                                              children: [
-                                                // Copy Link Button
-                                                Expanded(
-                                                  child: SizedBox(
-                                                    height: 50,
-                                                    child: ElevatedButton.icon(
-                                                      onPressed: () {
-                                                        Clipboard.setData(
-                                                          ClipboardData(
-                                                            text: controller
-                                                                .searchUrl,
+                                            Visibility(
+                                              visible: false,
+                                              child: Row(
+                                                children: [
+                                                  // Copy Link Button
+                                                  Expanded(
+                                                    child: SizedBox(
+                                                      height: 50,
+                                                      child: ElevatedButton.icon(
+                                                        onPressed: () {
+                                                          Clipboard.setData(
+                                                            ClipboardData(
+                                                              text: controller
+                                                                  .searchUrl,
+                                                            ),
+                                                          );
+                                                          Get.snackbar(
+                                                            'Link Copied',
+                                                            'Link berhasil disalin ke clipboard',
+                                                            snackPosition:
+                                                                SnackPosition
+                                                                    .BOTTOM,
+                                                            backgroundColor:
+                                                                Colors.teal,
+                                                            colorText:
+                                                                Colors.white,
+                                                            duration:
+                                                                const Duration(
+                                                                  seconds: 2,
+                                                                ),
+                                                          );
+                                                        },
+                                                        icon: const Icon(
+                                                          Icons.copy,
+                                                          size: 18,
+                                                        ),
+                                                        label: const Text(
+                                                          'Copy Link',
+                                                        ),
+                                                        style: ElevatedButton.styleFrom(
+                                                          backgroundColor:
+                                                              Colors.white
+                                                                  .withOpacity(
+                                                                    0.2,
+                                                                  ),
+                                                          foregroundColor:
+                                                              Colors.white,
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  25,
+                                                                ),
                                                           ),
-                                                        );
-                                                        Get.snackbar(
-                                                          'Link Copied',
-                                                          'Link berhasil disalin ke clipboard',
-                                                          snackPosition:
-                                                              SnackPosition
-                                                                  .BOTTOM,
+                                                          elevation: 0,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 12),
+
+                                                  // Share Button
+                                                  Expanded(
+                                                    child: SizedBox(
+                                                      height: 50,
+                                                      child: ElevatedButton.icon(
+                                                        onPressed: () {
+                                                          Get.snackbar(
+                                                            'Share',
+                                                            'Share feature coming soon',
+                                                            snackPosition:
+                                                                SnackPosition
+                                                                    .BOTTOM,
+                                                            backgroundColor:
+                                                                Colors.blue,
+                                                            colorText:
+                                                                Colors.white,
+                                                            duration:
+                                                                const Duration(
+                                                                  seconds: 2,
+                                                                ),
+                                                          );
+                                                        },
+                                                        icon: const Icon(
+                                                          Icons.share,
+                                                          size: 18,
+                                                        ),
+                                                        label: const Text(
+                                                          'Share',
+                                                        ),
+                                                        style: ElevatedButton.styleFrom(
                                                           backgroundColor:
                                                               Colors.teal,
-                                                          colorText:
+                                                          foregroundColor:
                                                               Colors.white,
-                                                          duration:
-                                                              const Duration(
-                                                                seconds: 2,
-                                                              ),
-                                                        );
-                                                      },
-                                                      icon: const Icon(
-                                                        Icons.copy,
-                                                        size: 18,
-                                                      ),
-                                                      label: const Text(
-                                                        'Copy Link',
-                                                      ),
-                                                      style: ElevatedButton.styleFrom(
-                                                        backgroundColor: Colors
-                                                            .white
-                                                            .withOpacity(0.2),
-                                                        foregroundColor:
-                                                            Colors.white,
-                                                        shape: RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                25,
-                                                              ),
+                                                          shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  25,
+                                                                ),
+                                                          ),
+                                                          elevation: 5,
                                                         ),
-                                                        elevation: 0,
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                                const SizedBox(width: 12),
-
-                                                // Share Button
-                                                Expanded(
-                                                  child: SizedBox(
-                                                    height: 50,
-                                                    child: ElevatedButton.icon(
-                                                      onPressed: () {
-                                                        Get.snackbar(
-                                                          'Share',
-                                                          'Share feature coming soon',
-                                                          snackPosition:
-                                                              SnackPosition
-                                                                  .BOTTOM,
-                                                          backgroundColor:
-                                                              Colors.blue,
-                                                          colorText:
-                                                              Colors.white,
-                                                          duration:
-                                                              const Duration(
-                                                                seconds: 2,
-                                                              ),
-                                                        );
-                                                      },
-                                                      icon: const Icon(
-                                                        Icons.share,
-                                                        size: 18,
-                                                      ),
-                                                      label: const Text(
-                                                        'Share',
-                                                      ),
-                                                      style: ElevatedButton.styleFrom(
-                                                        backgroundColor:
-                                                            Colors.teal,
-                                                        foregroundColor:
-                                                            Colors.white,
-                                                        shape: RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                25,
-                                                              ),
-                                                        ),
-                                                        elevation: 5,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -375,7 +383,7 @@ class QRCodePage extends GetView<QRCodeController> {
                                         const SizedBox(height: 12),
                                         _buildInstructionItem(
                                           '3',
-                                          'Otomatis akan mencari "Dago Valley" di Google',
+                                          'Otomatis akan mengakses laman resmi Dago Valley',
                                         ),
                                       ],
                                     ),

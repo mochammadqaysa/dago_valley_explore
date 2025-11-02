@@ -3,8 +3,13 @@ import 'package:dago_valley_explore/presentation/controllers/qrcode/qrcode_contr
 import 'package:get/get.dart';
 
 class QrCodeBinding extends Bindings {
+  final String? initialUrl;
+
+  QrCodeBinding({this.initialUrl});
   @override
   void dependencies() {
-    Get.lazyPut<QRCodeController>(() => QRCodeController());
+    final argUrl = Get.arguments as String?;
+    final url = argUrl ?? initialUrl;
+    Get.lazyPut<QRCodeController>(() => QRCodeController(url));
   }
 }

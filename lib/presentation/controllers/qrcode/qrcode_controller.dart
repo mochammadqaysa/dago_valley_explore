@@ -1,17 +1,23 @@
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class QRCodeController extends GetxController {
-  // URL untuk Google Search "Dago Valley"
-  final searchUrl = 'https://share.google/X2hw1barxPYD8QBjy';
+  // use a mutable field so we can set via constructor/binding
+  String _searchUrl;
 
-  // Observable untuk loading state
+  QRCodeController([String? initialUrl])
+    : _searchUrl = initialUrl ?? 'https://share.google/X2hw1barxPYD8QBjy';
+
+  String get searchUrl => _searchUrl;
+
+  // Observable untuk loading state (jika diperlukan)
   final _isLoading = false.obs;
   bool get isLoading => _isLoading.value;
 
   @override
   void onInit() {
     super.onInit();
-    print('QRCodeController initialized');
+    print('QRCodeController initialized with url=$_searchUrl');
   }
 
   @override
@@ -23,6 +29,24 @@ class QRCodeController extends GetxController {
   // Close modal
   void closeModal() {
     Get.back();
+  }
+
+  // Copy link to clipboard
+  Future<void> copyLink() async {
+    try {
+      await Clipboard.setData(ClipboardData(text: _searchUrl));
+      Get.snackbar(
+        'Link Copied',
+        'Link berhasil disalin ke clipboard',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Gagal menyalin link: $e',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
   }
 
   // Handle download QR (opsional)
@@ -43,15 +67,5 @@ class QRCodeController extends GetxController {
       snackPosition: SnackPosition.BOTTOM,
     );
     // Tambahkan logic share di sini
-  }
-
-  // Copy link to clipboard
-  void copyLink() {
-    // Tambahkan clipboard copy logic
-    Get.snackbar(
-      'Link Copied',
-      'Link berhasil disalin ke clipboard',
-      snackPosition: SnackPosition.BOTTOM,
-    );
   }
 }

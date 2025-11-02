@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dago_valley_explore/domain/entities/brochure.dart';
 import 'package:dago_valley_explore/domain/entities/event.dart';
 import 'package:dago_valley_explore/domain/entities/promo.dart';
 import 'package:dago_valley_explore/domain/entities/version.dart';
@@ -8,7 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../domain/entities/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum _Key { user, promos, events, versions, lastUpdate }
+enum _Key { user, promos, events, brochures, versions, lastUpdate }
 
 class LocalStorageService extends GetxService {
   SharedPreferences? _sharedPreferences;
@@ -84,6 +85,33 @@ class LocalStorageService extends GetxService {
     if (value != null) {
       _sharedPreferences?.setString(
         _Key.events.toString(),
+        json.encode(value.map((e) => e.toJson()).toList()),
+      );
+    } else {
+      _sharedPreferences?.remove(_Key.events.toString());
+    }
+  }
+
+  // ========== Brochure Management ==========
+  List<Brochure>? get brochures {
+    final rawJson = _sharedPreferences?.getString(_Key.brochures.toString());
+    if (rawJson == null) return null;
+
+    try {
+      List<dynamic> list = jsonDecode(rawJson);
+      return list
+          .map((e) => Brochure.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      print('Error parsing brochures: $e');
+      return null;
+    }
+  }
+
+  set brochures(List<Brochure>? value) {
+    if (value != null) {
+      _sharedPreferences?.setString(
+        _Key.brochures.toString(),
         json.encode(value.map((e) => e.toJson()).toList()),
       );
     } else {

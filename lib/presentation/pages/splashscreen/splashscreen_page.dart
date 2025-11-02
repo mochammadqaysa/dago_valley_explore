@@ -1,3 +1,4 @@
+import 'package:dago_valley_explore/app/config/app_colors.dart';
 import 'package:dago_valley_explore/presentation/controllers/splash/splash_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,7 +15,7 @@ class SplashScreen extends GetView<SplashController> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.blue.shade700, Colors.blue.shade900],
+            colors: [AppColors.primary, AppColors.secondaryNight],
           ),
         ),
         child: Obx(() {
@@ -33,8 +34,8 @@ class SplashScreen extends GetView<SplashController> {
       children: [
         // Logo
         Container(
-          width: 150,
-          height: 150,
+          width: 300,
+          height: 300,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
@@ -46,13 +47,16 @@ class SplashScreen extends GetView<SplashController> {
               ),
             ],
           ),
-          child: const Icon(Icons.home, size: 80, color: Colors.blue),
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Image.asset("assets/logo-dago.webp"),
+          ),
         ),
         const SizedBox(height: 40),
 
         // App Name
         const Text(
-          'Housing App',
+          'Dago Valley Explore',
           style: TextStyle(
             fontSize: 32,
             fontWeight: FontWeight.bold,
@@ -61,7 +65,7 @@ class SplashScreen extends GetView<SplashController> {
         ),
         const SizedBox(height: 10),
         const Text(
-          'Dago Valley Bandung',
+          'By : Dago Valley Bandung',
           style: TextStyle(fontSize: 16, color: Colors.white70),
         ),
         const SizedBox(height: 60),

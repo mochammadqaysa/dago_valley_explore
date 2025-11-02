@@ -102,6 +102,11 @@ class SplashController extends GetxController {
             );
           }
 
+          if (housing.brochures != null && housing.brochures!.isNotEmpty) {
+            _storage.brochures = housing.brochures!;
+            print('✅ Saved ${housing.brochures!.length} brochures');
+          }
+
           // Simpan version
           _storage.versions = apiVersions;
           print('✅ Saved versions: ${apiVersions.toJson()}');
