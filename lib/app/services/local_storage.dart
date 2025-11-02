@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dago_valley_explore/domain/entities/brochure.dart';
 import 'package:dago_valley_explore/domain/entities/event.dart';
+import 'package:dago_valley_explore/domain/entities/kpr_calculator.dart';
 import 'package:dago_valley_explore/domain/entities/promo.dart';
 import 'package:dago_valley_explore/domain/entities/version.dart';
 import 'package:get/get.dart';
@@ -9,7 +10,15 @@ import 'package:path_provider/path_provider.dart';
 import '../../domain/entities/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum _Key { user, promos, events, brochures, versions, lastUpdate }
+enum _Key {
+  user,
+  promos,
+  events,
+  kprCalculators,
+  brochures,
+  versions,
+  lastUpdate,
+}
 
 class LocalStorageService extends GetxService {
   SharedPreferences? _sharedPreferences;
@@ -89,6 +98,35 @@ class LocalStorageService extends GetxService {
       );
     } else {
       _sharedPreferences?.remove(_Key.events.toString());
+    }
+  }
+
+  // ========== KPR Calculator Management ==========
+  List<KprCalculator>? get kprCalculators {
+    final rawJson = _sharedPreferences?.getString(
+      _Key.kprCalculators.toString(),
+    );
+    if (rawJson == null) return null;
+
+    try {
+      List<dynamic> list = jsonDecode(rawJson);
+      return list
+          .map((e) => KprCalculator.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      print('Error parsing kpr calculators: $e');
+      return null;
+    }
+  }
+
+  set kprCalculators(List<KprCalculator>? value) {
+    if (value != null) {
+      _sharedPreferences?.setString(
+        _Key.kprCalculators.toString(),
+        json.encode(value.map((e) => e.toJson()).toList()),
+      );
+    } else {
+      _sharedPreferences?.remove(_Key.kprCalculators.toString());
     }
   }
 
@@ -199,6 +237,7 @@ class LocalStorageService extends GetxService {
   Future<void> clearCache() async {
     promos = null;
     events = null;
+    kprCalculators = null;
     versions = null;
     lastUpdate = null;
 

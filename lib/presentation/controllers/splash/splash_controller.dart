@@ -53,11 +53,13 @@ class SplashController extends GetxController {
       // Ambil data lokal
       final localPromos = _storage.promos;
       final localEvents = _storage.events;
+      final localKprCalculators = _storage.kprCalculators;
       final localVersions = _storage.versions;
 
       print('📦 Local data check:');
       print('- Promos: ${localPromos?.length ?? 0}');
       print('- Events: ${localEvents?.length ?? 0}');
+      print('- KPR Calculators: ${localKprCalculators?.length ?? 0}');
       print('- Versions: ${localVersions?.toJson()}');
 
       // Fetch data dari API menggunakan use case
@@ -71,10 +73,15 @@ class SplashController extends GetxController {
         print('🌐 API data check:');
         print('- Promos: ${housing.promos?.length ?? 0}');
         print('- Events: ${housing.events?.length ?? 0}');
+        print('- KPR Calculators: ${housing.kprCalculators?.length ?? 0}');
         print('- Versions: ${apiVersions.toJson()}');
 
         // Cek apakah perlu update
-        final needsUpdate = _checkNeedsUpdate(localVersions, apiVersions);
+        final needsUpdate = _checkNeedsUpdate(
+          localVersions,
+          apiVersions,
+          housing.kprCalculators != null && housing.kprCalculators!.isNotEmpty,
+        );
 
         if (needsUpdate) {
           loadingMessage.value = 'Menyimpan data baru...';
@@ -106,6 +113,12 @@ class SplashController extends GetxController {
             _storage.brochures = housing.brochures!;
             print('✅ Saved ${housing.brochures!.length} brochures');
           }
+          // Simpan kpr calculators
+          if (housing.kprCalculators != null &&
+              housing.kprCalculators!.isNotEmpty) {
+            _storage.kprCalculators = housing.kprCalculators!;
+            print('✅ Saved ${housing.kprCalculators!.length} kpr calculators');
+          }
 
           // Simpan version
           _storage.versions = apiVersions;
@@ -130,8 +143,11 @@ class SplashController extends GetxController {
       // Cek apakah ada data lokal sebagai fallback
       final localPromos = _storage.promos;
       final localEvents = _storage.events;
+      final localKprCalculators = _storage.kprCalculators;
 
-      if (localPromos != null || localEvents != null) {
+      if (localPromos != null ||
+          localEvents != null ||
+          localKprCalculators != null) {
         print('💾 Using local cache as fallback');
         loadingMessage.value = 'Menggunakan data tersimpan...';
       } else {
@@ -140,7 +156,11 @@ class SplashController extends GetxController {
     }
   }
 
-  bool _checkNeedsUpdate(dynamic localVersions, dynamic apiVersions) {
+  bool _checkNeedsUpdate(
+    dynamic localVersions,
+    dynamic apiVersions,
+    bool hasKprCalculators,
+  ) {
     if (localVersions == null || apiVersions == null) {
       print('⚠️ No local version or API version, forcing update');
       return true;
@@ -160,6 +180,17 @@ class SplashController extends GetxController {
         apiVersions.eventVersion != localVersions.eventVersion) {
       print(
         '🔄 Event version changed: ${localVersions.eventVersion} -> ${apiVersions.eventVersion}',
+      );
+      return true;
+    }
+
+    // Cek apakah ada data kpr calculator baru
+    if (hasKprCalculators &&
+        (localVersions.kprCalculatorVersion == null ||
+            localVersions.kprCalculatorVersion !=
+                apiVersions.kprCalculatorVersion)) {
+      print(
+        '🔄 KPR Calculator version changed: ${localVersions.kprCalculatorVersion} -> ${apiVersions.kprCalculatorVersion}',
       );
       return true;
     }

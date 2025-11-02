@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../../../domain/usecases/fetch_headline_use_case.dart';
+import '../../../app/services/local_storage.dart';
 import 'cashcalculator_controller.dart';
 
 class CashcalculatorBinding extends Bindings {
