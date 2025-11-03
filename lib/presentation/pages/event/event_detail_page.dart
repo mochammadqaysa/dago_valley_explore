@@ -302,9 +302,15 @@ class EventDetailPage extends GetView<EventController> {
                                                     ),
                                                     const SizedBox(height: 12),
                                                     Text(
-                                                      controller
-                                                          .currentEvent
-                                                          .subtitle,
+                                                      localeController
+                                                              .isIndonesian
+                                                          ? controller
+                                                                .currentEvent
+                                                                .subtitle
+                                                          : controller
+                                                                .currentEvent
+                                                                .en
+                                                                .subtitle,
                                                       style: TextStyle(
                                                         fontSize: 18,
                                                         color: Colors.white
