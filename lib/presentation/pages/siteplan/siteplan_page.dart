@@ -1,7 +1,9 @@
 import 'package:dago_valley_explore/app/config/app_colors.dart';
 import 'package:dago_valley_explore/app/services/local_storage.dart';
 import 'package:dago_valley_explore/presentation/controllers/qrcode/qrcode_binding.dart';
+import 'package:dago_valley_explore/presentation/controllers/siteplan/detailsiteplan/detail_siteplan_binding.dart';
 import 'package:dago_valley_explore/presentation/pages/qrcode/qrcode_page.dart';
+import 'package:dago_valley_explore/presentation/pages/siteplan/detail_siteplan/detail_siteplan_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -58,8 +60,8 @@ class _SiteplanPageState extends State<SiteplanPage> {
 
     // Navigate to QRCodePage and pass the url via arguments; binding will create controller with this arg
     Get.to(
-      () => const QRCodePage(),
-      binding: QrCodeBinding(),
+      () => const SiteplanDetailPage(),
+      binding: DetailSiteplanBinding(),
       arguments: url,
       transition: Transition.fade,
       duration: const Duration(milliseconds: 400),
