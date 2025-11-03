@@ -190,7 +190,7 @@ class CustomDrawer extends GetView<SidebarController> {
                       isActive: false,
                       isCollapsed: controller.isCollapsed,
                       icon: Icons.exit_to_app,
-                      svgIcon: "assets/menu/hotline_icon.svg",
+                      svgIcon: "assets/menu/power_icon.svg",
                       title: 'Exit App',
                       infoCount: 0,
                       onTap: () {
