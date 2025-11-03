@@ -42,10 +42,10 @@ class DetailSiteplanController extends GetxController {
   void loadSiteplans() {
     final cachedSiteplans = _storage.siteplans;
     if (cachedSiteplans != null && cachedSiteplans.isNotEmpty) {
-      print('✅ Using cached promos: ${cachedSiteplans.length} items');
+      print('✅ Using cached siteplan: ${cachedSiteplans.length} items');
       _siteplans.assignAll(cachedSiteplans);
     } else {
-      print('⚠️ Using dummy promos');
+      print('⚠️ Using dummy siteplan');
       // _siteplans.assignAll(dummyPromos);
     }
   }
