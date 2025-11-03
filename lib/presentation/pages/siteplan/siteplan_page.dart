@@ -1,11 +1,20 @@
 import 'package:dago_valley_explore/app/config/app_colors.dart';
+import 'package:dago_valley_explore/app/services/local_storage.dart';
+import 'package:dago_valley_explore/presentation/controllers/qrcode/qrcode_binding.dart';
+import 'package:dago_valley_explore/presentation/pages/qrcode/qrcode_page.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SiteplanPage extends StatelessWidget {
+class SiteplanPage extends StatefulWidget {
   const SiteplanPage({Key? key}) : super(key: key);
 
+  @override
+  State<SiteplanPage> createState() => _SiteplanPageState();
+}
+
+class _SiteplanPageState extends State<SiteplanPage> {
   void _showNotifySnack() {
     Get.snackbar(
       'Terima Kasih',
@@ -18,14 +27,55 @@ class SiteplanPage extends StatelessWidget {
     );
   }
 
+  void _showSitePlanModal([String? url]) {
+    // If caller didn't pass URL, try get from local storage (Brochure list)
+    if (url == null || url.isEmpty) {
+      try {
+        final storage = Get.find<LocalStorageService>();
+        // Assuming LocalStorageService has a 'brochures' getter returning List<Brochure>?
+        // Adjust field name if your implementation uses a different property.
+        final brochures = storage.brochures;
+        print('Fetched brochures from local storage: $brochures');
+        if (brochures != null && brochures.isNotEmpty) {
+          final first = brochures.first;
+          // Brochure entity should have imageUrl property; adjust if different
+          url = (first.imageUrl ?? '').toString();
+        }
+      } catch (e) {
+        if (kDebugMode)
+          print('Error fetching brochures from local storage: $e');
+      }
+    }
+
+    if (url == null || url.isEmpty) {
+      Get.snackbar(
+        'QR Code',
+        'Tidak ada URL brochure yang tersedia.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
+    // Navigate to QRCodePage and pass the url via arguments; binding will create controller with this arg
+    Get.to(
+      () => const QRCodePage(),
+      binding: QrCodeBinding(),
+      arguments: url,
+      transition: Transition.fade,
+      duration: const Duration(milliseconds: 400),
+      opaque: false,
+      fullscreenDialog: true,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isWide = MediaQuery.of(context).size.width > 700;
     final bg = const Color(0xFF121212);
 
-    return CupertinoPageScaffold(
+    return Scaffold(
       // backgroundColor: bg,
-      child: SafeArea(
+      body: SafeArea(
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
@@ -146,6 +196,12 @@ class SiteplanPage extends StatelessWidget {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {}, // panggil tanpa arg -> ambil dari localstorage
+        backgroundColor: AppColors.primary,
+        child: const Icon(Icons.map, color: Colors.white),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
     );
   }
 }

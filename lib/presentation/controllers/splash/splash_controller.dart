@@ -105,10 +105,23 @@ class SplashController extends GetxController {
             );
           }
 
+          // Simpan siteplan
+          if (housing.siteplans != null && housing.siteplans!.isNotEmpty) {
+            _storage.siteplans = housing.siteplans!;
+            print('✅ Saved ${housing.siteplans!.length} events');
+
+            // Download dan simpan gambar event
+            await _downloadImages(
+              housing.siteplans!.map((e) => e.imageUrl).toList(),
+            );
+          }
+
+          // simpan brosur
           if (housing.brochures != null && housing.brochures!.isNotEmpty) {
             _storage.brochures = housing.brochures!;
             print('✅ Saved ${housing.brochures!.length} brochures');
           }
+
           // Simpan kpr calculators
           if (housing.kprCalculators != null &&
               housing.kprCalculators!.isNotEmpty) {

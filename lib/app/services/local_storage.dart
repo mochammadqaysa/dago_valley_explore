@@ -4,6 +4,7 @@ import 'package:dago_valley_explore/domain/entities/brochure.dart';
 import 'package:dago_valley_explore/domain/entities/event.dart';
 import 'package:dago_valley_explore/domain/entities/kpr_calculator.dart';
 import 'package:dago_valley_explore/domain/entities/promo.dart';
+import 'package:dago_valley_explore/domain/entities/site_plan.dart';
 import 'package:dago_valley_explore/domain/entities/version.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
@@ -14,6 +15,7 @@ enum _Key {
   user,
   promos,
   events,
+  siteplans,
   kprCalculators,
   brochures,
   versions,
@@ -98,6 +100,33 @@ class LocalStorageService extends GetxService {
       );
     } else {
       _sharedPreferences?.remove(_Key.events.toString());
+    }
+  }
+
+  // ========== Siteplan Management ==========
+  List<SitePlan>? get siteplans {
+    final rawJson = _sharedPreferences?.getString(_Key.siteplans.toString());
+    if (rawJson == null) return null;
+
+    try {
+      List<dynamic> list = jsonDecode(rawJson);
+      return list
+          .map((e) => SitePlan.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      print('Error parsing events: $e');
+      return null;
+    }
+  }
+
+  set siteplans(List<SitePlan>? value) {
+    if (value != null) {
+      _sharedPreferences?.setString(
+        _Key.siteplans.toString(),
+        json.encode(value.map((e) => e.toJson()).toList()),
+      );
+    } else {
+      _sharedPreferences?.remove(_Key.siteplans.toString());
     }
   }
 
