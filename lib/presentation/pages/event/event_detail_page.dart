@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:dago_valley_explore/app/services/local_storage.dart';
 import 'package:dago_valley_explore/presentation/controllers/event/event_controller.dart';
+import 'package:dago_valley_explore/presentation/controllers/locale/locale_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart' as cs;
 import 'package:get/get.dart';
@@ -99,6 +100,7 @@ class EventDetailPage extends GetView<EventController> {
 
   @override
   Widget build(BuildContext context) {
+    final localeController = Get.find<LocaleController>();
     return GetX<EventController>(
       init: controller,
       initState: (state) {
@@ -227,19 +229,19 @@ class EventDetailPage extends GetView<EventController> {
                                                     fit: BoxFit.contain,
                                                   ),
                                                   // Gradient overlay (kosongkan atau isi jika perlu)
-                                                  Container(
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                          gradient:
-                                                              LinearGradient(
-                                                                begin: Alignment
-                                                                    .topCenter,
-                                                                end: Alignment
-                                                                    .bottomCenter,
-                                                                colors: [],
-                                                              ),
-                                                        ),
-                                                  ),
+                                                  // Container(
+                                                  //   decoration:
+                                                  //       const BoxDecoration(
+                                                  //         gradient:
+                                                  //             LinearGradient(
+                                                  //               begin: Alignment
+                                                  //                   .topCenter,
+                                                  //               end: Alignment
+                                                  //                   .bottomCenter,
+                                                  //               colors: [],
+                                                  //             ),
+                                                  //       ),
+                                                  // ),
                                                 ],
                                               );
                                             },
@@ -313,9 +315,15 @@ class EventDetailPage extends GetView<EventController> {
                                                     ),
                                                     const SizedBox(height: 24),
                                                     Text(
-                                                      controller
-                                                          .currentEvent
-                                                          .description,
+                                                      localeController
+                                                              .isIndonesian
+                                                          ? controller
+                                                                .currentEvent
+                                                                .description
+                                                          : controller
+                                                                .currentEvent
+                                                                .en
+                                                                .description,
                                                       style: TextStyle(
                                                         fontSize: 16,
                                                         color: Colors.white

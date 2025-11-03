@@ -231,13 +231,14 @@ class LocalStorageService extends GetxService {
 
   // ========== Image Cache Management ==========
   Future<String> getCachedImagePath(String url) async {
-    final directory = await getApplicationDocumentsDirectory();
+    final directory = await getApplicationSupportDirectory();
     final filename = url.split('/').last;
     return '${directory.path}/images/$filename';
   }
 
   Future<File> saveImageToLocal(String url, List<int> bytes) async {
-    final directory = await getApplicationDocumentsDirectory();
+    // final directory = await getApplicationDocumentsDirectory();
+    final directory = await getApplicationSupportDirectory();
     final imageDir = Directory('${directory.path}/images');
     print('Image directory path: ${imageDir.path}');
     if (!await imageDir.exists()) {

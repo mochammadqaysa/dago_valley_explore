@@ -227,19 +227,19 @@ class PromoDetailPage extends GetView<PromoController> {
                                                     fit: BoxFit.contain,
                                                   ),
                                                   // Gradient overlay (kosongkan atau isi jika perlu)
-                                                  Container(
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                          gradient:
-                                                              LinearGradient(
-                                                                begin: Alignment
-                                                                    .topCenter,
-                                                                end: Alignment
-                                                                    .bottomCenter,
-                                                                colors: [],
-                                                              ),
-                                                        ),
-                                                  ),
+                                                  // Container(
+                                                  //   decoration:
+                                                  //       const BoxDecoration(
+                                                  //         gradient:
+                                                  //             LinearGradient(
+                                                  //               begin: Alignment
+                                                  //                   .topCenter,
+                                                  //               end: Alignment
+                                                  //                   .bottomCenter,
+                                                  //               colors: [],
+                                                  //             ),
+                                                  //       ),
+                                                  // ),
                                                 ],
                                               );
                                             },
