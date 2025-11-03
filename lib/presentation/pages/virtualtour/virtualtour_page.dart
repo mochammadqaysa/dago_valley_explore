@@ -102,9 +102,9 @@ class _VirtualtourPageState extends State<VirtualtourPage>
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
-                      tabs: const [
-                        Tab(text: 'Tahap 1'),
-                        Tab(text: 'Tahap 2'),
+                      tabs: [
+                        Tab(text: 'phase_one'.tr),
+                        Tab(text: 'phase_two'.tr),
                       ],
                     ),
                   ),

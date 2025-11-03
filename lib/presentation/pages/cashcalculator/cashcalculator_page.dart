@@ -113,7 +113,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                             child: ListView(
                               children: [
                                 Text(
-                                  'Simulasi KPR',
+                                  'mortgage_simulation'.tr,
                                   style: TextStyle(
                                     fontSize: 32,
                                     color: textColor,
@@ -121,7 +121,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   ),
                                 ),
                                 Text(
-                                  'Simulasi KPR membantu Anda menghitung perkiraan cicilan rumah berdasarkan harga, uang muka, dan lama cicilan. Dengan fitur ini, Anda bisa mengetahui estimasi angsuran bulanan agar lebih mudah merencanakan pembelian rumah impian.',
+                                  'mortgage_simulation_desc'.tr,
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: textColor,
@@ -130,7 +130,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                 ),
                                 const SizedBox(height: 24),
                                 Text(
-                                  'Model & Tipe',
+                                  'model_and_type'.tr,
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -151,7 +151,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                     isExpanded: true,
                                     value: selectedModel,
                                     hint: Text(
-                                      'Pilih model rumah',
+                                      'choose_house_model'.tr,
                                       style: TextStyle(color: Colors.grey),
                                     ),
                                     dropdownColor: cardColor,
@@ -173,7 +173,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                 const SizedBox(height: 16),
 
                                 Text(
-                                  'Metode Pembayaran',
+                                  'payment_method'.tr,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: textColor,
@@ -184,7 +184,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                     Expanded(
                                       child: RadioListTile<PaymentMethod>(
                                         title: Text(
-                                          'KPR Bank Syariah',
+                                          'sharia_bank_mortgage'.tr,
                                           style: TextStyle(color: textColor),
                                         ),
                                         value: PaymentMethod.kprSyariah,
@@ -202,7 +202,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                     Expanded(
                                       child: RadioListTile<PaymentMethod>(
                                         title: Text(
-                                          'KPR Developer',
+                                          'developer_mortgage'.tr,
                                           style: TextStyle(color: textColor),
                                         ),
                                         value: PaymentMethod.developer,
@@ -219,7 +219,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   ],
                                 ),
                                 Text(
-                                  'Tenor (tahun)',
+                                  'tenor'.tr,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: textColor,
@@ -232,13 +232,13 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   divisions: tenorOptions.length - 1,
                                   min: tenorOptions.first.toDouble(),
                                   max: tenorOptions.last.toDouble(),
-                                  label: '$tenor Tahun',
+                                  label: '$tenor ${'years'.tr}',
                                   onChanged: (v) =>
                                       setState(() => tenor = v.round()),
                                 ),
                                 Center(
                                   child: Text(
-                                    '$tenor Tahun',
+                                    '$tenor ${'years'.tr}',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: textColor,
@@ -251,7 +251,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   Row(
                                     children: [
                                       Text(
-                                        'Tanpa DP',
+                                        'no_down_payment'.tr,
                                         style: TextStyle(color: textColor),
                                       ),
                                       const SizedBox(width: 10),
@@ -296,7 +296,8 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                             ),
                                             child: Text(
                                               selectedModel == null
-                                                  ? 'Pilih model dulu'
+                                                  ? 'choose_house_model_first'
+                                                        .tr
                                                   : 'Rp ${_formatCurrency(controller.calculateDp(harga: selectedModel!.hargaCash.toDouble(), method: paymentMethod, tanpaDp: tanpaDp).round())}',
                                               style: TextStyle(
                                                 fontSize: 16,
@@ -375,7 +376,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            'Margin KPR',
+                                            'mortgage_margin'.tr,
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: textColor,
@@ -396,7 +397,8 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                             child: Text(
                                               selectedModel == null ||
                                                       result == null
-                                                  ? 'Pilih model dulu'
+                                                  ? 'choose_house_model_first'
+                                                        .tr
                                                   : 'Rp ${_formatCurrency(result.marginKpr.round())}',
                                               style: TextStyle(
                                                 fontSize: 16,
@@ -412,7 +414,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
 
                                 const SizedBox(height: 16),
                                 Text(
-                                  'Diskon',
+                                  'discount'.tr,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: textColor,
@@ -429,7 +431,8 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                             controller: _diskonRpController,
                                             enabled: diskonPersen == null,
                                             decoration: InputDecoration(
-                                              labelText: 'Diskon (Rp)',
+                                              labelText:
+                                                  '${'discount'.tr} (Rp)',
                                               border:
                                                   const OutlineInputBorder(),
                                               suffixIcon: diskonNominal != null
@@ -497,7 +500,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                             controller: _diskonPersenController,
                                             enabled: diskonNominal == null,
                                             decoration: InputDecoration(
-                                              labelText: 'Diskon (%)',
+                                              labelText: '${'discount'.tr} (%)',
                                               border:
                                                   const OutlineInputBorder(),
                                               suffixIcon: diskonPersen != null
@@ -645,9 +648,9 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                 labelColor: textColor,
                                 unselectedLabelColor: Colors.grey,
                                 indicatorColor: Colors.green.shade700,
-                                tabs: const [
-                                  Tab(text: 'Ringkasan'),
-                                  Tab(text: 'Tabel Angsuran'),
+                                tabs: [
+                                  Tab(text: 'summary'.tr),
+                                  Tab(text: 'installment_table'.tr),
                                 ],
                               ),
                             ),
@@ -661,7 +664,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Syarat & Ketentuan:',
+                                          '${'terms_n_conditions'.tr}:',
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -694,7 +697,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                                   ),
                                                   Expanded(
                                                     child: Text(
-                                                      _ringkasanList[index],
+                                                      _ringkasanList[index].tr,
                                                       textAlign:
                                                           TextAlign.justify,
                                                       style: TextStyle(
@@ -892,16 +895,16 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
 }
 
 final List<String> _ringkasanList = [
-  'Harga tidak mengikat dan dapat berubah sewaktu-waktu tanpa pemberitahuan terlebih dahulu.',
-  'Harga sudah termasuk biaya Notaris, Splitizing Sertipikat, AJB, BBN Sertipikat & IMB.',
-  'Harga belum termasuk BPHTB & PPN (apabila terjadi perubahan tarif PPN maka selisih PPN ditanggung dan wajib dibayarkan oleh pembeli).',
-  'Harga sudah termasuk biaya pemasangan daya listrik PLN dan suplai air bersih.',
-  'Pembayaran Booking Fee sebesar Rp. 10.000.000,- (uang tidak dapat dikembalikan apabila konsumen melakukan pembatalan).',
-  'Pembayaran pembelian unit cash keras dilakukan selambat-lambatnya 1 bulan setelah pembayaran Booking Fee.',
-  'Pembayaran DP untuk pembelian unit secara KPR dilakukan selambat-lambatnya 14 hari setelah pembayaran Booking Fee.',
-  'Persyaratan pembelian unit secara KPR: FC KTP/Paspor suami & istri, Surat Nikah, KK, NPWP, Rekening Koran 3 bulan terakhir, Slip Gaji, SK awal & akhir.',
-  'Apabila dilakukan perubahan/pemindahan lokasi kavling yang telah dipilih sebelumnya maka akan dikenakan biaya sebesar Rp. 3.000.000,-',
-  'Pembayaran melalui setoran tunai/transfer bank ditujukan ke rekening BSI (Bank Syariah Indonesia), nomor: 722-127-3607, a.n. PT. Cisitu Indah Lestari.',
-  'Unit bangunan rumah indent (serah terima bangunan 12 bulan setelah pembayaran DP lunas atau pembayaran minimal 30% dari harga total diterima oleh Developer).',
-  'Luas/spesifikasi tanah dan bangunan dapat berubah menyesuaikan ketentuan legalitas dari BPN, ketentuan perijinan dari pemerintahan kota dan/atau menjadi kebijakan Developer.',
+  'terms_one',
+  'terms_two',
+  'terms_three',
+  'terms_four',
+  'terms_five',
+  'terms_six',
+  'terms_seven',
+  'terms_eight',
+  'terms_nine',
+  'terms_ten',
+  'terms_eleven',
+  'terms_twelve',
 ];

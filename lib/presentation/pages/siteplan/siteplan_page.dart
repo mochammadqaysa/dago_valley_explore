@@ -95,7 +95,7 @@ class _SiteplanPageState extends State<SiteplanPage> {
                     SvgPicture.asset("assets/time.svg", colorFilter: null),
                     const SizedBox(height: 20),
                     Text(
-                      'Fitur Siteplan',
+                      'siteplan_feature'.tr,
                       style: TextStyle(
                         fontSize: isWide ? 28 : 22,
                         fontWeight: FontWeight.bold,
@@ -103,8 +103,7 @@ class _SiteplanPageState extends State<SiteplanPage> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'Fitur peta/siteplan sedang kami kembangkan. '
-                      'Segera hadir: tampilan interaktif, zoom, dan detail unit.',
+                      'siteplan_feature_desc'.tr,
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: isWide ? 16 : 14),
                     ),

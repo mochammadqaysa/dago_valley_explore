@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:dago_valley_explore/app/services/local_storage.dart';
+import 'package:dago_valley_explore/presentation/controllers/locale/locale_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/promo/promo_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart' as cs;
@@ -99,6 +100,7 @@ class PromoDetailPage extends GetView<PromoController> {
 
   @override
   Widget build(BuildContext context) {
+    final localeController = Get.find<LocaleController>();
     return GetX<PromoController>(
       init: controller,
       initState: (state) {
@@ -287,9 +289,15 @@ class PromoDetailPage extends GetView<PromoController> {
                                                       MainAxisSize.min,
                                                   children: [
                                                     Text(
-                                                      controller
-                                                          .currentPromo
-                                                          .title,
+                                                      localeController
+                                                              .isIndonesian
+                                                          ? controller
+                                                                .currentPromo
+                                                                .title
+                                                          : controller
+                                                                .currentPromo
+                                                                .en
+                                                                .title,
                                                       style: const TextStyle(
                                                         fontSize: 36,
                                                         fontWeight:
@@ -300,9 +308,15 @@ class PromoDetailPage extends GetView<PromoController> {
                                                     ),
                                                     const SizedBox(height: 12),
                                                     Text(
-                                                      controller
-                                                          .currentPromo
-                                                          .subtitle,
+                                                      localeController
+                                                              .isIndonesian
+                                                          ? controller
+                                                                .currentPromo
+                                                                .subtitle
+                                                          : controller
+                                                                .currentPromo
+                                                                .en
+                                                                .subtitle,
                                                       style: TextStyle(
                                                         fontSize: 18,
                                                         color: Colors.white
@@ -313,9 +327,15 @@ class PromoDetailPage extends GetView<PromoController> {
                                                     ),
                                                     const SizedBox(height: 24),
                                                     Text(
-                                                      controller
-                                                          .currentPromo
-                                                          .description,
+                                                      localeController
+                                                              .isIndonesian
+                                                          ? controller
+                                                                .currentPromo
+                                                                .description
+                                                          : controller
+                                                                .currentPromo
+                                                                .en
+                                                                .description,
                                                       style: TextStyle(
                                                         fontSize: 16,
                                                         color: Colors.white
