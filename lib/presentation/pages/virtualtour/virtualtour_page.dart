@@ -18,7 +18,7 @@ class VirtualtourPage extends StatefulWidget {
 class _VirtualtourPageState extends State<VirtualtourPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  void _showPromoModal(HouseModel house) {
+  void _showProductModal(HouseModel house) {
     // Panggil binding secara manual sesuai pattern Anda
     DetailProductBinding().dependencies();
 
@@ -26,6 +26,21 @@ class _VirtualtourPageState extends State<VirtualtourPage>
     Get.to(
       () => const ProductDetailPage(),
       arguments: house, // Pass house model di sini
+      transition: Transition.fade,
+      duration: const Duration(milliseconds: 400),
+      opaque: false,
+      fullscreenDialog: true,
+    );
+  }
+
+  void _showPanoramicView() {
+    // Panggil binding secara manual sesuai pattern Anda
+    DetailProductBinding().dependencies();
+
+    // Navigasi dengan fade transition dan pass house model sebagai argument
+    Get.to(
+      () => const ProductDetailPage(),
+      // arguments: house, // Pass house model di sini
       transition: Transition.fade,
       duration: const Duration(milliseconds: 400),
       opaque: false,
@@ -127,6 +142,17 @@ class _VirtualtourPageState extends State<VirtualtourPage>
             ),
           ],
         ),
+
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () => print(""), // <-- call the function
+          backgroundColor: AppColors.primary,
+          label: Text(
+            "Jelajahi 360 Panoramic View",
+            style: TextStyle(color: Colors.white),
+          ),
+          icon: Icon(Icons.threesixty_rounded, color: Colors.white),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
       );
     });
   }
@@ -337,7 +363,7 @@ class _VirtualtourPageState extends State<VirtualtourPage>
       title: house.model,
       imageUrl: house.gambar.first,
       buttonText: 'view_details'.tr,
-      onButtonPressed: () => _showPromoModal(house),
+      onButtonPressed: () => _showProductModal(house),
       titleBackgroundColor: Colors.white.withOpacity(0.8),
       buttonColor: Colors.blueAccent,
       houseModel: house,

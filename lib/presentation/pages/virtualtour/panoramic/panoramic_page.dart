@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart' as cs;
 import 'package:get/get.dart';
 
-class SiteplanDetailPage extends GetView<DetailSiteplanController> {
-  const SiteplanDetailPage({Key? key}) : super(key: key);
+class PanoramicPage extends GetView<DetailSiteplanController> {
+  const PanoramicPage({Key? key}) : super(key: key);
 
   Future<File?> _localFile(String imageUrl) {
     final storage = Get.find<LocalStorageService>();
