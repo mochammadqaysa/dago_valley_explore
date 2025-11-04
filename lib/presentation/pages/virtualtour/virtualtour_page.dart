@@ -1,8 +1,10 @@
 import 'package:dago_valley_explore/app/config/app_colors.dart';
 import 'package:dago_valley_explore/data/models/house_model.dart';
 import 'package:dago_valley_explore/presentation/components/productcard/product_card.dart';
+import 'package:dago_valley_explore/presentation/controllers/panoramic/panoramic_binding.dart';
 import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/virtualtour/detailproduct/detail_product_binding.dart';
+import 'package:dago_valley_explore/presentation/pages/panoramic_page/panoramic_page.dart';
 import 'package:dago_valley_explore/presentation/pages/virtualtour/detail_product/detail_product_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -35,11 +37,11 @@ class _VirtualtourPageState extends State<VirtualtourPage>
 
   void _showPanoramicView() {
     // Panggil binding secara manual sesuai pattern Anda
-    DetailProductBinding().dependencies();
+    PanoramicBinding().dependencies();
 
     // Navigasi dengan fade transition dan pass house model sebagai argument
     Get.to(
-      () => const ProductDetailPage(),
+      () => const PanoramicPage(),
       // arguments: house, // Pass house model di sini
       transition: Transition.fade,
       duration: const Duration(milliseconds: 400),
@@ -144,7 +146,7 @@ class _VirtualtourPageState extends State<VirtualtourPage>
         ),
 
         floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => print(""), // <-- call the function
+          onPressed: () => _showPanoramicView(),
           backgroundColor: AppColors.primary,
           label: Text(
             "Jelajahi 360 Panoramic View",
