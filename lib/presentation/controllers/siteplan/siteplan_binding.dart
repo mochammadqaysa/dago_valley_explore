@@ -5,6 +5,6 @@ class SiteplanBinding extends Bindings {
   @override
   void dependencies() {
     // Get.lazyPut(() => FetchHeadlineUseCase(Get.find<ArticleRepositoryIml>()));
-    Get.lazyPut(() => SiteplanController(Get.find()));
+    Get.lazyPut<SiteplanController>(() => SiteplanController());
   }
 }
