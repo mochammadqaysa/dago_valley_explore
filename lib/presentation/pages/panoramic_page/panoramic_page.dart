@@ -20,7 +20,9 @@ class PanoramicPage extends GetView<PanoramicController> {
         child: Stack(
           children: [
             // Close button
-            _buildCloseButton(),
+            Positioned.fill(child: _buildPanoramaViewer()),
+            // Top-left close button
+            Positioned(top: 12, left: 12, child: _buildCloseButton()),
           ],
         ),
       ),
@@ -53,37 +55,6 @@ class PanoramicPage extends GetView<PanoramicController> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  // Carousel section
-  Widget _buildPanoramicView() {
-    return SafeArea(
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: 16,
-            right: 16,
-            top: 60,
-            bottom: 60,
-          ),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(Get.context!).size.width,
-              maxHeight: double.infinity,
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Container(
-                child: AspectRatio(
-                  aspectRatio: 17 / 10,
-                  child: _buildPanoramaViewer(),
-                ),
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }
@@ -167,111 +138,5 @@ class PanoramicPage extends GetView<PanoramicController> {
           ),
       ],
     );
-  }
-
-  // Thumbnail navigation
-  Widget _buildThumbnailNavigation() {
-    return SizedBox(
-      height: 180,
-      child: Obx(
-        () => ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: controller.promos.length,
-          itemBuilder: (context, index) {
-            final isActive = index == controller.currentIndex;
-            final promo = controller.promos[index];
-
-            return GestureDetector(
-              onTap: () => controller.goToPage(index),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                width: 120,
-                margin: const EdgeInsets.symmetric(horizontal: 5),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: isActive ? Colors.white : Colors.transparent,
-                    width: 3,
-                  ),
-                  boxShadow: isActive
-                      ? [
-                          BoxShadow(
-                            color: Colors.white.withOpacity(0.3),
-                            blurRadius: 10,
-                            spreadRadius: 2,
-                          ),
-                        ]
-                      : null,
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Opacity(
-                    opacity: isActive ? 1.0 : 0.5,
-                    child: _buildPromoImage(
-                      promo.imageUrl,
-                      fit: BoxFit.cover,
-                      height: 180,
-                      width: 120,
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  // Build promo image with controller logic
-  Widget _buildPromoImage(
-    String imageUrl, {
-    BoxFit fit = BoxFit.cover,
-    double? height,
-    double? width,
-  }) {
-    return Obx(() {
-      // Check loading state
-      if (controller.isImageLoading(imageUrl)) {
-        return Container(
-          width: width,
-          height: height,
-          color: Colors.grey[200],
-          child: const Center(child: CircularProgressIndicator()),
-        );
-      }
-
-      // Check if file exists in cache
-      final file = controller.getCachedImageFile(imageUrl);
-      if (controller.fileExists(file)) {
-        return Image.file(file!, fit: fit, width: width, height: height);
-      }
-
-      // Try to load as asset
-      if (imageUrl.isNotEmpty) {
-        return Image.asset(
-          imageUrl,
-          fit: fit,
-          width: width,
-          height: height,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              width: width,
-              height: height,
-              color: Colors.grey[200],
-              child: const Center(child: Icon(Icons.broken_image)),
-            );
-          },
-        );
-      }
-
-      // Fallback: no image
-      return Container(
-        width: width,
-        height: height,
-        color: Colors.grey[200],
-        child: const Center(child: Icon(Icons.image_not_supported)),
-      );
-    });
   }
 }
