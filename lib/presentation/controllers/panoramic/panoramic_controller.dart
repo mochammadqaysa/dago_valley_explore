@@ -12,6 +12,8 @@ class PanoramicController extends GetxController {
 
   final LocalStorageService _storage = Get.find<LocalStorageService>();
 
+  final currentPanoramaPath = 'assets/walk1/'.obs;
+
   // Panorama state
   final _panoId = 0.obs;
   int get panoId => _panoId.value;
