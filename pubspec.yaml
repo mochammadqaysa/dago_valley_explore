@@ -87,6 +87,7 @@ flutter:
     - assets/rumah/
     - assets/promo/
     - assets/event/
+    - assets/walkthrough/
     - assets/tahap_1/legalitas/
     - assets/tahap_1/perizinan/
     - assets/tahap_2/legalitas/

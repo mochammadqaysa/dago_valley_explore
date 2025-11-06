@@ -30,9 +30,9 @@ class PanoramicController extends GetxController {
 
   // Panorama assets
   final panoAssets = <Image>[
-    Image.asset('assets/panorama1.webp', fit: BoxFit.cover),
-    Image.asset('assets/panorama2.webp', fit: BoxFit.cover),
-    Image.asset('assets/panorama3.webp', fit: BoxFit.cover),
+    Image.asset('assets/walkthrough/panorama_1.jpg', fit: BoxFit.cover),
+    Image.asset('assets/walkthrough/panorama_2.jpg', fit: BoxFit.cover),
+    Image.asset('assets/walkthrough/panorama_3.jpg', fit: BoxFit.cover),
   ];
 
   // Get current panorama asset
