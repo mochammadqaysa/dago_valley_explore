@@ -1,5 +1,6 @@
 import 'package:dago_valley_explore/app/config/app_colors.dart';
 import 'package:dago_valley_explore/presentation/controllers/siteplan/siteplan_controller.dart';
+import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -11,6 +12,7 @@ class SiteplanPage extends GetView<SiteplanController> {
   @override
   Widget build(BuildContext context) {
     final isWide = MediaQuery.of(context).size.width > 700;
+    final themeController = Get.find<ThemeController>();
 
     return Scaffold(
       body: SafeArea(
@@ -24,13 +26,18 @@ class SiteplanPage extends GetView<SiteplanController> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  color: Colors.black,
-                  child: AspectRatio(
-                    aspectRatio: 17 / 10,
-                    child: _buildPanoramaViewer(),
-                  ),
-                ),
+                child: Obx(() {
+                  return Container(
+                    color: themeController.isDarkMode
+                        ? Colors.black
+                        : Colors.white,
+                    child: AspectRatio(
+                      aspectRatio: 17 / 10,
+                      // child: _buildPanoramaViewer(),
+                      child: ComingSoonSitePlan(isWide: true),
+                    ),
+                  );
+                }),
               ),
             ),
           ),
