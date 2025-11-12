@@ -273,7 +273,7 @@ class LocalStorageService extends GetxService {
 
     // Clear image cache
     try {
-      final directory = await getApplicationDocumentsDirectory();
+      final directory = await getApplicationSupportDirectory();
       final imageDir = Directory('${directory.path}/images');
       if (await imageDir.exists()) {
         await imageDir.delete(recursive: true);

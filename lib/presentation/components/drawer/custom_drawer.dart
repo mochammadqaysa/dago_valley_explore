@@ -1,13 +1,16 @@
 import 'dart:io';
 
 import 'package:dago_valley_explore/app/extensions/color.dart';
+import 'package:dago_valley_explore/app/services/local_storage.dart';
 import 'package:dago_valley_explore/app/types/tab_type.dart';
 import 'package:dago_valley_explore/presentation/components/drawer/bottom_user_info.dart';
 import 'package:dago_valley_explore/presentation/components/drawer/custom_list_tile.dart';
 import 'package:dago_valley_explore/presentation/components/drawer/header.dart';
 import 'package:dago_valley_explore/presentation/controllers/fullscreen/fullscreen_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/sidebar/sidebar_controller.dart';
+import 'package:dago_valley_explore/presentation/controllers/splash/splash_binding.dart';
 import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
+import 'package:dago_valley_explore/presentation/pages/splashscreen/splashscreen_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -125,6 +128,116 @@ class CustomDrawer extends GetView<SidebarController> {
     );
   }
 
+  void _showSyncConfirmation(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
+
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        backgroundColor: themeController.isDarkMode
+            ? HexColor("1C1C19")
+            : HexColor("EBEBEB"),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Icon
+              Icon(Icons.sync_rounded, size: 64, color: Colors.blue),
+              const SizedBox(height: 16),
+
+              // Title
+              Text(
+                'Konfirmasi Sinkronisasi',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: themeController.isDarkMode
+                      ? Colors.white
+                      : Colors.black,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Message
+              Text(
+                'Apakah Anda yakin ingin menghapus cache dan menyinkronkan ulang data? Aplikasi akan restart.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: themeController.isDarkMode
+                      ? Colors.white70
+                      : Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Buttons
+              Row(
+                children: [
+                  // Tombol Batal
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        Get.back(); // Tutup dialog
+                      },
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        side: BorderSide(
+                          color: themeController.isDarkMode
+                              ? Colors.white54
+                              : Colors.black54,
+                        ),
+                      ),
+                      child: Text(
+                        'Batal',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: themeController.isDarkMode
+                              ? Colors.white
+                              : Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+
+                  // Tombol Sinkronisasi
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _clearCacheAndRestart(); // ✅ Clear cache dan restart
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'Sinkronisasi',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: true, // Bisa ditutup dengan klik di luar dialog
+    );
+  }
+
   // ✅ Method untuk exit aplikasi
   void _exitApp() {
     if (Platform.isAndroid || Platform.isIOS) {
@@ -133,6 +246,99 @@ class CustomDrawer extends GetView<SidebarController> {
     } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       // Untuk Desktop
       exit(0);
+    }
+  }
+
+  // ✅ Method untuk clear cache dan restart ke splashscreen
+  Future<void> _clearCacheAndRestart() async {
+    try {
+      // Tutup dialog konfirmasi
+      Get.back();
+
+      // Tampilkan loading indicator
+      Get.dialog(
+        WillPopScope(
+          onWillPop: () async => false,
+          child: Container(
+            color: Colors.black54,
+            child: Center(
+              child: Card(
+                margin: const EdgeInsets.all(40),
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Menghapus cache...',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        barrierDismissible: false,
+      );
+
+      print('🔄 Starting cache clear and restart...');
+
+      // Clear cache dari LocalStorageService
+      final localStorageService = Get.find<LocalStorageService>();
+      await localStorageService.clearCache();
+
+      print('✅ Cache cleared successfully');
+
+      // Tunggu sebentar untuk memastikan cache terhapus
+      await Future.delayed(const Duration(milliseconds: 800));
+
+      // Hapus semua controller kecuali yang permanent (Theme & Locale)
+      print('🗑️ Deleting controllers...');
+      Get.delete<SidebarController>(force: true);
+
+      // Tutup loading indicator
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
+
+      print('🚀 Navigating to SplashScreen...');
+
+      // Clear semua route dan navigate ke SplashScreen
+      Get.offAll(
+        () => SplashScreen(),
+        binding: SplashBinding(),
+        transition: Transition.fadeIn,
+        duration: const Duration(milliseconds: 300),
+      );
+
+      print('✅ Navigation complete');
+    } catch (e, stackTrace) {
+      print('❌ Error clearing cache: $e');
+      print('Stack trace: $stackTrace');
+
+      // Tutup loading jika ada
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
+      }
+
+      // Tampilkan error
+      Get.snackbar(
+        'Error',
+        'Gagal menghapus cache: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: const Duration(seconds: 3),
+      );
     }
   }
 
@@ -184,6 +390,20 @@ class CustomDrawer extends GetView<SidebarController> {
                       )
                       .toList(),
                   const Spacer(),
+                  Visibility(
+                    visible: true,
+                    child: CustomListTile(
+                      isActive: false,
+                      isCollapsed: controller.isCollapsed,
+                      icon: Icons.sync,
+                      svgIcon: "assets/menu/sync_icon.svg",
+                      title: 'Sync Data',
+                      infoCount: 0,
+                      onTap: () {
+                        _showSyncConfirmation(context);
+                      },
+                    ),
+                  ),
                   Visibility(
                     visible: true,
                     child: CustomListTile(

@@ -71,14 +71,18 @@ class PanoramicPage extends GetView<PanoramicController> {
           onTap: controller.onPanoramaTap,
           hotspots: [
             Hotspot(
-              latitude: 0.0,
-              longitude: 0.0,
-              width: 90,
-              height: 80,
-              widget: _buildHotspotButton(
-                text: "Next",
-                icon: Icons.open_in_new,
-                onPressed: controller.goToNextPanorama,
+              latitude: -20,
+              longitude: 57.0,
+              width: 700,
+              height: 700,
+              widget: Column(
+                children: [
+                  Image.asset(
+                    "assets/gifs/arrow_up.gif",
+                    width: 900,
+                    height: 900,
+                  ),
+                ],
               ),
             ),
           ],
