@@ -19,10 +19,19 @@ class PanoramicPage extends GetView<PanoramicController> {
       body: SafeArea(
         child: Stack(
           children: [
-            // Close button
+            // Panorama viewer
             Positioned.fill(child: _buildPanoramaViewer()),
             // Top-left close button
             Positioned(top: 12, left: 12, child: _buildCloseButton()),
+            // Optional: Debug info
+            if (controller.showDebugInfo)
+              Positioned(bottom: 20, left: 20, child: _buildDebugInfo()),
+            // Optional: Navigation controls
+            Positioned(
+              bottom: 20,
+              right: 20,
+              child: _buildNavigationControls(),
+            ),
           ],
         ),
       ),
@@ -62,6 +71,19 @@ class PanoramicPage extends GetView<PanoramicController> {
   Widget _buildPanoramaViewer() {
     return Obx(() {
       try {
+        // Get hotspots dinamis berdasarkan panorama yang aktif
+        final hotspots = controller.currentHotspots
+            .map(
+              (hotspot) => Hotspot(
+                latitude: hotspot.latitude,
+                longitude: hotspot.longitude,
+                width: hotspot.width,
+                height: hotspot.height,
+                widget: _buildHotspotWidget(hotspot),
+              ),
+            )
+            .toList();
+
         return PanoramaViewer(
           animSpeed: 0.1,
           sensorControl: controller.isDesktop
@@ -69,23 +91,7 @@ class PanoramicPage extends GetView<PanoramicController> {
               : SensorControl.orientation,
           onViewChanged: controller.onViewChanged,
           onTap: controller.onPanoramaTap,
-          hotspots: [
-            Hotspot(
-              latitude: -20,
-              longitude: 57.0,
-              width: 700,
-              height: 700,
-              widget: Column(
-                children: [
-                  Image.asset(
-                    "assets/gifs/arrow_up.gif",
-                    width: 900,
-                    height: 900,
-                  ),
-                ],
-              ),
-            ),
-          ],
+          hotspots: hotspots,
           child: controller.currentPanoAsset,
         );
       } catch (e, st) {
@@ -93,6 +99,56 @@ class PanoramicPage extends GetView<PanoramicController> {
         return _buildPanoramaFallback();
       }
     });
+  }
+
+  // Build hotspot widget yang bisa diklik
+  Widget _buildHotspotWidget(PanoramaHotspot hotspot) {
+    return GestureDetector(
+      onTap: () {
+        // Navigate ke panorama target
+        controller.navigateToPanorama(hotspot.targetPanoramaId);
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Animated icon
+          Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.white.withOpacity(0.3),
+                  blurRadius: 20,
+                  spreadRadius: 5,
+                ),
+              ],
+            ),
+            child: Image.asset(hotspot.iconPath, width: 250, height: 250),
+          ),
+          const SizedBox(height: 8),
+          // Optional: Add label
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.6),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.3),
+                width: 1,
+              ),
+            ),
+            child: Text(
+              'Panorama ${hotspot.targetPanoramaId + 1}',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   // Build panorama fallback
@@ -113,33 +169,118 @@ class PanoramicPage extends GetView<PanoramicController> {
     );
   }
 
-  // Build hotspot button
-  Widget _buildHotspotButton({
-    String? text,
-    IconData? icon,
-    VoidCallback? onPressed,
-  }) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        TextButton(
-          style: ButtonStyle(
-            shape: WidgetStateProperty.all(const CircleBorder()),
-            backgroundColor: WidgetStateProperty.all(Colors.black38),
-            foregroundColor: WidgetStateProperty.all(Colors.white),
-          ),
-          onPressed: onPressed,
-          child: Icon(icon),
+  // Debug info widget
+  Widget _buildDebugInfo() {
+    return Obx(
+      () => Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.7),
+          borderRadius: BorderRadius.circular(8),
         ),
-        if (text != null)
-          Container(
-            padding: const EdgeInsets.all(4.0),
-            decoration: const BoxDecoration(
-              color: Colors.black38,
-              borderRadius: BorderRadius.all(Radius.circular(4)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Panorama: ${controller.panoId + 1}/${controller.panoramaData.length}',
+              style: const TextStyle(color: Colors.white, fontSize: 12),
             ),
-            child: Center(child: Text(text)),
+            Text(
+              'Lon: ${controller.lon.toStringAsFixed(1)}°',
+              style: const TextStyle(color: Colors.white, fontSize: 12),
+            ),
+            Text(
+              'Lat: ${controller.lat.toStringAsFixed(1)}°',
+              style: const TextStyle(color: Colors.white, fontSize: 12),
+            ),
+            Text(
+              'Hotspots: ${controller.currentHotspots.length}',
+              style: const TextStyle(color: Colors.white, fontSize: 12),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Navigation controls
+  Widget _buildNavigationControls() {
+    return Column(
+      children: [
+        // Toggle debug button
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: controller.toggleDebugInfo,
+            borderRadius: BorderRadius.circular(30),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.3),
+                  width: 1,
+                ),
+              ),
+              child: const Icon(
+                Icons.info_outline,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
           ),
+        ),
+        const SizedBox(height: 8),
+        // Previous panorama
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: controller.goToPreviousPanorama,
+            borderRadius: BorderRadius.circular(30),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.3),
+                  width: 1,
+                ),
+              ),
+              child: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        // Next panorama
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: controller.goToNextPanorama,
+            borderRadius: BorderRadius.circular(30),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.3),
+                  width: 1,
+                ),
+              ),
+              child: const Icon(
+                Icons.arrow_forward,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }

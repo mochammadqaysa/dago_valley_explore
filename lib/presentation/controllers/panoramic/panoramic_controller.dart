@@ -7,6 +7,38 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+// Model untuk Hotspot Data
+class PanoramaHotspot {
+  final double latitude;
+  final double longitude;
+  final int targetPanoramaId;
+  final String iconPath;
+  final double width;
+  final double height;
+
+  PanoramaHotspot({
+    required this.latitude,
+    required this.longitude,
+    required this.targetPanoramaId,
+    required this.iconPath,
+    this.width = 700,
+    this.height = 700,
+  });
+}
+
+// Model untuk Panorama Data
+class PanoramaData {
+  final int id;
+  final String imagePath;
+  final List<PanoramaHotspot> hotspots;
+
+  PanoramaData({
+    required this.id,
+    required this.imagePath,
+    required this.hotspots,
+  });
+}
+
 class PanoramicController extends GetxController {
   PanoramicController();
 
@@ -30,15 +62,75 @@ class PanoramicController extends GetxController {
   final _showDebugInfo = false.obs;
   bool get showDebugInfo => _showDebugInfo.value;
 
-  // Panorama assets
-  final panoAssets = <Image>[
-    Image.asset('assets/walkthrough/panorama_1.jpg', fit: BoxFit.cover),
-    Image.asset('assets/walkthrough/panorama_2.jpg', fit: BoxFit.cover),
-    Image.asset('assets/walkthrough/panorama_3.jpg', fit: BoxFit.cover),
+  // Data panorama dengan hotspot
+  final panoramaData = <PanoramaData>[
+    PanoramaData(
+      id: 0,
+      imagePath: 'assets/walkthrough/panorama_1.jpg',
+      hotspots: [
+        PanoramaHotspot(
+          latitude: -28,
+          longitude: 57.0,
+          targetPanoramaId: 1,
+          iconPath: 'assets/gifs/arrow_up.gif',
+        ),
+        PanoramaHotspot(
+          latitude: -25,
+          longitude: -130.0,
+          targetPanoramaId: 2,
+          iconPath: 'assets/gifs/arrow_up_left.gif',
+        ),
+      ],
+    ),
+    PanoramaData(
+      id: 1,
+      imagePath: 'assets/walkthrough/panorama_2.jpg',
+      hotspots: [
+        PanoramaHotspot(
+          latitude: -30,
+          longitude: 0.0,
+          targetPanoramaId: 0,
+          iconPath: 'assets/gifs/arrow_up.gif',
+        ),
+        PanoramaHotspot(
+          latitude: -20,
+          longitude: 90.0,
+          targetPanoramaId: 2,
+          iconPath: 'assets/gifs/arrow_up_left.gif',
+        ),
+      ],
+    ),
+    PanoramaData(
+      id: 2,
+      imagePath: 'assets/walkthrough/panorama_3.jpg',
+      hotspots: [
+        PanoramaHotspot(
+          latitude: -25,
+          longitude: -45.0,
+          targetPanoramaId: 0,
+          iconPath: 'assets/gifs/arrow_up.gif',
+        ),
+        PanoramaHotspot(
+          latitude: -28,
+          longitude: 135.0,
+          targetPanoramaId: 1,
+          iconPath: 'assets/gifs/arrow_up_left.gif',
+        ),
+      ],
+    ),
   ];
 
   // Get current panorama asset
-  Image get currentPanoAsset => panoAssets[_panoId.value % panoAssets.length];
+  Image get currentPanoAsset {
+    final currentData = panoramaData[_panoId.value % panoramaData.length];
+    return Image.asset(currentData.imagePath, fit: BoxFit.cover);
+  }
+
+  // Get current panorama hotspots
+  List<PanoramaHotspot> get currentHotspots {
+    final currentData = panoramaData[_panoId.value % panoramaData.length];
+    return currentData.hotspots;
+  }
 
   // Check if running on desktop
   bool get isDesktop {
@@ -102,9 +194,28 @@ class PanoramicController extends GetxController {
     }
   }
 
+  // Navigate to specific panorama (triggered by hotspot)
+  void navigateToPanorama(int targetPanoramaId) {
+    if (targetPanoramaId >= 0 && targetPanoramaId < panoramaData.length) {
+      _panoId.value = targetPanoramaId;
+      if (kDebugMode) {
+        print('Navigated to panorama: $targetPanoramaId');
+      }
+      // Optional: Add smooth transition effect
+      Get.snackbar(
+        'Navigation',
+        'Moved to Panorama ${targetPanoramaId + 1}',
+        snackPosition: SnackPosition.TOP,
+        duration: const Duration(seconds: 1),
+        backgroundColor: Colors.black54,
+        colorText: Colors.white,
+      );
+    }
+  }
+
   // Go to next panorama
   void goToNextPanorama() {
-    _panoId.value = (_panoId.value + 1) % panoAssets.length;
+    _panoId.value = (_panoId.value + 1) % panoramaData.length;
     if (kDebugMode) {
       print('Switched to panorama: ${_panoId.value}');
     }
@@ -112,7 +223,8 @@ class PanoramicController extends GetxController {
 
   // Go to previous panorama
   void goToPreviousPanorama() {
-    _panoId.value = (_panoId.value - 1 + panoAssets.length) % panoAssets.length;
+    _panoId.value =
+        (_panoId.value - 1 + panoramaData.length) % panoramaData.length;
     if (kDebugMode) {
       print('Switched to panorama: ${_panoId.value}');
     }
