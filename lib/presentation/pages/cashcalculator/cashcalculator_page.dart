@@ -314,99 +314,105 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                     // === Kolom Margin (%) ===
                                     Expanded(
                                       flex: 1,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Margin (%)',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: textColor,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 8),
-                                          SizedBox(
-                                            width: double
-                                                .infinity, // <-- supaya sama dengan kolom lain
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                border:
-                                                    const OutlineInputBorder(),
-                                                hintText: 'Margin %',
-                                                contentPadding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: 12,
-                                                      vertical: 12,
-                                                    ),
-                                              ),
-                                              keyboardType:
-                                                  const TextInputType.numberWithOptions(
-                                                    decimal: true,
-                                                  ),
+                                      child: Offstage(
+                                        offstage: true,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'Margin (%)',
                                               style: TextStyle(
+                                                fontWeight: FontWeight.bold,
                                                 color: textColor,
                                               ),
-                                              controller: TextEditingController(
-                                                text: marginPersen.toString(),
-                                              ),
-                                              onChanged: (v) {
-                                                double? val = double.tryParse(
-                                                  v,
-                                                );
-                                                if (val != null) {
-                                                  setState(
-                                                    () => marginPersen = val,
-                                                  );
-                                                }
-                                              },
                                             ),
-                                          ),
-                                        ],
+                                            const SizedBox(height: 8),
+                                            SizedBox(
+                                              width: double.infinity,
+                                              child: TextField(
+                                                decoration: InputDecoration(
+                                                  border: OutlineInputBorder(),
+                                                  hintText: 'Margin %',
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                        horizontal: 12,
+                                                        vertical: 12,
+                                                      ),
+                                                ),
+                                                keyboardType:
+                                                    TextInputType.numberWithOptions(
+                                                      decimal: true,
+                                                    ),
+                                                style: TextStyle(
+                                                  color: textColor,
+                                                ),
+                                                controller:
+                                                    TextEditingController(
+                                                      text: marginPersen
+                                                          .toString(),
+                                                    ),
+                                                onChanged: (v) {
+                                                  double? val = double.tryParse(
+                                                    v,
+                                                  );
+                                                  if (val != null) {
+                                                    setState(
+                                                      () => marginPersen = val,
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
 
                                     const SizedBox(width: 12),
 
-                                    // === Kolom Margin KPR ===
+                                    // === Kolom Margin KPR  ===
                                     Expanded(
                                       flex: 1,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'mortgage_margin'.tr,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: textColor,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Container(
-                                            width:
-                                                double.infinity, // <-- penting
-                                            padding: const EdgeInsets.all(12),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
-                                              color: themeController.isDarkMode
-                                                  ? Colors.grey[800]
-                                                  : Colors.grey[200],
-                                            ),
-                                            child: Text(
-                                              selectedModel == null ||
-                                                      result == null
-                                                  ? 'choose_house_model_first'
-                                                        .tr
-                                                  : 'Rp ${_formatCurrency(result.marginKpr.round())}',
+                                      child: Offstage(
+                                        offstage: true,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              'mortgage_margin'.tr,
                                               style: TextStyle(
-                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
                                                 color: textColor,
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                            const SizedBox(height: 8),
+                                            Container(
+                                              width: double.infinity,
+                                              padding: const EdgeInsets.all(12),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                                color:
+                                                    themeController.isDarkMode
+                                                    ? Colors.grey[800]
+                                                    : Colors.grey[200],
+                                              ),
+                                              child: Text(
+                                                selectedModel == null ||
+                                                        result == null
+                                                    ? 'choose_house_model_first'
+                                                          .tr
+                                                    : 'Rp ${_formatCurrency(result.marginKpr.round())}',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: textColor,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -819,24 +825,24 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                       ),
                     ),
                   ),
-                  DataColumn(
-                    label: Text(
-                      'Pokok',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  DataColumn(
-                    label: Text(
-                      'Margin',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                  // DataColumn(
+                  //   label: Text(
+                  //     'Pokok',
+                  //     style: TextStyle(
+                  //       color: Colors.grey,
+                  //       fontWeight: FontWeight.bold,
+                  //     ),
+                  //   ),
+                  // ),
+                  // DataColumn(
+                  //   label: Text(
+                  //     'Margin',
+                  //     style: TextStyle(
+                  //       color: Colors.grey,
+                  //       fontWeight: FontWeight.bold,
+                  //     ),
+                  //   ),
+                  // ),
                   DataColumn(
                     label: Text(
                       'Sisa Hutang',
@@ -863,18 +869,18 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                               style: TextStyle(color: Colors.grey),
                             ),
                           ),
-                          DataCell(
-                            Text(
-                              'Rp ${_formatCurrency((r['pokok'] as double).round())}',
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                          DataCell(
-                            Text(
-                              'Rp ${_formatCurrency((r['margin'] as double).round())}',
-                              style: TextStyle(color: Colors.grey),
-                            ),
-                          ),
+                          // DataCell(
+                          //   Text(
+                          //     'Rp ${_formatCurrency((r['pokok'] as double).round())}',
+                          //     style: TextStyle(color: Colors.grey),
+                          //   ),
+                          // ),
+                          // DataCell(
+                          //   Text(
+                          //     'Rp ${_formatCurrency((r['margin'] as double).round())}',
+                          //     style: TextStyle(color: Colors.grey),
+                          //   ),
+                          // ),
                           DataCell(
                             Text(
                               'Rp ${_formatCurrency((r['sisaHutang'] as double).round())}',
