@@ -69,13 +69,13 @@ class PanoramicController extends GetxController {
       imagePath: 'assets/walkthrough/panorama_1.jpg',
       hotspots: [
         PanoramaHotspot(
-          latitude: -28,
+          latitude: -12,
           longitude: 57.0,
           targetPanoramaId: 1,
           iconPath: 'assets/gifs/arrow_up.gif',
         ),
         PanoramaHotspot(
-          latitude: -25,
+          latitude: -8,
           longitude: -130.0,
           targetPanoramaId: 2,
           iconPath: 'assets/gifs/arrow_up_left.gif',
@@ -87,16 +87,16 @@ class PanoramicController extends GetxController {
       imagePath: 'assets/walkthrough/panorama_2.jpg',
       hotspots: [
         PanoramaHotspot(
-          latitude: -30,
-          longitude: 0.0,
+          latitude: -10,
+          longitude: -103.0,
           targetPanoramaId: 0,
           iconPath: 'assets/gifs/arrow_up.gif',
         ),
         PanoramaHotspot(
           latitude: -20,
-          longitude: 90.0,
+          longitude: 75.0,
           targetPanoramaId: 2,
-          iconPath: 'assets/gifs/arrow_up_left.gif',
+          iconPath: 'assets/gifs/arrow_up_2.gif',
         ),
       ],
     ),
@@ -105,16 +105,34 @@ class PanoramicController extends GetxController {
       imagePath: 'assets/walkthrough/panorama_3.jpg',
       hotspots: [
         PanoramaHotspot(
-          latitude: -25,
-          longitude: -45.0,
+          latitude: -10,
+          longitude: -75.0,
           targetPanoramaId: 0,
           iconPath: 'assets/gifs/arrow_up.gif',
         ),
         PanoramaHotspot(
-          latitude: -28,
-          longitude: 135.0,
+          latitude: -5,
+          longitude: 25.0,
           targetPanoramaId: 1,
-          iconPath: 'assets/gifs/arrow_up_left.gif',
+          iconPath: 'assets/gifs/arrow_up_right.gif',
+        ),
+      ],
+    ),
+    PanoramaData(
+      id: 3,
+      imagePath: 'assets/walkthrough/panorama_4.jpg',
+      hotspots: [
+        PanoramaHotspot(
+          latitude: -10,
+          longitude: -75.0,
+          targetPanoramaId: 0,
+          iconPath: 'assets/gifs/arrow_up.gif',
+        ),
+        PanoramaHotspot(
+          latitude: -5,
+          longitude: 25.0,
+          targetPanoramaId: 1,
+          iconPath: 'assets/gifs/arrow_up_right.gif',
         ),
       ],
     ),

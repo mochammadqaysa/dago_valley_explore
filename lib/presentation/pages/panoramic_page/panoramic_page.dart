@@ -113,16 +113,16 @@ class PanoramicPage extends GetView<PanoramicController> {
         children: [
           // Animated icon
           Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.white.withOpacity(0.3),
-                  blurRadius: 20,
-                  spreadRadius: 5,
-                ),
-              ],
-            ),
+            // decoration: BoxDecoration(
+            //   shape: BoxShape.circle,
+            //   boxShadow: [
+            //     BoxShadow(
+            //       color: Colors.white.withOpacity(0.3),
+            //       blurRadius: 20,
+            //       spreadRadius: 5,
+            //     ),
+            //   ],
+            // ),
             child: Image.asset(hotspot.iconPath, width: 250, height: 250),
           ),
           const SizedBox(height: 8),
