@@ -104,15 +104,15 @@ class PanoramicController extends GetxController {
       imagePath: 'assets/walkthrough/panorama_7.jpg',
       hotspots: [
         PanoramaHotspot(
-          latitude: -17,
-          longitude: -5.0,
+          latitude: -23,
+          longitude: 158.0,
           toPanorama: 'panorama_8.jpg',
           iconPath: 'assets/gifs/arrow_up_2.gif',
-          label: 'Back to Start',
+          label: 'Go to Panorama 8',
         ),
         PanoramaHotspot(
-          latitude: -10,
-          longitude: -74.0,
+          latitude: -23,
+          longitude: -10.0,
           toPanorama: 'panorama_6.jpg',
           iconPath: 'assets/gifs/arrow_up_2.gif',
           label: 'Go to Panorama 6',
@@ -213,7 +213,7 @@ class PanoramicController extends GetxController {
           longitude: -5.0,
           toPanorama: 'panorama_7.jpg',
           iconPath: 'assets/gifs/arrow_up_2.gif',
-          label: 'Back to Start',
+          label: 'Go to Panorama 7',
         ),
         PanoramaHotspot(
           latitude: -10,
@@ -221,6 +221,27 @@ class PanoramicController extends GetxController {
           toPanorama: 'panorama_5.jpg',
           iconPath: 'assets/gifs/arrow_up_2.gif',
           label: 'Go to Panorama 5',
+        ),
+      ],
+    ),
+    PanoramaData(
+      id: 6,
+      fileName: 'panorama_7.jpg',
+      imagePath: 'assets/walkthrough/panorama_7.jpg',
+      hotspots: [
+        PanoramaHotspot(
+          latitude: -23,
+          longitude: 158.0,
+          toPanorama: 'panorama_8.jpg',
+          iconPath: 'assets/gifs/arrow_up_2.gif',
+          label: 'Go to Panorama 8',
+        ),
+        PanoramaHotspot(
+          latitude: -23,
+          longitude: -10.0,
+          toPanorama: 'panorama_6.jpg',
+          iconPath: 'assets/gifs/arrow_up_2.gif',
+          label: 'Go to Panorama 6',
         ),
       ],
     ),
