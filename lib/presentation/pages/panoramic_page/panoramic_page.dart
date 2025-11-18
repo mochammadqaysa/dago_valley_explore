@@ -104,48 +104,51 @@ class PanoramicPage extends GetView<PanoramicController> {
   // Build hotspot widget yang bisa diklik
   Widget _buildHotspotWidget(PanoramaHotspot hotspot) {
     return GestureDetector(
-      onTap: () {
-        // Navigate ke panorama target
-        controller.navigateToPanorama(hotspot.targetPanoramaId);
+      onTap: () async {
+        // Handle hotspot tap (bisa navigasi atau buka link)
+        await controller.handleHotspotTap(hotspot);
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Animated icon
           Container(
-            // decoration: BoxDecoration(
-            //   shape: BoxShape.circle,
-            //   boxShadow: [
-            //     BoxShadow(
-            //       color: Colors.white.withOpacity(0.3),
-            //       blurRadius: 20,
-            //       spreadRadius: 5,
-            //     ),
-            //   ],
-            // ),
             child: Image.asset(hotspot.iconPath, width: 250, height: 250),
           ),
           const SizedBox(height: 8),
-          // Optional: Add label
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.6),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: Colors.white.withOpacity(0.3),
-                width: 1,
+          // Label
+          if (hotspot.label != null)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.6),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: Colors.white.withOpacity(0.3),
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (hotspot.isExternalLink)
+                    const Icon(
+                      Icons.open_in_new,
+                      color: Colors.white,
+                      size: 14,
+                    ),
+                  if (hotspot.isExternalLink) const SizedBox(width: 4),
+                  Text(
+                    hotspot.label!,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ),
-            child: Text(
-              'Panorama ${hotspot.targetPanoramaId + 1}',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -182,7 +185,11 @@ class PanoramicPage extends GetView<PanoramicController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Panorama: ${controller.panoId + 1}/${controller.panoramaData.length}',
+              'Panorama: ${controller.panoramaData[controller.panoId].fileName}',
+              style: const TextStyle(color: Colors.white, fontSize: 12),
+            ),
+            Text(
+              'ID: ${controller.panoId + 1}/${controller.panoramaData.length}',
               style: const TextStyle(color: Colors.white, fontSize: 12),
             ),
             Text(
