@@ -7,13 +7,24 @@ import 'package:get/get.dart';
 class SplashBinding extends Bindings {
   @override
   void dependencies() {
-    // Repository (jika belum ada di DependencyCreator)
-    Get.lazyPut<HouseRepository>(() => HouseRepositoryImpl());
+    print('📦 Initializing SplashBinding dependencies...');
+
+    // ✅ Gunakan fenix: true untuk auto-recreate jika sudah dihapus
+    // Repository
+    Get.lazyPut<HouseRepository>(() => HouseRepositoryImpl(), fenix: true);
 
     // UseCase
-    Get.lazyPut(() => FetchHousingDataUseCase(Get.find<HouseRepository>()));
+    Get.lazyPut(
+      () => FetchHousingDataUseCase(Get.find<HouseRepository>()),
+      fenix: true,
+    );
 
     // Controller
-    Get.lazyPut(() => SplashController(Get.find<FetchHousingDataUseCase>()));
+    Get.lazyPut(
+      () => SplashController(Get.find<FetchHousingDataUseCase>()),
+      fenix: true,
+    );
+
+    print('✅ SplashBinding dependencies initialized');
   }
 }

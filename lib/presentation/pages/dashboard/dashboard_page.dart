@@ -1,8 +1,10 @@
 import 'package:dago_valley_explore/app/config/app_colors.dart';
+import 'package:dago_valley_explore/app/services/local_storage.dart';
 import 'package:dago_valley_explore/app/types/tab_type.dart';
 import 'package:dago_valley_explore/presentation/components/liquidglass/liquid_glass_button.dart';
 import 'package:dago_valley_explore/presentation/components/liquidglass/liquid_glass_container.dart';
 import 'package:dago_valley_explore/presentation/controllers/event/event_binding.dart';
+import 'package:dago_valley_explore/presentation/controllers/locale/locale_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/promo/promo_binding.dart';
 import 'package:dago_valley_explore/presentation/controllers/qrcode/qrcode_binding.dart';
 import 'package:dago_valley_explore/presentation/controllers/sidebar/sidebar_controller.dart';
@@ -74,6 +76,8 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
+    final localeController = Get.find<LocaleController>();
+    final _storage = Get.find<LocalStorageService>();
     return Obx(() {
       return Scaffold(
         // backgroundColor: HexColor("121212"),
@@ -118,7 +122,11 @@ class _DashboardPageState extends State<DashboardPage> {
                               ),
                               SizedBox(height: 8),
                               Text(
-                                "welcome_desc".tr,
+                                localeController.isEnglish
+                                    ? _storage.housings?.welcomeTextEn ??
+                                          "welcome_desc"
+                                    : _storage.housings?.welcomeText ??
+                                          "welcome_desc",
                                 style: TextStyle(
                                   color: AppColors.white,
                                   fontSize: 16,
@@ -194,7 +202,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       SizedBox(width: 24),
                       Expanded(
                         child: SitePlanCard(
-                          title: 'event'.tr,
+                          title: 'documentation'.tr,
                           imageUrl: 'assets/event.jpg',
                           buttonText: 'check_availability'.tr,
                           onButtonPressed: _showEventModal,

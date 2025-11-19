@@ -3,12 +3,15 @@ import 'dart:io';
 import 'package:dago_valley_explore/app/extensions/color.dart';
 import 'package:dago_valley_explore/app/services/local_storage.dart';
 import 'package:dago_valley_explore/app/types/tab_type.dart';
+import 'package:dago_valley_explore/domain/repositories/house_repository.dart';
+import 'package:dago_valley_explore/domain/usecases/fetch_housing_use_case.dart';
 import 'package:dago_valley_explore/presentation/components/drawer/bottom_user_info.dart';
 import 'package:dago_valley_explore/presentation/components/drawer/custom_list_tile.dart';
 import 'package:dago_valley_explore/presentation/components/drawer/header.dart';
 import 'package:dago_valley_explore/presentation/controllers/fullscreen/fullscreen_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/sidebar/sidebar_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/splash/splash_binding.dart';
+import 'package:dago_valley_explore/presentation/controllers/splash/splash_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
 import 'package:dago_valley_explore/presentation/pages/splashscreen/splashscreen_page.dart';
 import 'package:flutter/material.dart';
@@ -250,6 +253,7 @@ class CustomDrawer extends GetView<SidebarController> {
   }
 
   // ✅ Method untuk clear cache dan restart ke splashscreen
+  // ✅ Method untuk clear cache dan restart ke splashscreen
   Future<void> _clearCacheAndRestart() async {
     try {
       // Tutup dialog konfirmasi
@@ -274,7 +278,7 @@ class CustomDrawer extends GetView<SidebarController> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'Menghapus cache...',
+                        'Menghapus cache dan menyinkronkan...',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
@@ -299,11 +303,41 @@ class CustomDrawer extends GetView<SidebarController> {
       print('✅ Cache cleared successfully');
 
       // Tunggu sebentar untuk memastikan cache terhapus
-      await Future.delayed(const Duration(milliseconds: 800));
+      await Future.delayed(const Duration(milliseconds: 500));
 
-      // Hapus semua controller kecuali yang permanent (Theme & Locale)
-      print('🗑️ Deleting controllers...');
-      Get.delete<SidebarController>(force: true);
+      // ✅ PERBAIKAN: Hapus SEMUA controller yang tidak permanent
+      print('🗑️ Deleting all controllers...');
+
+      // Hapus SidebarController
+      if (Get.isRegistered<SidebarController>()) {
+        Get.delete<SidebarController>(force: true);
+        print('✅ SidebarController deleted');
+      }
+
+      // ✅ PENTING: Hapus SplashController juga
+      if (Get.isRegistered<SplashController>()) {
+        Get.delete<SplashController>(force: true);
+        print('✅ SplashController deleted');
+      }
+
+      // Hapus dependency lain yang mungkin ter-register
+      if (Get.isRegistered<FetchHousingDataUseCase>()) {
+        Get.delete<FetchHousingDataUseCase>(force: true);
+        print('✅ FetchHousingDataUseCase deleted');
+      }
+
+      if (Get.isRegistered<HouseRepository>()) {
+        Get.delete<HouseRepository>(force: true);
+        print('✅ HouseRepository deleted');
+      }
+
+      // Tutup drawer jika terbuka
+      // if (Get.isDrawerOpen ?? false) {
+      //   Get.back();
+      // }
+
+      // Tunggu sebentar
+      await Future.delayed(const Duration(milliseconds: 300));
 
       // Tutup loading indicator
       if (Get.isDialogOpen ?? false) {
@@ -312,10 +346,10 @@ class CustomDrawer extends GetView<SidebarController> {
 
       print('🚀 Navigating to SplashScreen...');
 
-      // Clear semua route dan navigate ke SplashScreen
-      Get.offAll(
+      // ✅ PERBAIKAN: Reset semua dan navigate dengan binding baru
+      await Get.offAll(
         () => SplashScreen(),
-        binding: SplashBinding(),
+        binding: SplashBinding(), // Ini akan create instance baru
         transition: Transition.fadeIn,
         duration: const Duration(milliseconds: 300),
       );

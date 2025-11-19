@@ -11,6 +11,8 @@ class HousingModel extends Housing {
     this.name,
     this.alamat,
     this.logo,
+    this.welcomeText,
+    this.welcomeTextEn,
     this.createdAt,
     this.updatedAt,
     this.promos,
@@ -23,6 +25,8 @@ class HousingModel extends Housing {
          name: name,
          alamat: alamat,
          logo: logo,
+         welcomeText: welcomeText,
+         welcomeTextEn: welcomeTextEn,
          createdAt: createdAt,
          updatedAt: updatedAt,
          promos: promos,
@@ -36,6 +40,8 @@ class HousingModel extends Housing {
   final String? name;
   final String? alamat;
   final String? logo;
+  final String? welcomeText;
+  final String? welcomeTextEn;
   final String? createdAt;
   final String? updatedAt;
   final List<PromoModel>? promos;
@@ -49,6 +55,8 @@ class HousingModel extends Housing {
     name: json['name'] as String?,
     alamat: json['alamat'] as String?,
     logo: json['logo'] as String?,
+    welcomeText: json['welcome_text'] as String?,
+    welcomeTextEn: json['welcome_text_en'] as String?,
     createdAt: json['created_at'] as String?,
     updatedAt: json['updated_at'] as String?,
     promos: (json['promos'] as List<dynamic>?)
@@ -67,4 +75,20 @@ class HousingModel extends Housing {
         ?.map((e) => KprCalculatorModel.fromJson(e as Map<String, dynamic>))
         .toList(),
   );
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'alamat': alamat,
+    'logo': logo,
+    'welcome_text': welcomeText,
+    'welcome_text_en': welcomeTextEn,
+    'created_at': createdAt,
+    'updated_at': updatedAt,
+    'promos': promos?.map((e) => e.toJson()).toList(),
+    'events': events?.map((e) => e.toJson()).toList(),
+    'brochures': brochures?.map((e) => e.toJson()).toList(),
+    'siteplans': siteplans?.map((e) => e.toJson()).toList(),
+    'kpr_calculators': kprCalculators?.map((e) => e.toJson()).toList(),
+  };
 }

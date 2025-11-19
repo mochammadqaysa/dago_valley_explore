@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:dago_valley_explore/domain/entities/brochure.dart';
 import 'package:dago_valley_explore/domain/entities/event.dart';
+import 'package:dago_valley_explore/domain/entities/housing.dart';
 import 'package:dago_valley_explore/domain/entities/kpr_calculator.dart';
 import 'package:dago_valley_explore/domain/entities/promo.dart';
 import 'package:dago_valley_explore/domain/entities/site_plan.dart';
@@ -14,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 enum _Key {
   user,
   promos,
+  housing,
   events,
   siteplans,
   kprCalculators,
@@ -46,6 +48,31 @@ class LocalStorageService extends GetxService {
       );
     } else {
       _sharedPreferences?.remove(_Key.user.toString());
+    }
+  }
+
+  // ========== Housing Management ==========
+  Housing? get housings {
+    final rawJson = _sharedPreferences?.getString(_Key.housing.toString());
+    if (rawJson == null) return null;
+
+    try {
+      Map<String, dynamic> list = jsonDecode(rawJson);
+      return Housing.fromJson(list);
+    } catch (e) {
+      print('Error parsing housings: $e');
+      return null;
+    }
+  }
+
+  set housings(Housing? value) {
+    if (value != null) {
+      _sharedPreferences?.setString(
+        _Key.housing.toString(),
+        json.encode(value.toJson()),
+      );
+    } else {
+      _sharedPreferences?.remove(_Key.housing.toString());
     }
   }
 

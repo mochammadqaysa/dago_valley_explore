@@ -1,3 +1,4 @@
+import 'package:dago_valley_explore/app/services/local_storage.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import '../../../domain/entities/article.dart';
@@ -13,7 +14,16 @@ class DashboardController extends GetxController {
   var _isLoadMore = false;
   var _paging = Rx<Paging?>(null);
 
+  final LocalStorageService _storage = Get.find<LocalStorageService>();
   var articles = RxList<Article>([]);
+
+  String get welcomeText {
+    return _storage.housings?.welcomeText ?? "welcome_desc".tr;
+  }
+
+  String get welcomeTextEn {
+    return _storage.housings?.welcomeTextEn ?? "welcome_desc".tr;
+  }
 
   fetchData() async {
     final newPaging = await _fetchHeadlineUseCase.execute(

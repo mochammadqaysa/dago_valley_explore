@@ -180,16 +180,6 @@ class SiteplanDetailPage extends GetView<DetailSiteplanController> {
                                                     .imageUrl,
                                                 fit: BoxFit.contain,
                                               ),
-                                              // Gradient overlay (kosongkan atau isi jika perlu)
-                                              Container(
-                                                decoration: const BoxDecoration(
-                                                  gradient: LinearGradient(
-                                                    begin: Alignment.topCenter,
-                                                    end: Alignment.bottomCenter,
-                                                    colors: [],
-                                                  ),
-                                                ),
-                                              ),
                                             ],
                                           ),
                                         ),

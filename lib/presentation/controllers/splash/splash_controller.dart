@@ -22,11 +22,19 @@ class SplashController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    print('🎬 SplashController initialized');
     initializeApp();
+  }
+
+  @override
+  void onClose() {
+    print('🛑 SplashController closed');
+    super.onClose();
   }
 
   Future<void> initializeApp() async {
     try {
+      print('🚀 Starting app initialization...');
       isLoading.value = true;
       errorMessage.value = '';
 
@@ -37,10 +45,13 @@ class SplashController extends GetxController {
       ]);
 
       await Future.delayed(const Duration(milliseconds: 500));
+
+      print('✅ Initialization complete, navigating to HomePage');
       Get.off(() => HomePage(), binding: SidebarBinding());
-    } catch (e) {
+    } catch (e, stackTrace) {
       print('❌ Error initializing app: $e');
-      errorMessage.value = 'Terjadi kesalahan: $e';
+      print('Stack trace: $stackTrace');
+      errorMessage.value = 'Terjadi kesalahan: ${e.toString()}';
     } finally {
       isLoading.value = false;
     }
@@ -71,6 +82,7 @@ class SplashController extends GetxController {
         final housing = response.housing.first;
 
         print('🌐 API data check:');
+        print('- Housing: ${housing ?? 0}');
         print('- Promos: ${housing.promos?.length ?? 0}');
         print('- Events: ${housing.events?.length ?? 0}');
         print('- KPR Calculators: ${housing.kprCalculators?.length ?? 0}');
@@ -82,6 +94,10 @@ class SplashController extends GetxController {
         if (needsUpdate) {
           loadingMessage.value = 'Menyimpan data baru...';
           print('🔄 Updating local data...');
+
+          // Simpan housing
+          _storage.housings = housing;
+          print('✅ Saved housing');
 
           // Simpan promo
           if (housing.promos != null && housing.promos!.isNotEmpty) {
@@ -261,6 +277,7 @@ class SplashController extends GetxController {
   }
 
   Future<void> retry() async {
+    print('🔄 Retrying initialization...');
     await initializeApp();
   }
 }

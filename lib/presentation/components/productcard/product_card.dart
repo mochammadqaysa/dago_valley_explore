@@ -89,6 +89,7 @@ class ProductCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
+                          color: Colors.black,
                         ),
                       ),
                       Text(
@@ -96,6 +97,7 @@ class ProductCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
+                          color: Colors.black,
                         ),
                       ),
                     ],

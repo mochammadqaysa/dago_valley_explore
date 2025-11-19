@@ -145,16 +145,19 @@ class _VirtualtourPageState extends State<VirtualtourPage>
           ],
         ),
 
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () => _showPanoramicView(),
-          backgroundColor: AppColors.primary,
-          label: Text(
-            "Jelajahi 360 Panoramic View",
-            style: TextStyle(color: Colors.white),
+        floatingActionButton: Container(
+          margin: const EdgeInsets.only(top: 15, right: 650),
+          child: FloatingActionButton.extended(
+            onPressed: () => _showPanoramicView(),
+            backgroundColor: AppColors.primary,
+            label: Text(
+              "Jelajahi 360 Panoramic View",
+              style: TextStyle(color: Colors.white),
+            ),
+            icon: Icon(Icons.threesixty_rounded, color: Colors.white),
           ),
-          icon: Icon(Icons.threesixty_rounded, color: Colors.white),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
       );
     });
   }
