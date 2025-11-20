@@ -1,3 +1,4 @@
+import 'package:dago_valley_explore/domain/entities/event_media.dart';
 import 'package:dago_valley_explore/domain/entities/promo_translation.dart';
 
 class Event {
@@ -10,6 +11,8 @@ class Event {
   final String tag1;
   final String tag2;
   final PromoTranslation en;
+  final List<EventMedia> images;
+  final List<EventMedia> videos;
 
   Event({
     required this.id,
@@ -21,6 +24,8 @@ class Event {
     required this.tag1,
     required this.tag2,
     required this.en,
+    required this.images,
+    required this.videos,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) => Event(
@@ -33,6 +38,12 @@ class Event {
     tag1: json["tag1"],
     tag2: json["tag2"],
     en: PromoTranslation.fromJson(json["en"]),
+    images: List<EventMedia>.from(
+      json["images"].map((x) => EventMedia.fromJson(x)),
+    ),
+    videos: List<EventMedia>.from(
+      json["videos"].map((x) => EventMedia.fromJson(x)),
+    ),
   );
 
   Map<String, dynamic> toJson() => {
@@ -45,5 +56,7 @@ class Event {
     "tag1": tag1,
     "tag2": tag2,
     "en": en.toJson(),
+    "images": List<dynamic>.from(images.map((x) => x.toJson())),
+    "videos": List<dynamic>.from(videos.map((x) => x.toJson())),
   };
 }

@@ -215,27 +215,36 @@ class ProductDetailPage extends GetView<DetailProductController> {
               ),
             ),
           if (controller.videos.isNotEmpty)
-            Container(
-              margin: const EdgeInsets.only(left: 16),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.videocam, color: Colors.white, size: 16),
-                  const SizedBox(width: 6),
-                  Text(
-                    '${controller.videos.length}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+            InkWell(
+              onTap: () {
+                final firstVideoIndex = controller.images.length;
+                controller.carouselController.animateToPage(firstVideoIndex);
+              },
+              child: Container(
+                margin: const EdgeInsets.only(left: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.8),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.videocam, color: Colors.white, size: 16),
+                    const SizedBox(width: 6),
+                    Text(
+                      '${controller.videos.length}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
         ],
@@ -261,6 +270,8 @@ class ProductDetailPage extends GetView<DetailProductController> {
             enlargeCenterPage: false,
             autoPlay: false,
             enableInfiniteScroll: false,
+            scrollPhysics: const PageScrollPhysics(),
+            pageSnapping: true,
             onPageChanged: (index, reason) {
               controller.setCurrentIndex(index);
               scrollThumbnailToIndex(index);

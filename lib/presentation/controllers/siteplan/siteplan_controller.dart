@@ -6,9 +6,52 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+// ✅ Enum untuk tab types
+enum SiteplanTabType {
+  map,
+  fasum,
+  timelineProgress,
+  siteplanStatus,
+  kawasan360;
+
+  String get label {
+    switch (this) {
+      case SiteplanTabType.map:
+        return 'Map';
+      case SiteplanTabType.fasum:
+        return 'Fasum';
+      case SiteplanTabType.timelineProgress:
+        return 'Timeline Progress';
+      case SiteplanTabType.siteplanStatus:
+        return 'Siteplan Status';
+      case SiteplanTabType.kawasan360:
+        return 'Kawasan 360';
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case SiteplanTabType.map:
+        return Icons.map;
+      case SiteplanTabType.fasum:
+        return Icons.location_city;
+      case SiteplanTabType.timelineProgress:
+        return Icons.timeline;
+      case SiteplanTabType.siteplanStatus:
+        return Icons.assignment;
+      case SiteplanTabType.kawasan360:
+        return Icons.threesixty;
+    }
+  }
+}
+
 class SiteplanController extends GetxController {
   SiteplanController();
   final LocalStorageService _storage = Get.find<LocalStorageService>();
+
+  // ✅ Tab state
+  final _selectedTab = Rx<SiteplanTabType>(SiteplanTabType.map);
+  SiteplanTabType get selectedTab => _selectedTab.value;
 
   // Panorama state
   final _panoId = 0.obs;
@@ -51,6 +94,14 @@ class SiteplanController extends GetxController {
   void _initializePanorama() {
     if (kDebugMode) {
       print('Initializing Siteplan Panorama');
+    }
+  }
+
+  // ✅ Change selected tab
+  void setSelectedTab(SiteplanTabType tab) {
+    _selectedTab.value = tab;
+    if (kDebugMode) {
+      print('Tab changed to: ${tab.label}');
     }
   }
 
@@ -123,7 +174,6 @@ class SiteplanController extends GetxController {
 
   // Show siteplan modal
   void showSitePlanModal([String? url]) {
-    // If caller didn't pass URL, try get from local storage
     if (url == null || url.isEmpty) {
       url = getBrochureUrl();
     }
@@ -140,12 +190,10 @@ class SiteplanController extends GetxController {
       return;
     }
 
-    // Debug log
     if (kDebugMode) {
       print('Opening Siteplan detail modal with url: $url');
     }
 
-    // Navigate to SiteplanDetailPage
     Get.to(
       () => const SiteplanDetailPage(),
       binding: DetailSiteplanBinding(),
@@ -159,8 +207,6 @@ class SiteplanController extends GetxController {
 
   // Get sensor control based on platform
   dynamic get sensorControl {
-    // Import panorama_viewer package to get SensorControl enum
-    // For now, return string that will be handled in view
     return isDesktop ? 'none' : 'orientation';
   }
 }

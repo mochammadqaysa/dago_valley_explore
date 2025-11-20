@@ -1,3 +1,4 @@
+import 'package:dago_valley_explore/data/models/event_media_model.dart';
 import 'package:dago_valley_explore/data/models/promo_translation_model.dart';
 import 'package:dago_valley_explore/domain/entities/event.dart';
 
@@ -12,6 +13,8 @@ class EventModel extends Event {
     required this.tag1,
     required this.tag2,
     required this.en,
+    required this.images,
+    required this.videos,
   }) : super(
          id: id,
          housingId: housingId,
@@ -22,6 +25,8 @@ class EventModel extends Event {
          tag1: tag1,
          tag2: tag2,
          en: en,
+         images: images,
+         videos: videos,
        );
 
   final int id;
@@ -33,6 +38,8 @@ class EventModel extends Event {
   final String tag1;
   final String tag2;
   final PromoTranslationModel en;
+  final List<EventMediaModel> images;
+  final List<EventMediaModel> videos;
 
   @override
   factory EventModel.fromJson(Map<String, dynamic> json) => EventModel(
@@ -45,5 +52,11 @@ class EventModel extends Event {
     tag1: json["tag1"],
     tag2: json["tag2"],
     en: PromoTranslationModel.fromJson(json["en"]),
+    images: List<EventMediaModel>.from(
+      json["images"].map((x) => EventMediaModel.fromJson(x)),
+    ),
+    videos: List<EventMediaModel>.from(
+      json["videos"].map((x) => EventMediaModel.fromJson(x)),
+    ),
   );
 }

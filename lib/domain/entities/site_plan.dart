@@ -3,6 +3,9 @@ class SitePlan {
   final String housingId;
   final String name;
   final String imageUrl;
+  final String mapUrl;
+  final String fasumUrl;
+  final String timelineProgressUrl;
   final String createdAt;
   final String updatedAt;
 
@@ -11,6 +14,9 @@ class SitePlan {
     required this.housingId,
     required this.name,
     required this.imageUrl,
+    required this.mapUrl,
+    required this.fasumUrl,
+    required this.timelineProgressUrl,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -20,6 +26,9 @@ class SitePlan {
     housingId: json["housing_id"],
     name: json['name'],
     imageUrl: json['imageUrl'],
+    mapUrl: json['mapUrl'],
+    fasumUrl: json['fasumUrl'],
+    timelineProgressUrl: json['timelineProgressUrl'],
     createdAt: json['created_at'],
     updatedAt: json['updated_at'],
   );
@@ -29,6 +38,9 @@ class SitePlan {
     "housing_id": housingId,
     "name": name,
     "imageUrl": imageUrl,
+    "mapUrl": mapUrl,
+    "fasumUrl": fasumUrl,
+    "timelineProgressUrl": timelineProgressUrl,
     "created_at": createdAt,
     "updated_at": updatedAt,
   };

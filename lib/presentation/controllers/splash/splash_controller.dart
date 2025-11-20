@@ -130,6 +130,15 @@ class SplashController extends GetxController {
             await _downloadImages(
               housing.siteplans!.map((e) => e.imageUrl).toList(),
             );
+            await _downloadImages(
+              housing.siteplans!.map((e) => e.mapUrl).toList(),
+            );
+            await _downloadImages(
+              housing.siteplans!.map((e) => e.fasumUrl).toList(),
+            );
+            await _downloadImages(
+              housing.siteplans!.map((e) => e.timelineProgressUrl).toList(),
+            );
           }
 
           // simpan brosur
