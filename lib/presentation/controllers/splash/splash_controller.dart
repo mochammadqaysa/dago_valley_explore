@@ -19,6 +19,10 @@ class SplashController extends GetxController {
   final loadingMessage = 'Memuat data...'.obs;
   final housingData = Rx<HousingResponse?>(null);
 
+  // Progress tracking untuk download
+  final downloadProgress = 0.0.obs;
+  final currentDownloadItem = ''.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -119,14 +123,31 @@ class SplashController extends GetxController {
             await _downloadImages(
               housing.events!.map((e) => e.imageUrl).toList(),
             );
+
+            // Download gambar detail event
+            for (var event in housing.events!) {
+              await _downloadImages(
+                event.images.map((e) => e.filePath).toList(),
+              );
+
+              // Download video event jika ada
+              final videoUrls = event.videos
+                  .where((e) => _isVideoUrl(e.filePath))
+                  .map((e) => e.filePath)
+                  .toList();
+
+              if (videoUrls.isNotEmpty) {
+                await _downloadVideos(videoUrls);
+              }
+            }
           }
 
           // Simpan siteplan
           if (housing.siteplans != null && housing.siteplans!.isNotEmpty) {
             _storage.siteplans = housing.siteplans!;
-            print('✅ Saved ${housing.siteplans!.length} events');
+            print('✅ Saved ${housing.siteplans!.length} siteplans');
 
-            // Download dan simpan gambar event
+            // Download dan simpan gambar siteplan
             await _downloadImages(
               housing.siteplans!.map((e) => e.imageUrl).toList(),
             );
@@ -231,7 +252,8 @@ class SplashController extends GetxController {
 
     final client = http.Client();
     try {
-      for (final imageUrl in imageUrls) {
+      for (int i = 0; i < imageUrls.length; i++) {
+        final imageUrl = imageUrls[i];
         if (imageUrl.isEmpty || imageUrl.startsWith('assets/')) continue;
 
         try {
@@ -241,13 +263,15 @@ class SplashController extends GetxController {
             continue;
           }
 
+          currentDownloadItem.value = 'Gambar ${i + 1}/${imageUrls.length}';
+          downloadProgress.value = (i / imageUrls.length) * 100;
+
           print('⬇️ Downloading image: $imageUrl');
           final uri = Uri.parse(imageUrl);
           final response = await client
               .get(
                 uri,
                 headers: {
-                  // Jika server memerlukan user-agent
                   'User-Agent': 'Mozilla/5.0 (Windows NT) FlutterApp',
                   'Accept': 'image/*',
                 },
@@ -273,7 +297,110 @@ class SplashController extends GetxController {
       }
     } finally {
       client.close();
+      downloadProgress.value = 0.0;
+      currentDownloadItem.value = '';
     }
+  }
+
+  /// Download videos dengan progress tracking
+  Future<void> _downloadVideos(List<String> videoUrls) async {
+    if (videoUrls.isEmpty) return;
+
+    loadingMessage.value = 'Mengunduh video...';
+
+    final client = http.Client();
+    try {
+      for (int i = 0; i < videoUrls.length; i++) {
+        final videoUrl = videoUrls[i];
+        if (videoUrl.isEmpty || videoUrl.startsWith('assets/')) continue;
+
+        try {
+          // Cek apakah video sudah di-cache
+          final existing = await _storage.getLocalVideo(videoUrl);
+          if (existing != null) {
+            print('✅ Video already cached: $videoUrl');
+            continue;
+          }
+
+          currentDownloadItem.value = 'Video ${i + 1}/${videoUrls.length}';
+          print('⬇️ Downloading video: $videoUrl');
+
+          final uri = Uri.parse(videoUrl);
+
+          // Gunakan streaming download untuk file besar
+          final request = http.Request('GET', uri);
+          request.headers.addAll({
+            'User-Agent': 'Mozilla/5.0 (Windows NT) FlutterApp',
+            'Accept': 'video/*',
+          });
+
+          final streamedResponse = await client
+              .send(request)
+              .timeout(
+                const Duration(minutes: 5), // Timeout lebih lama untuk video
+              );
+
+          if (streamedResponse.statusCode == 200) {
+            final contentLength = streamedResponse.contentLength ?? 0;
+            final List<int> bytes = [];
+            int downloadedBytes = 0;
+
+            // Download dengan progress tracking
+            await for (var chunk in streamedResponse.stream) {
+              bytes.addAll(chunk);
+              downloadedBytes += chunk.length;
+
+              if (contentLength > 0) {
+                final progress = (downloadedBytes / contentLength) * 100;
+                downloadProgress.value = progress;
+
+                // Update loading message dengan ukuran file
+                final downloadedMB = (downloadedBytes / 1024 / 1024)
+                    .toStringAsFixed(1);
+                final totalMB = (contentLength / 1024 / 1024).toStringAsFixed(
+                  1,
+                );
+                loadingMessage.value =
+                    'Mengunduh video ${i + 1}/${videoUrls.length} ($downloadedMB/$totalMB MB)';
+              }
+            }
+
+            final videoBytes = Uint8List.fromList(bytes);
+            await _storage.saveVideoToLocal(videoUrl, videoBytes);
+
+            final sizeMB = (videoBytes.length / 1024 / 1024).toStringAsFixed(2);
+            print('✅ Video saved: $videoUrl (${sizeMB} MB)');
+          } else {
+            print(
+              '❌ Failed to download video ($videoUrl) status: ${streamedResponse.statusCode}',
+            );
+          }
+        } catch (e) {
+          print('❌ Error downloading video $videoUrl: $e');
+          // Lanjutkan ke video berikutnya jika ada error
+          continue;
+        }
+      }
+    } finally {
+      client.close();
+      downloadProgress.value = 0.0;
+      currentDownloadItem.value = '';
+    }
+  }
+
+  /// Helper untuk mengecek apakah URL adalah video
+  bool _isVideoUrl(String url) {
+    final videoExtensions = [
+      '.mp4',
+      '.mov',
+      '.avi',
+      '.mkv',
+      '.webm',
+      '.flv',
+      '.wmv',
+    ];
+    final lowerUrl = url.toLowerCase();
+    return videoExtensions.any((ext) => lowerUrl.endsWith(ext));
   }
 
   // Helper method untuk convert Stream<List<int>> ke Uint8List

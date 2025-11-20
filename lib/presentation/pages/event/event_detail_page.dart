@@ -40,35 +40,6 @@ class EventDetailPage extends GetView<EventController> {
           return Image.file(file, fit: fit, width: width, height: height);
         }
 
-        // fallback ke network jika URL http(s)
-        // if (imageUrl.isNotEmpty &&
-        //     (imageUrl.startsWith('http://') ||
-        //         imageUrl.startsWith('https://'))) {
-        //   return Image.network(
-        //     imageUrl,
-        //     fit: fit,
-        //     width: width,
-        //     height: height,
-        //     loadingBuilder: (context, child, progress) {
-        //       if (progress == null) return child;
-        //       return Container(
-        //         width: width,
-        //         height: height,
-        //         color: Colors.grey[200],
-        //         child: const Center(child: CircularProgressIndicator()),
-        //       );
-        //     },
-        //     errorBuilder: (context, error, stackTrace) {
-        //       return Container(
-        //         width: width,
-        //         height: height,
-        //         color: Colors.grey[200],
-        //         child: const Center(child: Icon(Icons.broken_image)),
-        //       );
-        //     },
-        //   );
-        // }
-
         // terakhir, anggap sebagai asset path
         if (imageUrl.isNotEmpty) {
           return Image.asset(
@@ -217,34 +188,21 @@ class EventDetailPage extends GetView<EventController> {
                                                 );
                                               },
                                             ),
-                                            itemBuilder: (context, index, realIndex) {
-                                              final promo =
-                                                  controller.events[index];
-                                              return Stack(
-                                                fit: StackFit.expand,
-                                                children: [
-                                                  // gunakan _buildPromoImage untuk menampilkan image (lokal/network/asset)
-                                                  _buildPromoImage(
-                                                    promo.imageUrl,
-                                                    fit: BoxFit.contain,
-                                                  ),
-                                                  // Gradient overlay (kosongkan atau isi jika perlu)
-                                                  // Container(
-                                                  //   decoration:
-                                                  //       const BoxDecoration(
-                                                  //         gradient:
-                                                  //             LinearGradient(
-                                                  //               begin: Alignment
-                                                  //                   .topCenter,
-                                                  //               end: Alignment
-                                                  //                   .bottomCenter,
-                                                  //               colors: [],
-                                                  //             ),
-                                                  //       ),
-                                                  // ),
-                                                ],
-                                              );
-                                            },
+                                            itemBuilder:
+                                                (context, index, realIndex) {
+                                                  final promo =
+                                                      controller.events[index];
+                                                  return Stack(
+                                                    fit: StackFit.expand,
+                                                    children: [
+                                                      // gunakan _buildPromoImage untuk menampilkan image (lokal/network/asset)
+                                                      _buildPromoImage(
+                                                        promo.imageUrl,
+                                                        fit: BoxFit.contain,
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
                                           ),
                                         ),
                                       ),
@@ -335,6 +293,79 @@ class EventDetailPage extends GetView<EventController> {
                                                         color: Colors.white
                                                             .withOpacity(0.9),
                                                         height: 1.6,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 30),
+                                                    Material(
+                                                      color: Colors.transparent,
+                                                      child: InkWell(
+                                                        onTap: controller
+                                                            .openGallery,
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              12,
+                                                            ),
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets.symmetric(
+                                                                horizontal: 24,
+                                                                vertical: 14,
+                                                              ),
+                                                          decoration: BoxDecoration(
+                                                            gradient: LinearGradient(
+                                                              colors: [
+                                                                Colors.white
+                                                                    .withOpacity(
+                                                                      0.2,
+                                                                    ),
+                                                                Colors.white
+                                                                    .withOpacity(
+                                                                      0.1,
+                                                                    ),
+                                                              ],
+                                                            ),
+                                                            borderRadius:
+                                                                BorderRadius.circular(
+                                                                  12,
+                                                                ),
+                                                            border: Border.all(
+                                                              color: Colors
+                                                                  .white
+                                                                  .withOpacity(
+                                                                    0.3,
+                                                                  ),
+                                                              width: 1.5,
+                                                            ),
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              Text(
+                                                                'Lihat Selengkapnya',
+                                                                style: TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w600,
+                                                                ),
+                                                              ),
+                                                              const SizedBox(
+                                                                width: 8,
+                                                              ),
+                                                              Icon(
+                                                                Icons
+                                                                    .arrow_forward_rounded,
+                                                                color: Colors
+                                                                    .white,
+                                                                size: 20,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
                                                     const SizedBox(height: 50),

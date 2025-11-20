@@ -1,5 +1,6 @@
 import 'dart:io' as io;
 import 'package:dago_valley_explore/app/services/local_storage.dart';
+import 'package:dago_valley_explore/domain/entities/site_plan.dart';
 import 'package:dago_valley_explore/presentation/controllers/siteplan/detailsiteplan/detail_siteplan_binding.dart';
 import 'package:dago_valley_explore/presentation/pages/siteplan/detail_siteplan/detail_siteplan_page.dart';
 import 'package:flutter/foundation.dart';
@@ -69,6 +70,14 @@ class SiteplanController extends GetxController {
   final _showDebugInfo = false.obs;
   bool get showDebugInfo => _showDebugInfo.value;
 
+  final _currentIndex = 0.obs;
+  int get currentIndex => _currentIndex.value;
+
+  // Observable untuk list siteplan
+  final _siteplans = RxList<SitePlan>([]);
+  List<SitePlan> get siteplans => _siteplans;
+  SitePlan get firstSiteplan => _siteplans.first;
+
   // Panorama assets
   final panoAssets = <Image>[
     Image.asset('assets/panorama1.webp', fit: BoxFit.cover),
@@ -85,10 +94,29 @@ class SiteplanController extends GetxController {
         (io.Platform.isWindows || io.Platform.isLinux || io.Platform.isMacOS);
   }
 
+  void loadSiteplans() {
+    final cachedSiteplans = _storage.siteplans;
+    if (cachedSiteplans != null && cachedSiteplans.isNotEmpty) {
+      print('✅ Using cached siteplan: ${cachedSiteplans.length} items');
+      _siteplans.assignAll(cachedSiteplans);
+    } else {
+      print('⚠️ Using dummy siteplan');
+      // _siteplans.assignAll(dummyPromos);
+    }
+  }
+
+  SitePlan get currentSiteplan {
+    if (_siteplans.isEmpty) {
+      return _siteplans.first;
+    }
+    return _siteplans[_currentIndex.value];
+  }
+
   @override
   void onInit() {
     super.onInit();
     _initializePanorama();
+    loadSiteplans();
   }
 
   void _initializePanorama() {

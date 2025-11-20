@@ -88,7 +88,8 @@ class _DashboardPageState extends State<DashboardPage> {
               child: Column(
                 children: [
                   Container(
-                    height: 400,
+                    // height: 400,
+                    height: MediaQuery.of(context).size.height * 0.37,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -149,70 +150,73 @@ class _DashboardPageState extends State<DashboardPage> {
                   SizedBox(height: 16),
 
                   // Ganti dengan Row + MainAxisAlignment.spaceBetween
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: SitePlanCard(
-                          title: 'site_plan'.tr,
-                          imageUrl: 'assets/siteplan.jpg',
-                          buttonText: 'check_availability'.tr,
-                          onButtonPressed: () {
-                            // Navigate ke SitePlanPage via sidebar
-                            _navigateToTab(TabType.siteplanpage);
-                          },
-                          titleBackgroundColor: themeController.isDarkMode
-                              ? Colors.black
-                              : Colors.white,
-                          buttonColor: Colors.white,
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.475,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: SitePlanCard(
+                            title: 'site_plan'.tr,
+                            imageUrl: 'assets/siteplan.jpg',
+                            buttonText: 'check_availability'.tr,
+                            onButtonPressed: () {
+                              // Navigate ke SitePlanPage via sidebar
+                              _navigateToTab(TabType.siteplanpage);
+                            },
+                            titleBackgroundColor: themeController.isDarkMode
+                                ? Colors.black
+                                : Colors.white,
+                            buttonColor: Colors.white,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 24),
-                      Expanded(
-                        child: SitePlanCard(
-                          title: 'house_type'.tr,
-                          imageUrl: 'assets/tiperumah.jpg',
-                          buttonText: 'check_availability'.tr,
-                          onButtonPressed: () {
-                            // Navigate ke VirtualTourPage (Product Page) via sidebar
-                            _navigateToTab(TabType.productpage);
-                          },
-                          titleBackgroundColor: themeController.isDarkMode
-                              ? Colors.black
-                              : Colors.white,
-                          buttonColor: Colors.white,
+                        SizedBox(width: 24),
+                        Expanded(
+                          child: SitePlanCard(
+                            title: 'house_type'.tr,
+                            imageUrl: 'assets/tiperumah.jpg',
+                            buttonText: 'check_availability'.tr,
+                            onButtonPressed: () {
+                              // Navigate ke VirtualTourPage (Product Page) via sidebar
+                              _navigateToTab(TabType.productpage);
+                            },
+                            titleBackgroundColor: themeController.isDarkMode
+                                ? Colors.black
+                                : Colors.white,
+                            buttonColor: Colors.white,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 24),
-                      Expanded(
-                        child: SitePlanCard(
-                          title: 'agreements_and_legality'.tr,
-                          imageUrl: 'assets/akad.jpg',
-                          buttonText: 'check_availability'.tr,
-                          onButtonPressed: () {
-                            // Navigate ke LicenseLegalDocumentPage via sidebar
-                            _navigateToTab(TabType.licenselegaldocumentpage);
-                          },
-                          titleBackgroundColor: themeController.isDarkMode
-                              ? Colors.black
-                              : Colors.white,
-                          buttonColor: Colors.white,
+                        SizedBox(width: 24),
+                        Expanded(
+                          child: SitePlanCard(
+                            title: 'agreements_and_legality'.tr,
+                            imageUrl: 'assets/akad.jpg',
+                            buttonText: 'check_availability'.tr,
+                            onButtonPressed: () {
+                              // Navigate ke LicenseLegalDocumentPage via sidebar
+                              _navigateToTab(TabType.licenselegaldocumentpage);
+                            },
+                            titleBackgroundColor: themeController.isDarkMode
+                                ? Colors.black
+                                : Colors.white,
+                            buttonColor: Colors.white,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 24),
-                      Expanded(
-                        child: SitePlanCard(
-                          title: 'documentation'.tr,
-                          imageUrl: 'assets/event.jpg',
-                          buttonText: 'check_availability'.tr,
-                          onButtonPressed: _showEventModal,
-                          titleBackgroundColor: themeController.isDarkMode
-                              ? Colors.black
-                              : Colors.white,
-                          buttonColor: Colors.white,
+                        SizedBox(width: 24),
+                        Expanded(
+                          child: SitePlanCard(
+                            title: 'event'.tr,
+                            imageUrl: 'assets/event.jpg',
+                            buttonText: 'check_availability'.tr,
+                            onButtonPressed: _showEventModal,
+                            titleBackgroundColor: themeController.isDarkMode
+                                ? Colors.black
+                                : Colors.white,
+                            buttonColor: Colors.white,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
 
                   SizedBox(height: 16),

@@ -825,24 +825,6 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                       ),
                     ),
                   ),
-                  // DataColumn(
-                  //   label: Text(
-                  //     'Pokok',
-                  //     style: TextStyle(
-                  //       color: Colors.grey,
-                  //       fontWeight: FontWeight.bold,
-                  //     ),
-                  //   ),
-                  // ),
-                  // DataColumn(
-                  //   label: Text(
-                  //     'Margin',
-                  //     style: TextStyle(
-                  //       color: Colors.grey,
-                  //       fontWeight: FontWeight.bold,
-                  //     ),
-                  //   ),
-                  // ),
                   DataColumn(
                     label: Text(
                       'Sisa Hutang',
@@ -865,25 +847,13 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                           ),
                           DataCell(
                             Text(
-                              'Rp ${_formatCurrency((r['angsuran'] as double).round())}',
+                              'Rp ${_formatCurrency((r['angsuran'] as num).toDouble().round())}',
                               style: TextStyle(color: Colors.grey),
                             ),
                           ),
-                          // DataCell(
-                          //   Text(
-                          //     'Rp ${_formatCurrency((r['pokok'] as double).round())}',
-                          //     style: TextStyle(color: Colors.grey),
-                          //   ),
-                          // ),
-                          // DataCell(
-                          //   Text(
-                          //     'Rp ${_formatCurrency((r['margin'] as double).round())}',
-                          //     style: TextStyle(color: Colors.grey),
-                          //   ),
-                          // ),
                           DataCell(
                             Text(
-                              'Rp ${_formatCurrency((r['sisaHutang'] as double).round())}',
+                              'Rp ${_formatCurrency((r['sisaHutang'] as num).toDouble().round())}',
                               style: TextStyle(color: Colors.grey),
                             ),
                           ),

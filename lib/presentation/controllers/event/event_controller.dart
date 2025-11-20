@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_controller.dart' as cs;
 import 'package:dago_valley_explore/app/services/local_storage.dart';
 import 'package:dago_valley_explore/domain/entities/event.dart';
+import 'package:dago_valley_explore/presentation/pages/event/event_gallery/event_gallery_page.dart';
 import 'package:get/get.dart';
 
 class EventController extends GetxController {
@@ -22,7 +23,6 @@ class EventController extends GetxController {
   // Current event
   Event get currentEvent {
     if (_events.isEmpty) {
-      // Fallback ke dummy atau throw error
       throw Exception('No events available');
     }
     return _events[_currentIndex.value];
@@ -66,6 +66,15 @@ class EventController extends GetxController {
       'Booking',
       'Booking event: ${currentEvent.title}',
       snackPosition: SnackPosition.BOTTOM,
+    );
+  }
+
+  // Open gallery page
+  void openGallery() {
+    Get.to(
+      () => EventGalleryPage(),
+      transition: Transition.rightToLeft,
+      duration: const Duration(milliseconds: 300),
     );
   }
 

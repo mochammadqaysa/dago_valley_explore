@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:dago_valley_explore/app/config/app_colors.dart';
+import 'package:dago_valley_explore/app/services/local_storage.dart';
 import 'package:dago_valley_explore/presentation/controllers/siteplan/siteplan_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
 import 'package:flutter/material.dart';
@@ -101,6 +104,64 @@ class SiteplanPage extends GetView<SiteplanController> {
     }
   }
 
+  Future<File?> _localFile(String imageUrl) {
+    final storage = Get.find<LocalStorageService>();
+    return storage.getLocalImage(imageUrl);
+  }
+
+  Widget _buildSiteplanImage(
+    String imageUrl, {
+    BoxFit fit = BoxFit.cover,
+    double? height,
+    double? width,
+  }) {
+    // gunakan FutureBuilder untuk mengecek apakah file tersedia di lokal
+    return FutureBuilder<File?>(
+      future: _localFile(imageUrl),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(
+            width: width,
+            height: height,
+            color: Colors.grey[200],
+            child: const Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        final file = snapshot.data;
+        if (file != null && file.existsSync()) {
+          return Image.file(file, fit: fit, width: width, height: height);
+        }
+
+        // terakhir, anggap sebagai asset path
+        if (imageUrl.isNotEmpty) {
+          return Image.asset(
+            imageUrl,
+            fit: fit,
+            width: width,
+            height: height,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                width: width,
+                height: height,
+                color: Colors.grey[200],
+                child: const Center(child: Icon(Icons.broken_image)),
+              );
+            },
+          );
+        }
+
+        // jika tidak ada imageUrl
+        return Container(
+          width: width,
+          height: height,
+          color: Colors.grey[200],
+          child: const Center(child: Icon(Icons.image_not_supported)),
+        );
+      },
+    );
+  }
+
   // ✅ Map Tab Content
   Widget _buildMapTab(BuildContext context, ThemeController themeController) {
     return Center(
@@ -123,28 +184,9 @@ class SiteplanPage extends GetView<SiteplanController> {
                         ? Colors.grey[900]
                         : Colors.grey[200],
                     child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.map,
-                            size: 64,
-                            color: themeController.isDarkMode
-                                ? Colors.white24
-                                : Colors.black26,
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'Map View',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: themeController.isDarkMode
-                                  ? Colors.white70
-                                  : Colors.black54,
-                            ),
-                          ),
-                        ],
+                      child: _buildSiteplanImage(
+                        controller.firstSiteplan.mapUrl,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -169,12 +211,48 @@ class SiteplanPage extends GetView<SiteplanController> {
 
   // ✅ Fasum Tab Content
   Widget _buildFasumTab(BuildContext context, ThemeController themeController) {
-    return _buildComingSoonWidget(
-      context,
-      themeController,
-      icon: Icons.location_city,
-      title: 'Fasilitas Umum',
-      description: 'Informasi fasilitas umum akan segera hadir',
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width,
+            maxHeight: MediaQuery.of(context).size.height * 0.9,
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              color: themeController.isDarkMode ? Colors.black : Colors.white,
+              child: Stack(
+                children: [
+                  // Placeholder for actual map
+                  Container(
+                    color: themeController.isDarkMode
+                        ? Colors.grey[900]
+                        : Colors.grey[200],
+                    child: Center(
+                      child: _buildSiteplanImage(
+                        controller.firstSiteplan.fasumUrl,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  // Floating action button for site plan
+                  // Positioned(
+                  //   bottom: 16,
+                  //   left: 16,
+                  //   child: FloatingActionButton(
+                  //     onPressed: () => controller.showSitePlanModal(),
+                  //     backgroundColor: AppColors.primary,
+                  //     child: const Icon(Icons.map, color: Colors.white),
+                  //   ),
+                  // ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -183,12 +261,48 @@ class SiteplanPage extends GetView<SiteplanController> {
     BuildContext context,
     ThemeController themeController,
   ) {
-    return _buildComingSoonWidget(
-      context,
-      themeController,
-      icon: Icons.timeline,
-      title: 'Timeline Progress',
-      description: 'Timeline pembangunan akan segera hadir',
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width,
+            maxHeight: MediaQuery.of(context).size.height * 0.9,
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              color: themeController.isDarkMode ? Colors.black : Colors.white,
+              child: Stack(
+                children: [
+                  // Placeholder for actual map
+                  Container(
+                    color: themeController.isDarkMode
+                        ? Colors.grey[900]
+                        : Colors.grey[200],
+                    child: Center(
+                      child: _buildSiteplanImage(
+                        controller.firstSiteplan.timelineProgressUrl,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  // Floating action button for site plan
+                  // Positioned(
+                  //   bottom: 16,
+                  //   left: 16,
+                  //   child: FloatingActionButton(
+                  //     onPressed: () => controller.showSitePlanModal(),
+                  //     backgroundColor: AppColors.primary,
+                  //     child: const Icon(Icons.map, color: Colors.white),
+                  //   ),
+                  // ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -197,12 +311,48 @@ class SiteplanPage extends GetView<SiteplanController> {
     BuildContext context,
     ThemeController themeController,
   ) {
-    return _buildComingSoonWidget(
-      context,
-      themeController,
-      icon: Icons.assignment,
-      title: 'Siteplan Status',
-      description: 'Status siteplan akan segera hadir',
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width,
+            maxHeight: MediaQuery.of(context).size.height * 0.9,
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              color: themeController.isDarkMode ? Colors.black : Colors.white,
+              child: Stack(
+                children: [
+                  // Placeholder for actual map
+                  Container(
+                    color: themeController.isDarkMode
+                        ? Colors.grey[900]
+                        : Colors.grey[200],
+                    child: Center(
+                      child: _buildSiteplanImage(
+                        controller.firstSiteplan.imageUrl,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  // Floating action button for site plan
+                  // Positioned(
+                  //   bottom: 16,
+                  //   left: 16,
+                  //   child: FloatingActionButton(
+                  //     onPressed: () => controller.showSitePlanModal(),
+                  //     backgroundColor: AppColors.primary,
+                  //     child: const Icon(Icons.map, color: Colors.white),
+                  //   ),
+                  // ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
