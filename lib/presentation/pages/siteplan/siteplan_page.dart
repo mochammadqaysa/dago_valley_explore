@@ -361,21 +361,28 @@ class SiteplanPage extends GetView<SiteplanController> {
     BuildContext context,
     ThemeController themeController,
   ) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            color: themeController.isDarkMode ? Colors.black : Colors.white,
-            child: AspectRatio(
-              aspectRatio: 17 / 10,
-              child: _buildPanoramaViewer(),
-            ),
-          ),
-        ),
-      ),
+    return _buildComingSoonWidget(
+      context,
+      themeController,
+      icon: Icons.threesixty,
+      title: "Virtual Tour",
+      description: "Segera Hadir",
     );
+    // return Center(
+    //   child: Padding(
+    //     padding: const EdgeInsets.symmetric(horizontal: 16),
+    //     child: ClipRRect(
+    //       borderRadius: BorderRadius.circular(12),
+    //       child: Container(
+    //         color: themeController.isDarkMode ? Colors.black : Colors.white,
+    //         child: AspectRatio(
+    //           aspectRatio: 17 / 10,
+    //           child: _buildPanoramaViewer(),
+    //         ),
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 
   // ✅ Coming Soon Widget (Reusable)
