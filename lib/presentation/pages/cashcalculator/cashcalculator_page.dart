@@ -20,9 +20,11 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
   PaymentMethod paymentMethod = PaymentMethod.kprSyariah;
   final TextEditingController _diskonRpController = TextEditingController();
   final TextEditingController _diskonPersenController = TextEditingController();
+  final TextEditingController _dpController = TextEditingController();
   bool tanpaDp = false;
   double? diskonNominal;
   double? diskonPersen;
+  double? customDp;
   int tenor = 5;
   double marginPersen = 11.0; // Default untuk KPR Syariah
   double marginSyariah = 0.0;
@@ -57,6 +59,14 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
   }
 
   @override
+  void dispose() {
+    _diskonRpController.dispose();
+    _diskonPersenController.dispose();
+    _dpController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
 
@@ -69,6 +79,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
             diskonPersen: diskonPersen,
             tenorYears: tenor,
             marginPersen: marginPersen,
+            customDp: customDp,
           )
         : null;
 
@@ -166,8 +177,13 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                         ),
                                       );
                                     }).toList(),
-                                    onChanged: (v) =>
-                                        setState(() => selectedModel = v),
+                                    onChanged: (v) {
+                                      setState(() {
+                                        selectedModel = v;
+                                        customDp = null;
+                                        _dpController.clear();
+                                      });
+                                    },
                                   ),
                                 ),
                                 const SizedBox(height: 16),
@@ -195,6 +211,8 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                             tanpaDp = false;
                                             tenor = 5;
                                             marginPersen = marginSyariah;
+                                            customDp = null;
+                                            _dpController.clear();
                                           });
                                         },
                                       ),
@@ -212,6 +230,8 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                             paymentMethod = v!;
                                             tenor = 4;
                                             marginPersen = marginDeveloper;
+                                            customDp = null;
+                                            _dpController.clear();
                                           });
                                         },
                                       ),
@@ -257,8 +277,13 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                       const SizedBox(width: 10),
                                       Switch(
                                         value: tanpaDp,
-                                        onChanged: (v) =>
-                                            setState(() => tanpaDp = v),
+                                        onChanged: (v) {
+                                          setState(() {
+                                            tanpaDp = v;
+                                            customDp = null;
+                                            _dpController.clear();
+                                          });
+                                        },
                                       ),
                                     ],
                                   ),
@@ -283,27 +308,97 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                             ),
                                           ),
                                           const SizedBox(height: 8),
-                                          Container(
-                                            width: double
-                                                .infinity, // <-- biar ikut lebar Expanded
-                                            padding: const EdgeInsets.all(12),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
-                                              color: themeController.isDarkMode
-                                                  ? Colors.grey[800]
-                                                  : Colors.grey[200],
-                                            ),
-                                            child: Text(
-                                              selectedModel == null
-                                                  ? 'choose_house_model_first'
-                                                        .tr
+                                          TextField(
+                                            controller: _dpController,
+                                            enabled: selectedModel != null,
+                                            decoration: InputDecoration(
+                                              hintText: selectedModel == null
+                                                  ? 'choose_house_model_first'.tr
                                                   : 'Rp ${_formatCurrency(controller.calculateDp(harga: selectedModel!.hargaCash.toDouble(), method: paymentMethod, tanpaDp: tanpaDp).round())}',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: textColor,
+                                              hintStyle: TextStyle(
+                                                color: themeController.isDarkMode
+                                                    ? Colors.grey[600]
+                                                    : Colors.grey[500],
                                               ),
+                                              prefixText: 'Rp ',
+                                              prefixStyle: TextStyle(
+                                                color: textColor,
+                                                fontSize: 16,
+                                              ),
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
+                                              ),
+                                              filled: true,
+                                              fillColor: customDp != null
+                                                  ? (themeController.isDarkMode
+                                                      ? Colors.blue[900]
+                                                          ?.withOpacity(0.3)
+                                                      : Colors.blue[50])
+                                                  : (themeController.isDarkMode
+                                                      ? Colors.grey[800]
+                                                      : Colors.grey[200]),
+                                              contentPadding:
+                                                  EdgeInsets.symmetric(
+                                                horizontal: 12,
+                                                vertical: 12,
+                                              ),
+                                              suffixIcon: customDp != null
+                                                  ? IconButton(
+                                                      icon: Icon(
+                                                        Icons.close,
+                                                        color: textColor,
+                                                      ),
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          customDp = null;
+                                                          _dpController.clear();
+                                                        });
+                                                      },
+                                                      tooltip: 'Reset ke default',
+                                                    )
+                                                  : null,
                                             ),
+                                            keyboardType: TextInputType.number,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: textColor,
+                                              fontWeight: customDp != null
+                                                  ? FontWeight.bold
+                                                  : FontWeight.normal,
+                                            ),
+                                            onChanged: (v) {
+                                              if (v.isEmpty) {
+                                                setState(() {
+                                                  customDp = null;
+                                                });
+                                                return;
+                                              }
+
+                                              // Remove formatting
+                                              String cleaned =
+                                                  v.replaceAll('.', '');
+                                              double? val =
+                                                  double.tryParse(cleaned);
+
+                                              if (val != null) {
+                                                setState(() {
+                                                  customDp = val;
+                                                });
+
+                                                // Format with thousand separator
+                                                _dpController.value =
+                                                    TextEditingValue(
+                                                  text: rupiahFormat.format(val),
+                                                  selection:
+                                                      TextSelection.collapsed(
+                                                    offset: rupiahFormat
+                                                        .format(val)
+                                                        .length,
+                                                  ),
+                                                );
+                                              }
+                                            },
                                           ),
                                         ],
                                       ),
