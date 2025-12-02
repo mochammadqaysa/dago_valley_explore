@@ -76,7 +76,8 @@ class SiteplanController extends GetxController {
   // Observable untuk list siteplan
   final _siteplans = RxList<SitePlan>([]);
   List<SitePlan> get siteplans => _siteplans;
-  SitePlan get firstSiteplan => _siteplans.first;
+  SitePlan? get firstSiteplan =>
+      _siteplans.isNotEmpty ? _siteplans.first : null;
 
   // Panorama assets
   final panoAssets = <Image>[
@@ -105,8 +106,12 @@ class SiteplanController extends GetxController {
     }
   }
 
-  SitePlan get currentSiteplan {
+  SitePlan? get currentSiteplan {
     if (_siteplans.isEmpty) {
+      return null;
+    }
+    // Ensure index is within bounds
+    if (_currentIndex.value >= _siteplans.length) {
       return _siteplans.first;
     }
     return _siteplans[_currentIndex.value];

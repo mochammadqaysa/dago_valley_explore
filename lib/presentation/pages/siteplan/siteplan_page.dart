@@ -185,7 +185,7 @@ class SiteplanPage extends GetView<SiteplanController> {
                         : Colors.grey[200],
                     child: Center(
                       child: _buildSiteplanImage(
-                        controller.firstSiteplan.mapUrl,
+                        controller.firstSiteplan?.mapUrl ?? '',
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -232,7 +232,7 @@ class SiteplanPage extends GetView<SiteplanController> {
                         : Colors.grey[200],
                     child: Center(
                       child: _buildSiteplanImage(
-                        controller.firstSiteplan.fasumUrl,
+                        controller.firstSiteplan?.fasumUrl ?? '',
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -282,7 +282,7 @@ class SiteplanPage extends GetView<SiteplanController> {
                         : Colors.grey[200],
                     child: Center(
                       child: _buildSiteplanImage(
-                        controller.firstSiteplan.timelineProgressUrl,
+                        controller.firstSiteplan?.timelineProgressUrl ?? '',
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -332,7 +332,7 @@ class SiteplanPage extends GetView<SiteplanController> {
                         : Colors.grey[200],
                     child: Center(
                       child: _buildSiteplanImage(
-                        controller.firstSiteplan.imageUrl,
+                        controller.firstSiteplan?.imageUrl ?? '',
                         fit: BoxFit.cover,
                       ),
                     ),
