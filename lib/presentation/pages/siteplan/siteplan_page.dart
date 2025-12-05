@@ -4,13 +4,40 @@ import 'package:dago_valley_explore/app/config/app_colors.dart';
 import 'package:dago_valley_explore/app/services/local_storage.dart';
 import 'package:dago_valley_explore/presentation/controllers/siteplan/siteplan_controller.dart';
 import 'package:dago_valley_explore/presentation/controllers/theme/theme_controller.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:panorama_viewer/panorama_viewer.dart';
 
-class SiteplanPage extends GetView<SiteplanController> {
+class SiteplanPage extends StatefulWidget {
   const SiteplanPage({Key? key}) : super(key: key);
+
+  @override
+  State<SiteplanPage> createState() => _SiteplanPageState();
+}
+
+class _SiteplanPageState extends State<SiteplanPage>
+    with SingleTickerProviderStateMixin {
+  // keep using controller via Get
+  final SiteplanController controller = Get.find<SiteplanController>();
+
+  // Tab controller for "Siteplan Status" pills (Tahap 1 / Tahap 2)
+  late final TabController _statusTabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _statusTabController = TabController(length: 2, vsync: this);
+    // Optional: start on tahap 1 (index 0)
+    _statusTabController.index = 0;
+  }
+
+  @override
+  void dispose() {
+    _statusTabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +47,17 @@ class SiteplanPage extends GetView<SiteplanController> {
       body: SafeArea(
         child: Column(
           children: [
-            // ✅ Segmented Button Tab Bar
+            // Segmented Button Tab Bar
             _buildSegmentedTabBar(context, themeController),
 
-            // ✅ Tab Content
+            // Tab Content
             Expanded(
-              child: Obx(() => _buildTabContent(context, themeController)),
+              child: Obx(
+                () => Align(
+                  alignment: Alignment.topCenter,
+                  child: _buildTabContent(context, themeController),
+                ),
+              ),
             ),
           ],
         ),
@@ -33,13 +65,13 @@ class SiteplanPage extends GetView<SiteplanController> {
     );
   }
 
-  // ✅ Build Segmented Button Tab Bar
+  // Build Segmented Button Tab Bar
   Widget _buildSegmentedTabBar(
     BuildContext context,
     ThemeController themeController,
   ) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.only(top: 60),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Obx(() {
@@ -85,7 +117,7 @@ class SiteplanPage extends GetView<SiteplanController> {
     );
   }
 
-  // ✅ Build Tab Content based on selected tab
+  // Build Tab Content based on selected tab
   Widget _buildTabContent(
     BuildContext context,
     ThemeController themeController,
@@ -162,45 +194,117 @@ class SiteplanPage extends GetView<SiteplanController> {
     );
   }
 
-  // ✅ Map Tab Content
+  // Wrapper untuk InteractiveViewer dengan zoom controls
+  Widget _buildZoomableImage({
+    required String imageUrl,
+    required BoxFit fit,
+    required ThemeController themeController,
+  }) {
+    final TransformationController transformationController =
+        TransformationController();
+
+    return Stack(
+      children: [
+        InteractiveViewer(
+          transformationController: transformationController,
+          minScale: 1.0,
+          maxScale: 5.0,
+          boundaryMargin: const EdgeInsets.all(20),
+          panEnabled: true,
+          scaleEnabled: true,
+          child: Center(child: _buildSiteplanImage(imageUrl, fit: fit)),
+        ),
+        // Zoom controls
+        Positioned(
+          bottom: 16,
+          right: 16,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Zoom In Button
+              FloatingActionButton.small(
+                heroTag: 'zoom_in_${imageUrl.hashCode}',
+                onPressed: () {
+                  final currentScale = transformationController.value
+                      .getMaxScaleOnAxis();
+                  final newScale = (currentScale * 1.2).clamp(1.0, 5.0);
+                  transformationController.value = Matrix4.identity()
+                    ..scale(newScale);
+                },
+                backgroundColor: themeController.isDarkMode
+                    ? Colors.grey[800]
+                    : Colors.white,
+                child: Icon(
+                  Icons.zoom_in,
+                  color: themeController.isDarkMode
+                      ? Colors.white
+                      : Colors.black,
+                ),
+              ),
+              const SizedBox(height: 8),
+              // Zoom Out Button
+              FloatingActionButton.small(
+                heroTag: 'zoom_out_${imageUrl.hashCode}',
+                onPressed: () {
+                  final currentScale = transformationController.value
+                      .getMaxScaleOnAxis();
+                  final newScale = (currentScale / 1.2).clamp(1.0, 5.0);
+                  transformationController.value = Matrix4.identity()
+                    ..scale(newScale);
+                },
+                backgroundColor: themeController.isDarkMode
+                    ? Colors.grey[800]
+                    : Colors.white,
+                child: Icon(
+                  Icons.zoom_out,
+                  color: themeController.isDarkMode
+                      ? Colors.white
+                      : Colors.black,
+                ),
+              ),
+              const SizedBox(height: 8),
+              // Reset Zoom Button
+              FloatingActionButton.small(
+                heroTag: 'zoom_reset_${imageUrl.hashCode}',
+                onPressed: () {
+                  transformationController.value = Matrix4.identity();
+                },
+                backgroundColor: themeController.isDarkMode
+                    ? Colors.grey[800]
+                    : Colors.white,
+                child: Icon(
+                  Icons.refresh,
+                  color: themeController.isDarkMode
+                      ? Colors.white
+                      : Colors.black,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Map Tab Content
   Widget _buildMapTab(BuildContext context, ThemeController themeController) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width,
-            maxHeight: MediaQuery.of(context).size.height * 0.9,
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * 0.895,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            color: themeController.isDarkMode ? Colors.black : Colors.white,
             child: Container(
-              color: themeController.isDarkMode ? Colors.black : Colors.white,
-              child: Stack(
-                children: [
-                  // Placeholder for actual map
-                  Container(
-                    color: themeController.isDarkMode
-                        ? Colors.grey[900]
-                        : Colors.grey[200],
-                    child: Center(
-                      child: _buildSiteplanImage(
-                        controller.firstSiteplan?.mapUrl ?? '',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  // Floating action button for site plan
-                  // Positioned(
-                  //   bottom: 16,
-                  //   left: 16,
-                  //   child: FloatingActionButton(
-                  //     onPressed: () => controller.showSitePlanModal(),
-                  //     backgroundColor: AppColors.primary,
-                  //     child: const Icon(Icons.map, color: Colors.white),
-                  //   ),
-                  // ),
-                ],
+              color: themeController.isDarkMode
+                  ? Colors.grey[900]
+                  : Colors.grey[200],
+              child: _buildZoomableImage(
+                imageUrl: controller.firstSiteplan?.mapUrl ?? '',
+                fit: BoxFit.fitWidth,
+                themeController: themeController,
               ),
             ),
           ),
@@ -209,45 +313,25 @@ class SiteplanPage extends GetView<SiteplanController> {
     );
   }
 
-  // ✅ Fasum Tab Content
+  // Fasum Tab Content
   Widget _buildFasumTab(BuildContext context, ThemeController themeController) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width,
-            maxHeight: MediaQuery.of(context).size.height * 0.9,
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * 0.895,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            color: themeController.isDarkMode ? Colors.black : Colors.white,
             child: Container(
-              color: themeController.isDarkMode ? Colors.black : Colors.white,
-              child: Stack(
-                children: [
-                  // Placeholder for actual map
-                  Container(
-                    color: themeController.isDarkMode
-                        ? Colors.grey[900]
-                        : Colors.grey[200],
-                    child: Center(
-                      child: _buildSiteplanImage(
-                        controller.firstSiteplan?.fasumUrl ?? '',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  // Floating action button for site plan
-                  // Positioned(
-                  //   bottom: 16,
-                  //   left: 16,
-                  //   child: FloatingActionButton(
-                  //     onPressed: () => controller.showSitePlanModal(),
-                  //     backgroundColor: AppColors.primary,
-                  //     child: const Icon(Icons.map, color: Colors.white),
-                  //   ),
-                  // ),
-                ],
+              color: themeController.isDarkMode
+                  ? Colors.grey[900]
+                  : Colors.grey[200],
+              child: _buildZoomableImage(
+                imageUrl: controller.firstSiteplan?.fasumUrl ?? '',
+                fit: BoxFit.contain,
+                themeController: themeController,
               ),
             ),
           ),
@@ -256,48 +340,28 @@ class SiteplanPage extends GetView<SiteplanController> {
     );
   }
 
-  // ✅ Timeline Progress Tab Content
+  // Timeline Progress Tab Content
   Widget _buildTimelineProgressTab(
     BuildContext context,
     ThemeController themeController,
   ) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width,
-            maxHeight: MediaQuery.of(context).size.height * 0.9,
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * 0.895,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            color: themeController.isDarkMode ? Colors.black : Colors.white,
             child: Container(
-              color: themeController.isDarkMode ? Colors.black : Colors.white,
-              child: Stack(
-                children: [
-                  // Placeholder for actual map
-                  Container(
-                    color: themeController.isDarkMode
-                        ? Colors.grey[900]
-                        : Colors.grey[200],
-                    child: Center(
-                      child: _buildSiteplanImage(
-                        controller.firstSiteplan?.timelineProgressUrl ?? '',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  // Floating action button for site plan
-                  // Positioned(
-                  //   bottom: 16,
-                  //   left: 16,
-                  //   child: FloatingActionButton(
-                  //     onPressed: () => controller.showSitePlanModal(),
-                  //     backgroundColor: AppColors.primary,
-                  //     child: const Icon(Icons.map, color: Colors.white),
-                  //   ),
-                  // ),
-                ],
+              color: themeController.isDarkMode
+                  ? Colors.grey[900]
+                  : Colors.grey[200],
+              child: _buildZoomableImage(
+                imageUrl: controller.firstSiteplan?.timelineProgressUrl ?? '',
+                fit: BoxFit.contain,
+                themeController: themeController,
               ),
             ),
           ),
@@ -306,49 +370,106 @@ class SiteplanPage extends GetView<SiteplanController> {
     );
   }
 
-  // ✅ Siteplan Status Tab Content
+  // Siteplan Status Tab Content - with pills for Tahap 1 / Tahap 2
   Widget _buildSiteplanStatusTab(
     BuildContext context,
     ThemeController themeController,
   ) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width,
-            maxHeight: MediaQuery.of(context).size.height * 0.9,
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              color: themeController.isDarkMode ? Colors.black : Colors.white,
-              child: Stack(
-                children: [
-                  // Placeholder for actual map
-                  Container(
-                    color: themeController.isDarkMode
-                        ? Colors.grey[900]
-                        : Colors.grey[200],
-                    child: Center(
-                      child: _buildSiteplanImage(
-                        controller.firstSiteplan?.imageUrl ?? '',
-                        fit: BoxFit.cover,
+    final isDark = themeController.isDarkMode;
+    final tahap1Url = controller.firstSiteplan?.imageUrl;
+    final tahap2Url = controller.firstSiteplan?.imageTahap2Url;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * 0.895,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            color: isDark ? Colors.black : Colors.white,
+            child: Column(
+              children: [
+                // Pills / TabBar like virtualtour_page.dart
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 12,
+                  ),
+                  child: Container(
+                    width: 260,
+                    height: 34,
+                    decoration: BoxDecoration(
+                      color: isDark ? Colors.grey[850] : Colors.grey[200],
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: TabBar(
+                      controller: _statusTabController,
+                      indicator: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(25),
                       ),
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      labelColor: Colors.white,
+                      unselectedLabelColor: isDark
+                          ? Colors.white70
+                          : Colors.black54,
+                      labelStyle: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      tabs: [
+                        Tab(text: 'Tahap 1'),
+                        Tab(text: 'Tahap 2'),
+                      ],
                     ),
                   ),
-                  // Floating action button for site plan
-                  // Positioned(
-                  //   bottom: 16,
-                  //   left: 16,
-                  //   child: FloatingActionButton(
-                  //     onPressed: () => controller.showSitePlanModal(),
-                  //     backgroundColor: AppColors.primary,
-                  //     child: const Icon(Icons.map, color: Colors.white),
-                  //   ),
-                  // ),
-                ],
-              ),
+                ),
+
+                // Content area
+                Expanded(
+                  child: TabBarView(
+                    controller: _statusTabController,
+                    children: [
+                      // Tahap 1 - existing image
+                      Container(
+                        color: isDark ? Colors.grey[900] : Colors.grey[200],
+                        child: _buildZoomableImage(
+                          imageUrl: tahap1Url ?? '',
+                          fit: BoxFit.contain,
+                          themeController: themeController,
+                        ),
+                      ),
+
+                      // Tahap 2 - imageTahap2Url (fallback to placeholder if empty)
+                      Container(
+                        color: isDark ? Colors.grey[900] : Colors.grey[200],
+                        child: (tahap2Url?.isNotEmpty ?? false)
+                            ? _buildZoomableImage(
+                                imageUrl: tahap2Url ?? '',
+                                fit: BoxFit.contain,
+                                themeController: themeController,
+                              )
+                            : Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(24.0),
+                                  child: Text(
+                                    'No image available for Tahap 2',
+                                    style: TextStyle(
+                                      color: isDark
+                                          ? Colors.white70
+                                          : Colors.black54,
+                                      fontSize: 14,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -356,36 +477,35 @@ class SiteplanPage extends GetView<SiteplanController> {
     );
   }
 
-  // ✅ Kawasan 360 Tab Content
+  // Kawasan 360 Tab Content
   Widget _buildKawasan360Tab(
     BuildContext context,
     ThemeController themeController,
   ) {
-    return _buildComingSoonWidget(
-      context,
-      themeController,
-      icon: Icons.threesixty,
-      title: "Virtual Tour",
-      description: "Segera Hadir",
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * 0.895,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            color: themeController.isDarkMode ? Colors.black : Colors.white,
+            child: _buildComingSoonWidget(
+              context,
+              themeController,
+              icon: Icons.construction,
+              title: 'Kawasan 360° Coming Soon',
+              description:
+                  'Explore the 360-degree view of the kawasan soon.  Stay tuned for updates!',
+            ),
+          ),
+        ),
+      ),
     );
-    // return Center(
-    //   child: Padding(
-    //     padding: const EdgeInsets.symmetric(horizontal: 16),
-    //     child: ClipRRect(
-    //       borderRadius: BorderRadius.circular(12),
-    //       child: Container(
-    //         color: themeController.isDarkMode ? Colors.black : Colors.white,
-    //         child: AspectRatio(
-    //           aspectRatio: 17 / 10,
-    //           child: _buildPanoramaViewer(),
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 
-  // ✅ Coming Soon Widget (Reusable)
+  // Coming Soon Widget (Reusable)
   Widget _buildComingSoonWidget(
     BuildContext context,
     ThemeController themeController, {
