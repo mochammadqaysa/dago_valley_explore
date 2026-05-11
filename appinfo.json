@@ -1,0 +1,13 @@
+{
+    "id": "com.example.dago-valley-explore",
+    "version": "1.0.0",
+    "vendor": "Qaanii",
+    "type": "web",
+    "main": "index.html",
+    "title": "Dago Valley Explore",
+    "icon": "favicon.png",
+    "largeIcon": "favicon.png",
+    "bgColor": "#000000",
+    "iconColor": "#FFFFFF",
+    "splashBackground": "#000000"
+}
