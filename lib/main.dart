@@ -8,8 +8,9 @@ import 'app/util/dependency.dart';
 import 'app/util/platform_helper.dart';
 import 'presentation/app.dart';
 
-// Conditional import for window_manager (only available on desktop)
-import 'main_stub.dart' if (dart.library.io) 'main_desktop.dart'
+// Conditional import for window_manager (only available on desktop windows)
+import 'main_stub.dart'
+    if (dart.library.io) 'main_desktop.dart'
     as desktop_init;
 
 void main() async {
