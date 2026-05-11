@@ -1,0 +1,9 @@
+{
+    "id": "com.example.dagovalley",
+    "description": "Dago Valley Explore",
+    "services": [
+        {
+            "name": "com.example.dagovalley.service"
+        }
+    ]
+}
